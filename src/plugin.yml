@@ -1,0 +1,100 @@
+name: MysticEssentials
+author: Choco70
+main: fr.choco70.mysticessentials.MysticEssentials
+version: 1.2.0
+api-version: 1.14
+commands:
+  spawn:
+    description: Teleport to spawn.
+    permission: mysticessentials.spawn
+    permission-message: You don't have permission to teleport to spawn. (mysticessentials.spawn)
+  setspawn:
+    description: Make your position the server's spawn.
+    permission: mysticessentials.setspawn
+    permission-message: You don't have permission to set the spawn.
+  delspawn:
+    description: Remove the spawn location.
+    permission: mysticessentials.delspawn
+    permission-message: You don't have permission to remove the spawn.
+  home:
+    description: Teleport to home <home>.
+    permission: mysticessentials.home
+    permission-message: You don't have permission to use home (mysticessentials.home)
+    usage: "Correct usage: /home <home_name>"
+  sethome:
+    description: Setup home <home>.
+    permission: mysticessentials.sethome
+    permission-message: You don't have permission to set a home (mysticessentials.sethome)
+    usage: "Correct usage: /sethome <home_name>"
+  delhome:
+    description: Remove home <home>.
+    permission: mysticessentials.delhome
+    permission-message: You don't have permission to useset a home (mysticessentials.delhome)
+    usage: "Correct usage: /delhome <home_name>"
+  tpa:
+    description: Send a request to teleport to another player.
+    permission: mysticessentials.tpa
+    permission-message: You don't have permission to use tpa (mysticessentials.tpa)
+  tpahere:
+    description: Send a request to teleport a player to you.
+    permission: mysticessentials.tpahere
+    permission-message: You don't have permission to use tpahere (mysticessentials.tpahere)
+  tpaccept:
+    description: Accept teleport request from a player.
+    permission: mysticessentials.tpaccept
+    permission-message: You don't have permission to use tpaccept (mysticessentials.tpaccept)
+  tpdeny:
+    description: Deny teleport request from a player.
+    permission: mysticessentials.tpdeny
+    permission-message: You don't have permission to use tpdeny (mysticessentials.tpdeny)
+  back:
+    description: Teleport to your last death location.
+    permission: mysticessentials.back
+    permission-message: You don't have permission to use the back command (mysticessentials.back)
+  setlanguage:
+    description: Change your language.
+    permission: mysticessentials.setlanguage
+    permission-message: You don't have permission to change your language. (mysticessentials.setlanguage)
+    usage: "Correct usage: /setlanguage <language ex: en_us>"
+#  mysticessentialsreload:
+#    aliases: [mereload, mysticereload, messentialsreload, mer, mysticer, messentialsr]
+#    description: Reload plugin's configuration.
+#    permission: mysticessentials.reload
+#    permission-message: You don't have permission to use the reload command (mysticessentials.reload)
+permissions:
+  mysticessentials.spawn:
+    default: true
+    description: Allows to use /spawn command
+  mysticessentials.setspawn:
+    default: op
+    description: Allows to set the spawn
+  mysticessentials.delspawn:
+    default: op
+    description: Allows to remove the spawn
+  mysticessentials.home:
+    default: true
+    description: Allows to use /home command
+  mysticessentials.sethome:
+    default: true
+    description: Allows to use /sethome command
+  mysticessentials.tpa:
+    default: true
+    description: Allows to use /tpa command
+  mysticessentials.tpahere:
+    default: true
+    description: Allows to use /tpahere command
+  mysticessentials.tpaccept:
+    default: true
+    description: Allows to use /tpaccept command
+  mysticessentials.tpdeny:
+    default: true
+    description: Allows to use /tpdeny command
+  mysticessentials.back:
+    default: op
+    description: Allows to use /back command
+  mysticessentials.setlanguage:
+    default: true
+    description: Allows to use /setlanguage command
+#  mysticessentials.reload:
+#    default: op
+#    description: Allows to use /mysticessentialsreload command

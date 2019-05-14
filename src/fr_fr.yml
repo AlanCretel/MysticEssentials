@@ -1,0 +1,8 @@
+WELCOME_BACK_BROADCAST: '§6Bon retour sur §4#server_name#§6, §7#player#§6!'
+LANGUAGE_CHANGED: 'Language changé pour: #player_language#.'
+LANGUAGE_UNAVAILABLE: 'Language indisponible.'
+CONFIG_LOADED: '§2MysticEssential: Configuration chargée.'
+DEATH_LOCATION_MESSAGE: '§cDernière mort: /n§7World: §9#world#/n§7X: §9#x#/n§7Y: §9#y#/n§7Z:
+  §9#z#'
+CONFIG_RELOADED: 'MysticEssentials: configuration rechargée'
+ONLY_PLAYERS_COMMAND: 'Cette commande peut être utilisée seulement par un joueur.'

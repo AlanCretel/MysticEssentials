@@ -1,0 +1,16 @@
+SETTINGS:
+  isPrivateServer: false
+  spawnOnJoin: false
+  spawnOnDie: true
+  spawnOverrideBedSpawn: false
+  spawnIfNoBed: true
+  serverName: A minecraft server
+  showDeathCoordinates: true
+  serverLanguage: en_us
+SPAWN:
+  world:
+  x:
+  y:
+  z:
+  pitch:
+  yaw:
