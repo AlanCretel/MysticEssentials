@@ -1,7 +1,7 @@
 name: MysticEssentials
 author: Choco70
 main: fr.choco70.mysticessentials.MysticEssentials
-version: 1.2.0
+version: 1.3.0
 api-version: 1.14
 commands:
   spawn:
@@ -56,6 +56,33 @@ commands:
     permission: mysticessentials.setlanguage
     permission-message: You don't have permission to change your language. (mysticessentials.setlanguage)
     usage: "Correct usage: /setlanguage <language ex: en_us>"
+  homelist:
+    description: View your homes list.
+    permission: mysticessentials.homelist
+    permission-message: You don't have permission to use /homelist command. (mysticessentials.homelist)
+    usage: "Correct usage: /homelist"
+    aliases: [homes]
+  warp:
+    description: Teleport you to a warp.
+    permission: mysticessentials.warp
+    permission-message: You don't have permission to teleport you to a warp.
+    usage: "Correct usage: /warp <warp_name>"
+  setwarp:
+    description: Add a new warp.
+    permission: mysticessentials.setwarp
+    permission-message: You don't have permission to add a new warp.
+    usage: "Correct usage: /setwarp <warp_name>"
+  delwarp:
+    description: Remove a warp.
+    permission: mysticessentials.delwarp
+    permission-message: You don't have permission to remove a warp.
+    usage: "Correct usage: /delwarp <warp_name>"
+  warplist:
+    description: List all warps.
+    permission: mysticessentials.warplist
+    permission-message: You don't have permission to list warps.
+    usage: "Correct usage: /warplist"
+    aliases: [warps]
 #  mysticessentialsreload:
 #    aliases: [mereload, mysticereload, messentialsreload, mer, mysticer, messentialsr]
 #    description: Reload plugin's configuration.
@@ -95,6 +122,21 @@ permissions:
   mysticessentials.setlanguage:
     default: true
     description: Allows to use /setlanguage command
+  mysticessentials.homelist:
+    default: true
+    description: Allows to use /homelist command
+  mysticessentials.warp:
+    default: true
+    description: Allows to use /warp command
+  mysticessentials.setwarp:
+    default: op
+    description: Allows to use /setwarp command
+  mysticessentials.delwarp:
+    default: op
+    description: Allows to use /delwarp command
+  mysticessentials.warplist:
+    default: true
+    description: Allows to use /warplist command
 #  mysticessentials.reload:
 #    default: op
 #    description: Allows to use /mysticessentialsreload command

@@ -2,8 +2,9 @@ package fr.choco70.mysticessentials;
 
 import fr.choco70.mysticessentials.commands.*;
 import fr.choco70.mysticessentials.listeners.PlayerDeath;
-import fr.choco70.mysticessentials.listeners.PlayerRespawn;
 import fr.choco70.mysticessentials.listeners.PlayerJoin;
+import fr.choco70.mysticessentials.listeners.PlayerRespawn;
+import fr.choco70.mysticessentials.utils.langsManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,7 +14,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 
 public class MysticEssentials extends JavaPlugin {
@@ -23,6 +23,7 @@ public class MysticEssentials extends JavaPlugin {
 
     @Override
     public void onEnable(){
+        langsManager langsManager = new langsManager();
         FileConfiguration config = this.getConfig();
         config.options().copyDefaults(true);
         try {
@@ -31,25 +32,21 @@ public class MysticEssentials extends JavaPlugin {
             e.printStackTrace();
         }
 
-        createLanguageFile("fr_fr");
-        FileConfiguration langFR_fr = YamlConfiguration.loadConfiguration(getLanguageFile("fr_fr"));
+        langsManager.createLanguageFile("fr_fr");
+        FileConfiguration langFR_fr = YamlConfiguration.loadConfiguration(langsManager.getLanguageFile("fr_fr"));
         langFR_fr.options().copyDefaults(true);
 
         try {
-            langFR_fr.save(getLanguageFile("fr_fr"));
+            langFR_fr.save(langsManager.getLanguageFile("fr_fr"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        createLanguageFile(config.getString("SETTINGS.serverLanguage", "en_us").toLowerCase());
-        FileConfiguration languageConfig = YamlConfiguration.loadConfiguration(getLanguageFile(config.getString("SETTINGS.serverLanguage", "en_us").toLowerCase()));
+        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+        langsManager.createLanguageFile(serverLanguage);
 
-        String configLoadedMessage = languageConfig.getString("CONFIG_LOADED", "§2MysticEssential: Configuration loaded.");
+        String configLoadedMessage = langsManager.getMessage(serverLanguage,"CONFIG_LOADED", "§2MysticEssential: Configuration loaded.");
         getServer().getConsoleSender().sendMessage(configLoadedMessage);
-
-        languageConfig.set("CONFIG_LOADED", configLoadedMessage);
-
-        saveLanguageConfig(languageConfig, config.getString("SETTINGS.serverLanguage", "en_us").toLowerCase());
 
         this.getServer().getPluginManager().registerEvents(new PlayerJoin(),this);
         this.getServer().getPluginManager().registerEvents(new PlayerRespawn(), this);
@@ -67,6 +64,11 @@ public class MysticEssentials extends JavaPlugin {
         this.getCommand("delhome").setExecutor(new CommandDelHome());
         this.getCommand("back").setExecutor(new CommandBack());
         this.getCommand("setlanguage").setExecutor(new CommandSetLanguage());
+        this.getCommand("homelist").setExecutor(new CommandHomeList());
+        this.getCommand("setwarp").setExecutor(new CommandSetWarp());
+        this.getCommand("warp").setExecutor(new CommandWarp());
+        this.getCommand("delwarp").setExecutor(new CommandDelWarp());
+        this.getCommand("warplist").setExecutor(new CommandWarpList());
         //this.getCommand("mysticessentialsreload").setExecutor(new CommandReload());
     }
 
@@ -121,44 +123,9 @@ public class MysticEssentials extends JavaPlugin {
 
     public void savePlayerConfig(FileConfiguration playerConfig, String playerUUID){
         try {
-            playerConfig.save(getLanguageFile(playerUUID));
+            playerConfig.save(getPlayerFile(playerUUID));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    public void createLanguageFile(String fileName){
-        File langsForlder = new File(getDataFolder() + File.separator + "langs" + File.separator);
-        if(!getDataFolder().exists()){
-            getDataFolder().mkdir();
-        }
-        if(!langsForlder.exists()){
-            langsForlder.mkdir();
-        }
-        File file = new File(langsForlder,fileName + ".yml");
-
-        if(!file.exists()){
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public File getLanguageFile(String fileName){
-        File langsForlder = new File(getDataFolder() + File.separator + "langs" + File.separator);
-        return new File(langsForlder,fileName + ".yml");
-    }
-
-    public void saveLanguageConfig(FileConfiguration languageConfig, String fileName){
-        try {
-            languageConfig.save(getLanguageFile(fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
 }

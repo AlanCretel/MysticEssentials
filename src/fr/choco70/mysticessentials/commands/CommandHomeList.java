@@ -9,26 +9,31 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-public class CommandSpawn implements CommandExecutor {
+import java.util.Set;
+
+public class CommandHomeList implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private langsManager langsManager = new langsManager();
-    private String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+    private fr.choco70.mysticessentials.utils.langsManager langsManager = new langsManager();
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] arguments){
+    public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
+        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+
         if(sender instanceof Player){
             Player player = (Player)sender;
             FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(plugin.getPlayerFile(player.getUniqueId().toString()));
             String playerLanguage = playerConfig.getString("language", serverLanguage);
+            Set<String> homes = playerConfig.getConfigurationSection("homes").getKeys(false);
 
-            if(config.isSet("SPAWN.x") && config.isSet("SPAWN.y") && config.isSet("SPAWN.z") && config.isSet("SPAWN.pitch") && config.isSet("SPAWN.yaw") && config.isSet("SPAWN.world")){
-                String teleportedToSpawn = langsManager.getMessage(playerLanguage, "TELEPORT_TO_SPAWN", "Teleported to spawn.");
-                plugin.toSpawn(player, teleportedToSpawn);
+            if(homes.size() == 0){
+                String noHomesMessage = langsManager.getMessage(playerLanguage, "NO_HOMES", "You don't have any home.");
+                player.sendMessage(formatString(noHomesMessage, homes.toString()));
             }
             else{
-                player.sendMessage(langsManager.getMessage(playerLanguage, "NO_SPAWN", "No spawn set."));
+                String homeListMessage = langsManager.getMessage(playerLanguage, "HOME_LIST", "Your homes: #home_list#.");
+                player.sendMessage(formatString(homeListMessage, homes.toString()));
             }
         }
         else{
@@ -36,5 +41,12 @@ public class CommandSpawn implements CommandExecutor {
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;
+    }
+
+    public String formatString(String string, String homes){
+        String homeList_placeholder = "#home_list#";
+        String formatedString = string.replaceAll(homeList_placeholder, homes);
+
+        return formatedString;
     }
 }

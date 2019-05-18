@@ -1,6 +1,7 @@
 package fr.choco70.mysticessentials.listeners;
 
 import fr.choco70.mysticessentials.MysticEssentials;
+import fr.choco70.mysticessentials.utils.langsManager;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -13,6 +14,7 @@ public class PlayerDeath implements Listener{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
+    private langsManager langsManager = new langsManager();
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e){
@@ -20,15 +22,11 @@ public class PlayerDeath implements Listener{
         Location deathLocation = player.getLocation().clone();
         String playerUUID = player.getUniqueId().toString();
         FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(plugin.getPlayerFile(playerUUID));
+        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
 
         if(config.getBoolean("SETTINGS.showDeathCoordinates", true)){
-            FileConfiguration playerLanguageConfig = YamlConfiguration.loadConfiguration(plugin.getLanguageFile(playerConfig.getString("language", "en_us")));
-
-            String deathLocationMessage = playerLanguageConfig.getString("DEATH_LOCATION_MESSAGE", "Death location: /nWorld: #world#/nX: #x#/nY: #y#/nZ: #z#");
-            playerLanguageConfig.set("DEATH_LOCATION_MESSAGE", deathLocationMessage);
-
-            plugin.saveLanguageConfig(playerLanguageConfig, playerConfig.getString("language", "en_us"));
-
+            String playerLanguage = playerConfig.getString("language", serverLanguage);
+            String deathLocationMessage = langsManager.getMessage(playerLanguage, "DEATH_LOCATION_MESSAGE", "Death location: /nWorld: #world#/nX: #x#/nY: #y#/nZ: #z#");
             player.sendMessage(formatString(deathLocationMessage, player));
         }
         playerConfig.set("last_death.world", deathLocation.getWorld().getName());

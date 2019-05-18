@@ -1,6 +1,7 @@
 package fr.choco70.mysticessentials.listeners;
 
 import fr.choco70.mysticessentials.MysticEssentials;
+import fr.choco70.mysticessentials.utils.langsManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -12,6 +13,7 @@ public class PlayerJoin implements Listener {
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
+    private langsManager langsManager = new langsManager();
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e){
@@ -22,21 +24,17 @@ public class PlayerJoin implements Listener {
         plugin.createPlayerFile(playerUUID);
         FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(plugin.getPlayerFile(playerUUID));
 
-        String playerLocale = playerConfig.getString("language", "en_us");
+        String serverLanguage = config.getString("SETTINGS.serverLanguage");
+        String playerLocale = playerConfig.getString("language", serverLanguage);
         playerConfig.set("language", playerLocale);
 
-        plugin.createLanguageFile(playerLocale);
-        FileConfiguration languageConfig = YamlConfiguration.loadConfiguration(plugin.getLanguageFile(playerLocale));
-
-        String welcome_back_message = languageConfig.getString("WELCOME_BACK_MESSAGE", "§6Welcome back on §4#server_name#§6, §7#player#§6 !");
-        languageConfig.set("WELCOME_BACK_MESSAGE", welcome_back_message);
+        String welcome_back_message = langsManager.getMessage(playerLocale, "WELCOME_BACK_MESSAGE", "§6Welcome back on §4#server_name#§6, §7#player#§6 !");
 
         if(!playerConfig.isSet("name")){
             playerConfig.set("name", player.getName());
             playerConfig.set("display_name", playerDisplayName);
 
-            String welcome_message = languageConfig.getString("WELCOME_MESSAGE", "Welcome on #server_name# !");
-            languageConfig.set("WELCOME_MESSAGE", welcome_message);
+            String welcome_message = langsManager.getMessage(playerLocale, "WELCOME_MESSAGE", "Welcome on #server_name#, #player# !");
 
             if(config.isSet("SPAWN.x") && config.isSet("SPAWN.y") && config.isSet("SPAWN.z") && config.isSet("SPAWN.pitch") && config.isSet("SPAWN.yaw") && config.isSet("SPAWN.world")){
                 plugin.toSpawn(player, formatString(welcome_message, player));
@@ -45,8 +43,7 @@ public class PlayerJoin implements Listener {
                 player.sendMessage(formatString(welcome_message, player));
             }
 
-            String welcome_broadcast = languageConfig.getString("WELCOME_BROADCAST", "Welcome to #player# on #server_name# !");
-            languageConfig.set("WELCOME_BROADCAST", welcome_broadcast);
+            String welcome_broadcast = langsManager.getMessage(serverLanguage, "WELCOME_BROADCAST", "Welcome to #player# on #server_name# !");
             plugin.getServer().broadcastMessage(formatString(welcome_broadcast, player));
         }
         else if(playerConfig.get("name").toString() == player.getName()){
@@ -62,7 +59,6 @@ public class PlayerJoin implements Listener {
         }
 
         plugin.savePlayerConfig(playerConfig, playerUUID);
-        plugin.saveLanguageConfig(languageConfig, playerLocale);
     }
 
     public String formatString(String string, Player player){

@@ -1,6 +1,7 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
+import fr.choco70.mysticessentials.utils.langsManager;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,6 +15,9 @@ import java.io.IOException;
 public class CommandSetHome implements CommandExecutor {
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
+    private FileConfiguration config = plugin.getConfig();
+    private langsManager langsManager = new langsManager();
+    private String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] arguments){
@@ -21,27 +25,25 @@ public class CommandSetHome implements CommandExecutor {
             Player player = (Player)sender;
             if(arguments.length != 1 && arguments.length != 0){
                 player.sendMessage(command.getUsage());
-                return true;
             }
             else if(arguments.length == 0){
                 addHome(player, "home");
-                return true;
             }
             else{
                 String homeName = arguments[0];
                 addHome(player, homeName);
-                return true;
             }
         }
         else{
-            sender.sendMessage("Only players can use this command.");
-            return false;
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            sender.sendMessage(onlyPlayersWarn);
         }
+        return true;
     }
 
     public void addHome(Player player, String homeName){
         FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(plugin.getPlayerFile(player.getUniqueId().toString()));
-
+        String playerLanguage = playerConfig.getString("language", serverLanguage);
         Location playerLocation = player.getLocation();
 
         playerConfig.set("homes." + homeName + ".world", player.getWorld().getName());
@@ -56,6 +58,13 @@ public class CommandSetHome implements CommandExecutor {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        player.sendMessage("Successfully set home " + homeName + ".");
+        String homeSet = langsManager.getMessage(playerLanguage, "HOME_SET", "Successfully set home #home#.");
+        player.sendMessage(formatString(homeSet, homeName));
+    }
+
+    public String formatString(String string, String homeName){
+        String homeName_placeholder = "#home#";
+        String formatedString = string.replaceAll(homeName_placeholder, homeName);
+        return formatedString;
     }
 }
