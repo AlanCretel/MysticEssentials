@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.IOException;
 import java.util.Set;
 
 public class CommandHome implements CommandExecutor {
@@ -88,6 +89,19 @@ public class CommandHome implements CommandExecutor {
         homeLocation.setZ(z);
         homeLocation.setPitch(pitch);
         homeLocation.setYaw(yaw);
+
+        playerConfig.set("lastlocation.world", player.getLocation().getWorld().getName());
+        playerConfig.set("lastlocation.x", player.getLocation().getX());
+        playerConfig.set("lastlocation.y", player.getLocation().getY());
+        playerConfig.set("lastlocation.z", player.getLocation().getZ());
+        playerConfig.set("lastlocation.pitch", player.getLocation().getPitch());
+        playerConfig.set("lastlocation.yaw", player.getLocation().getYaw());
+
+        try {
+            playerConfig.save(plugin.getPlayerFile(player.getUniqueId().toString()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         player.teleport(homeLocation);
     }

@@ -11,6 +11,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.IOException;
+import java.util.Set;
+
 public class CommandWarp implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
@@ -26,7 +29,7 @@ public class CommandWarp implements CommandExecutor{
             String playerLanguage = playerConfig.getString("language", serverLanguage);
             if(arguments.length == 1){
                 String warpName = arguments[0];
-                if(config.isConfigurationSection("WARPS." + warpName) && (player.hasPermission("mysticessentials.warps." + warpName) || !config.getBoolean("SETTINGS.perWarpPermission", false))){
+                if(config.isConfigurationSection("WARPS." + warpName) && (player.hasPermission("mysticessentials.warps." + warpName) || !config.getBoolean("SETTINGS.perWarpPermission", false)) && !warpName.equalsIgnoreCase("list")){
                     Location warpLocation = player.getLocation().clone();
                     Double x = Double.valueOf(config.get("WARPS." + warpName + ".x").toString());
                     Double y = Double.valueOf(config.get("WARPS." + warpName + ".y").toString());
@@ -41,6 +44,19 @@ public class CommandWarp implements CommandExecutor{
                     warpLocation.setY(y);
                     warpLocation.setZ(z);
 
+                    playerConfig.set("lastlocation.world", player.getLocation().getWorld().getName());
+                    playerConfig.set("lastlocation.x", player.getLocation().getX());
+                    playerConfig.set("lastlocation.y", player.getLocation().getY());
+                    playerConfig.set("lastlocation.z", player.getLocation().getZ());
+                    playerConfig.set("lastlocation.pitch", player.getLocation().getPitch());
+                    playerConfig.set("lastlocation.yaw", player.getLocation().getYaw());
+
+                    try {
+                        playerConfig.save(plugin.getPlayerFile(player.getUniqueId().toString()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     String teleportedToWarp = langsManager.getMessage(playerLanguage, "TELEPORTED_TO_WARP", "Successfully teleported to warp #warp#");
                     player.sendMessage(formatString(teleportedToWarp, warpName));
                     player.teleport(warpLocation);
@@ -48,6 +64,17 @@ public class CommandWarp implements CommandExecutor{
                 else if(config.isConfigurationSection("WARPS." + warpName) && !player.hasPermission("mysticessentials.warps." + warpName) && config.getBoolean("SETTINGS.perWarpPermission", false)){
                     String noWarpPermission = langsManager.getMessage(playerLanguage, "NO_WARP_PERMISSION", "You don't have permission to teleport to this warp. (#permission#)");
                     player.sendMessage(formatString(noWarpPermission, warpName));
+                }
+                else if(warpName.equalsIgnoreCase("list") && player.hasPermission("mysticessentials.warplist")){
+                    Set<String> warps = config.getConfigurationSection("WARPS.").getKeys(false);
+                    if(warps.size() == 0){
+                        String noWarps = langsManager.getMessage(playerLanguage, "NO_WARPS", "No warps were set.");
+                        player.sendMessage(noWarps);
+                    }
+                    else{
+                        String warpListMessage = langsManager.getMessage(playerLanguage, "WARP_LIST", "Available warps: #warp_list#.");
+                        player.sendMessage(formatString(warpListMessage, warps.toString()));
+                    }
                 }
                 else{
                     String noWarpFound = langsManager.getMessage(playerLanguage, "WARP_NOT_EXIST", "The warp #warp# does not exist.");
