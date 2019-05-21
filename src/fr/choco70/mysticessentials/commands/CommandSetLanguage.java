@@ -2,6 +2,7 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.langsManager;
+import fr.choco70.mysticessentials.utils.playersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,14 +10,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import java.io.IOException;
-import java.util.UUID;
-
 public class CommandSetLanguage implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
     private langsManager langsManager = new langsManager();
+    private playersManager playersManager = new playersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments) {
@@ -25,27 +24,17 @@ public class CommandSetLanguage implements CommandExecutor{
 
         if(sender instanceof Player && arguments.length == 1){
             Player player = (Player)sender;
-            UUID playerUUID = player.getUniqueId();
-
-            plugin.createPlayerFile(playerUUID.toString());
-            FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(plugin.getPlayerFile(playerUUID.toString()));
-
-            String playerLanguage = playerConfig.getString("language", serverLanguage);
+            FileConfiguration playerConfig = playersManager.getPlayerConfig(player);
+            String playerLanguage = playersManager.getPlayerLanguage(player);
             String newLanguage = arguments[0].toLowerCase();
 
-            if(langsManager.getLanguageFile(arguments[0].toLowerCase()).exists() && newLanguage != playerLanguage){
+            if(langsManager.getLanguageFile(arguments[0].toLowerCase()).exists() && !newLanguage.equalsIgnoreCase(playerLanguage)){
                 playerConfig.set("language", newLanguage);
-
-                try {
-                    playerConfig.save(plugin.getPlayerFile(playerUUID.toString()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+                playersManager.savePlayerConfig(player, playerConfig);
                 String languageChanged = langsManager.getMessage(newLanguage, "LANGUAGE_CHANGED", "Language changed to #player_language#.");
                 player.sendMessage(formatString(languageChanged, player));
             }
-            else if(playerLanguage == newLanguage){
+            else if(playerLanguage.equalsIgnoreCase(newLanguage)){
                 String sameLanguage = langsManager.getMessage(playerLanguage, "ALREADY_YOUR_LANGUAGE", "Language #player_language# is already your language.");
                 player.sendMessage(formatString(sameLanguage, player));
             }
@@ -56,7 +45,7 @@ public class CommandSetLanguage implements CommandExecutor{
             return true;
         }
         else{
-            if(arguments.length == 0){
+            if(sender instanceof Player && arguments.length == 0){
                 sender.sendMessage(command.getUsage());
             }
             else{
@@ -72,18 +61,19 @@ public class CommandSetLanguage implements CommandExecutor{
         String server_name_placeholder = "#server_name#";
         String player_language_placeholder = "#player_language#";
         String server_language_placeholder = "#server_language#";
+        String serverName = config.getString("SETTINGS.serverName", "A minecraft server");
+        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
 
         if(player != null){
-            FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(plugin.getPlayerFile(player.getUniqueId().toString()));
             String formatedString = string.replaceAll(player_placeholder, player.getName());
-            formatedString = formatedString.replaceAll(player_language_placeholder, playerConfig.getString("language", "en_us"));
-            formatedString = formatedString.replaceAll(server_name_placeholder, config.getString("SETTINGS.serverName", "A minecraft server"));
-            formatedString = formatedString.replaceAll(server_language_placeholder, config.getString("SETTINGS.serverLanguage", "en_us"));
+            formatedString = formatedString.replaceAll(player_language_placeholder, playersManager.getPlayerLanguage(player));
+            formatedString = formatedString.replaceAll(server_name_placeholder, serverName);
+            formatedString = formatedString.replaceAll(server_language_placeholder, serverLanguage);
             return formatedString;
         }
         else{
-            String formatedString = string.replaceAll(server_name_placeholder, config.getString("SETTINGS.serverName", "A minecraft server"));
-            formatedString = formatedString.replaceAll(server_language_placeholder, config.getString("SETTINGS.serverLanguage", "en_us"));
+            String formatedString = string.replaceAll(server_name_placeholder, serverName);
+            formatedString = formatedString.replaceAll(server_language_placeholder, serverLanguage);
             return formatedString;
         }
     }

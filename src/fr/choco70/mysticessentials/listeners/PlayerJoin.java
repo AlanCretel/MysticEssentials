@@ -2,8 +2,8 @@ package fr.choco70.mysticessentials.listeners;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.langsManager;
+import fr.choco70.mysticessentials.utils.playersManager;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,18 +14,18 @@ public class PlayerJoin implements Listener {
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
     private langsManager langsManager = new langsManager();
+    private playersManager playersManager = new playersManager();
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e){
         Player player = e.getPlayer();
-        String playerUUID = player.getUniqueId().toString();
         String playerDisplayName = player.getDisplayName();
 
-        plugin.createPlayerFile(playerUUID);
-        FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(plugin.getPlayerFile(playerUUID));
+        playersManager.createPlayerFile(player);
+        FileConfiguration playerConfig = playersManager.getPlayerConfig(player);
 
         String serverLanguage = config.getString("SETTINGS.serverLanguage");
-        String playerLocale = playerConfig.getString("language", serverLanguage);
+        String playerLocale = playersManager.getPlayerLanguage(player);
         playerConfig.set("language", playerLocale);
 
         String welcome_back_message = langsManager.getMessage(playerLocale, "WELCOME_BACK_MESSAGE", "§6Welcome back on §4#server_name#§6, §7#player#§6 !");
@@ -58,7 +58,7 @@ public class PlayerJoin implements Listener {
             player.sendMessage(formatString(welcome_back_message, player));
         }
 
-        plugin.savePlayerConfig(playerConfig, playerUUID);
+        playersManager.savePlayerConfig(player, playerConfig);
     }
 
     public String formatString(String string, Player player){

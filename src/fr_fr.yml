@@ -1,8 +1,22 @@
-WELCOME_BACK_BROADCAST: '§6Bon retour sur §4#server_name#§6, §7#player#§6!'
 LANGUAGE_CHANGED: 'Language changé pour: #player_language#.'
-LANGUAGE_UNAVAILABLE: 'Language indisponible.'
+LANGUAGE_UNAVAILABLE: Language indisponible.
 CONFIG_LOADED: '§2MysticEssential: Configuration chargée.'
 DEATH_LOCATION_MESSAGE: '§cDernière mort: /n§7World: §9#world#/n§7X: §9#x#/n§7Y: §9#y#/n§7Z:
   §9#z#'
 CONFIG_RELOADED: 'MysticEssentials: configuration rechargée'
-ONLY_PLAYERS_COMMAND: 'Cette commande peut être utilisée seulement par un joueur.'
+WELCOME_BACK_MESSAGE: §6Bon retour sur §4#server_name#§6, §7#player#§6!
+HOME_REMOVED: 'Votre home #home_name# a été supprimé.'
+TELEPORT_TO_HOME: 'Téléportation vers votre home #home_name#.'
+HOME_LIST: 'Vos homes: #home_list#.'
+PLAYER_NOT_FOUND: 'Le joueur #target# n''a pas été trouvé.'
+WARP_SET: 'Warp #warp# ajouté.'
+TELEPORTED_TO_WARP: 'Téléporté au warp #warp#'
+WARP_LIST: 'Warps disponibles: #warp_list#.'
+WARP_REMOVED: 'Le warp #warp# a bien été supprimé.'
+NO_WARPS: Aucun warp enregistré.
+SELF_REQUESTED: Impossible de s'envoyer une requête à soi-même.
+NO_SPAWN: Le spawn n'a pas été défini.
+SPAWN_SET: Point de spawn défini.
+TELEPORT_TO_SPAWN: Téléporté au point de spawn.
+NO_HOMES: Vous n'avez aucun home.
+HOME_SET: 'Home #home# enregistré.'

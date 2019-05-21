@@ -1,8 +1,9 @@
 name: MysticEssentials
 author: Choco70
 main: fr.choco70.mysticessentials.MysticEssentials
-version: 1.3.1
+version: 1.3.2
 api-version: 1.14
+softdepend: [Vault]
 commands:
   spawn:
     description: Teleport to spawn.
@@ -56,6 +57,7 @@ commands:
     permission: mysticessentials.setlanguage
     permission-message: You don't have permission to change your language. (mysticessentials.setlanguage)
     usage: "Correct usage: /setlanguage <language ex: en_us>"
+    aliases: [langset, lang, setlang]
   homelist:
     description: View your homes list.
     permission: mysticessentials.homelist
@@ -83,6 +85,17 @@ commands:
     permission-message: You don't have permission to list warps.
     usage: "Correct usage: /warplist"
     aliases: [warps]
+  feed:
+    description: Feed you or a player.
+    permission: mysticessentials.feed
+    permission-message: You don't have permission to use feed command.
+    usage: "Correct usage: /feed [player]"
+  balance:
+    description: See your money or money from an other player.
+    permission: mysticessentials.balance
+    permission-message: You don't have permission to use balance command.
+    usage: "Correct usage: /balance [player] - Needs Vault with a valid economy plugin."
+    aliases: [bal, money]
 #  mysticessentialsreload:
 #    aliases: [mereload, mysticereload, messentialsreload, mer, mysticer, messentialsr]
 #    description: Reload plugin's configuration.
@@ -137,6 +150,22 @@ permissions:
   mysticessentials.warplist:
     default: true
     description: Allows to use /warplist command
+  mysticessentials.feed:
+    default: op
+    description: Allows to use /feed command
+  mysticessentials.feed.others:
+    default: op
+    description: Allows to use /feed command on another player
+    children:
+      mysticessentials.feed: false
+  mysticessentials.balance:
+    default: true
+    description: Allows to use /balance command.
+  mysticessentials.balance.others:
+    default: true
+    description: Allows to use /balance [player] command.
+    children:
+      mysticessentials.balance: true
 #  mysticessentials.reload:
 #    default: op
 #    description: Allows to use /mysticessentialsreload command

@@ -2,16 +2,15 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.langsManager;
+import fr.choco70.mysticessentials.utils.playersManager;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import java.io.IOException;
 import java.util.Set;
 
 public class CommandWarp implements CommandExecutor{
@@ -19,14 +18,14 @@ public class CommandWarp implements CommandExecutor{
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
     private langsManager langsManager = new langsManager();
-    private String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+    private playersManager playersManager = new playersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
+        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
         if(sender instanceof Player){
             Player player = (Player)sender;
-            FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(plugin.getPlayerFile(player.getUniqueId().toString()));
-            String playerLanguage = playerConfig.getString("language", serverLanguage);
+            String playerLanguage = playersManager.getPlayerLanguage(player);
             if(arguments.length == 1){
                 String warpName = arguments[0];
                 if(config.isConfigurationSection("WARPS." + warpName) && (player.hasPermission("mysticessentials.warps." + warpName) || !config.getBoolean("SETTINGS.perWarpPermission", false)) && !warpName.equalsIgnoreCase("list")){
@@ -44,18 +43,7 @@ public class CommandWarp implements CommandExecutor{
                     warpLocation.setY(y);
                     warpLocation.setZ(z);
 
-                    playerConfig.set("lastlocation.world", player.getLocation().getWorld().getName());
-                    playerConfig.set("lastlocation.x", player.getLocation().getX());
-                    playerConfig.set("lastlocation.y", player.getLocation().getY());
-                    playerConfig.set("lastlocation.z", player.getLocation().getZ());
-                    playerConfig.set("lastlocation.pitch", player.getLocation().getPitch());
-                    playerConfig.set("lastlocation.yaw", player.getLocation().getYaw());
-
-                    try {
-                        playerConfig.save(plugin.getPlayerFile(player.getUniqueId().toString()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    playersManager.setLastLocation(player);
 
                     String teleportedToWarp = langsManager.getMessage(playerLanguage, "TELEPORTED_TO_WARP", "Successfully teleported to warp #warp#");
                     player.sendMessage(formatString(teleportedToWarp, warpName));
@@ -73,7 +61,7 @@ public class CommandWarp implements CommandExecutor{
                     }
                     else{
                         String warpListMessage = langsManager.getMessage(playerLanguage, "WARP_LIST", "Available warps: #warp_list#.");
-                        player.sendMessage(formatString(warpListMessage, warps.toString()));
+                        player.sendMessage(formatString(warpListMessage, warps));
                     }
                 }
                 else{
@@ -98,5 +86,9 @@ public class CommandWarp implements CommandExecutor{
         String formatedString = string.replaceAll(warp_placeholder, warp);
         formatedString = formatedString.replaceAll(permission_placeholder, "mysticessentials.warps." + warp);
         return formatedString;
+    }
+    public String formatString(String string, Set<String> warps){
+        String warpList_placeholder = "#warp_list#";
+        return string.replaceAll(warpList_placeholder, warps.toString());
     }
 }

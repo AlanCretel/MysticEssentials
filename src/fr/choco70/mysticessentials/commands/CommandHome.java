@@ -2,35 +2,31 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.langsManager;
+import fr.choco70.mysticessentials.utils.playersManager;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import java.io.IOException;
 import java.util.Set;
 
 public class CommandHome implements CommandExecutor {
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private fr.choco70.mysticessentials.utils.langsManager langsManager = new langsManager();
+    private playersManager playersManager = new playersManager();
+    private langsManager langsManager = new langsManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
         String serverLanguage = config.getString("SETTINGS.serverLanguage");
         if(sender instanceof Player){
             Player player = (Player)sender;
-            String playerUUID = player.getUniqueId().toString();
-
-            FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(plugin.getPlayerFile(playerUUID));
+            FileConfiguration playerConfig = playersManager.getPlayerConfig(player);
             Set<String> homes = playerConfig.getConfigurationSection("homes").getKeys(false);
-            String playerLanguage = playerConfig.getString("language", serverLanguage);
-
+            String playerLanguage = playersManager.getPlayerLanguage(player);
             if(arguments.length != 0){
                 if(arguments.length == 1){
                     String homeName = arguments[0];
@@ -64,7 +60,6 @@ public class CommandHome implements CommandExecutor {
         }
         else{
             String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
-
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;
@@ -73,50 +68,25 @@ public class CommandHome implements CommandExecutor {
     public void toHome(Player player, String homeName, FileConfiguration playerConfig, String playerLanguage){
         String teleportToHome = langsManager.getMessage(playerLanguage, "TELEPORT_TO_HOME", "Teleportation to your home #home_name#.");
         player.sendMessage(formatString(teleportToHome, homeName, null));
-
-        Double x = Double.valueOf(playerConfig.get("homes." + homeName + ".x").toString());
-        Double y = Double.valueOf(playerConfig.get("homes." + homeName + ".y").toString());
-        Double z = Double.valueOf(playerConfig.get("homes." + homeName + ".z").toString());
-        Float pitch = Float.valueOf(playerConfig.get("homes." + homeName + ".pitch").toString());
-        Float yaw = Float.valueOf(playerConfig.get("homes." + homeName + ".yaw").toString());
-        World world = player.getServer().getWorld(playerConfig.get("homes." + homeName + ".world").toString());
-
         Location homeLocation = player.getLocation().clone();
-
-        homeLocation.setWorld(world);
-        homeLocation.setX(x);
-        homeLocation.setY(y);
-        homeLocation.setZ(z);
-        homeLocation.setPitch(pitch);
-        homeLocation.setYaw(yaw);
-
-        playerConfig.set("lastlocation.world", player.getLocation().getWorld().getName());
-        playerConfig.set("lastlocation.x", player.getLocation().getX());
-        playerConfig.set("lastlocation.y", player.getLocation().getY());
-        playerConfig.set("lastlocation.z", player.getLocation().getZ());
-        playerConfig.set("lastlocation.pitch", player.getLocation().getPitch());
-        playerConfig.set("lastlocation.yaw", player.getLocation().getYaw());
-
-        try {
-            playerConfig.save(plugin.getPlayerFile(player.getUniqueId().toString()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        homeLocation.setWorld(player.getServer().getWorld(playerConfig.get("homes." + homeName + ".world").toString()));
+        homeLocation.setX(Double.valueOf(playerConfig.get("homes." + homeName + ".x").toString()));
+        homeLocation.setY(Double.valueOf(playerConfig.get("homes." + homeName + ".y").toString()));
+        homeLocation.setZ(Double.valueOf(playerConfig.get("homes." + homeName + ".z").toString()));
+        homeLocation.setPitch(Float.valueOf(playerConfig.get("homes." + homeName + ".pitch").toString()));
+        homeLocation.setYaw(Float.valueOf(playerConfig.get("homes." + homeName + ".yaw").toString()));
+        playersManager.setLastLocation(player);
         player.teleport(homeLocation);
     }
 
     public String formatString(String string, String homeName, String homeList){
         String homeName_placeholder = "#home_name#";
         String homeList_placeholder = "#home_list#";
-
         if(homeList == null){
-            String formatedString = string.replaceAll(homeName_placeholder, homeName);
-            return formatedString;
+            return string.replaceAll(homeName_placeholder, homeName);
         }
         else if(homeName == null){
-            String formatedString = string.replaceAll(homeList_placeholder, homeList);
-            return formatedString;
+            return string.replaceAll(homeList_placeholder, homeList);
         }
         else{
             String formatedString = string.replaceAll(homeName_placeholder, homeName);

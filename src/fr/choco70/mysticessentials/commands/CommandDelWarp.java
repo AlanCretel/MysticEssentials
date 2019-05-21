@@ -2,11 +2,11 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.langsManager;
+import fr.choco70.mysticessentials.utils.playersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
@@ -16,14 +16,14 @@ public class CommandDelWarp implements CommandExecutor{
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
     private langsManager langsManager = new langsManager();
-    private String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+    private playersManager playersManager = new playersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
+        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
         if(sender instanceof Player){
             Player player = (Player)sender;
-            FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(plugin.getPlayerFile(player.getUniqueId().toString()));
-            String playerLanguage = playerConfig.getString("language", serverLanguage);
+            String playerLanguage = playersManager.getPlayerLanguage(player);
             if(arguments.length == 1){
                 String warpName = arguments[0];
                 if(config.isConfigurationSection("WARPS." + warpName)){
@@ -67,7 +67,6 @@ public class CommandDelWarp implements CommandExecutor{
 
     public String formatString(String string, String warp){
         String warp_placeholder = "#warp#";
-        String formatedString = string.replaceAll(warp_placeholder, warp);
-        return formatedString;
+        return string.replaceAll(warp_placeholder, warp);
     }
 }

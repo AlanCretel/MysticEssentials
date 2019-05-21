@@ -8,11 +8,9 @@ import fr.choco70.mysticessentials.utils.langsManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -28,16 +26,6 @@ public class MysticEssentials extends JavaPlugin {
         config.options().copyDefaults(true);
         try {
             config.save(this.getDataFolder().toString() + "/config.yml");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        langsManager.createLanguageFile("fr_fr");
-        FileConfiguration langFR_fr = YamlConfiguration.loadConfiguration(langsManager.getLanguageFile("fr_fr"));
-        langFR_fr.options().copyDefaults(true);
-
-        try {
-            langFR_fr.save(langsManager.getLanguageFile("fr_fr"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -69,12 +57,17 @@ public class MysticEssentials extends JavaPlugin {
         this.getCommand("warp").setExecutor(new CommandWarp());
         this.getCommand("delwarp").setExecutor(new CommandDelWarp());
         this.getCommand("warplist").setExecutor(new CommandWarpList());
+        this.getCommand("feed").setExecutor(new CommandFeed());
         //this.getCommand("mysticessentialsreload").setExecutor(new CommandReload());
+        // Vault required commands
+        if(this.getServer().getPluginManager().isPluginEnabled("Vault")){
+            this.getCommand("balance").setExecutor(new CommandBalance());
+        }
     }
 
     @Override
     public void onDisable(){
-        getServer().getConsoleSender().sendMessage(ChatColor.RED + "MysticEssentials: Disabled");
+        this.getServer().getConsoleSender().sendMessage(ChatColor.RED + "MysticEssentials: Disabled");
     }
 
     public HashMap<Player, Player> getTpa(){
@@ -95,37 +88,5 @@ public class MysticEssentials extends JavaPlugin {
     public Location getSpawnLocation(){
         Location spawn = new Location(getServer().getWorld(getConfig().get("SPAWN.world").toString()), Double.valueOf(getConfig().get("SPAWN.x").toString()), Double.valueOf(getConfig().get("SPAWN.y").toString()), Double.valueOf(getConfig().get("SPAWN.z").toString()), Float.valueOf(getConfig().get("SPAWN.yaw").toString()), Float.valueOf(getConfig().get("SPAWN.pitch").toString()));
         return spawn;
-    }
-
-    public void createPlayerFile(String playerUUID){
-        File playersForlder = new File(getDataFolder() + File.separator + "players" + File.separator);
-        if(!getDataFolder().exists()){
-            getDataFolder().mkdir();
-        }
-        if(!playersForlder.exists()){
-            playersForlder.mkdir();
-        }
-        File file = new File(playersForlder,playerUUID + ".yml");
-
-        if(!file.exists()){
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public File getPlayerFile(String playerUUID){
-        File playersForlder = new File(getDataFolder() + File.separator + "players" + File.separator);
-        return new File(playersForlder,playerUUID + ".yml");
-    }
-
-    public void savePlayerConfig(FileConfiguration playerConfig, String playerUUID){
-        try {
-            playerConfig.save(getPlayerFile(playerUUID));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

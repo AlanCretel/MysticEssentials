@@ -2,11 +2,11 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.langsManager;
+import fr.choco70.mysticessentials.utils.playersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 public class CommandTpAccept implements CommandExecutor{
@@ -14,21 +14,20 @@ public class CommandTpAccept implements CommandExecutor{
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
     private langsManager langsManager = new langsManager();
-    private String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+    private playersManager playersManager = new playersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
+        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
         if(sender instanceof Player){
             Player player = (Player)sender;
-            FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(plugin.getPlayerFile(player.getUniqueId().toString()));
-            String playerLanguage = playerConfig.getString("language", serverLanguage);
+            String playerLanguage = playersManager.getPlayerLanguage(player);
             if(plugin.getTpa().containsKey(player)){
                 Player requester = plugin.getTpa().get(player);
                 if(requester != null && requester.isOnline()){
                     requester.teleport(player.getLocation());
                     plugin.getTpa().remove(player);
-                    FileConfiguration requesterConfig = YamlConfiguration.loadConfiguration(plugin.getPlayerFile(requester.getUniqueId().toString()));
-                    String requesterLanguage = requesterConfig.getString("language", serverLanguage);
+                    String requesterLanguage = playersManager.getPlayerLanguage(requester);
                     String teleportedTo = langsManager.getMessage(requesterLanguage, "TPA_TELEPORTED", "Successfully teleported to #target#.");
                     requester.sendMessage(formatString(teleportedTo, player.getName(), requester));
                 }
@@ -44,8 +43,7 @@ public class CommandTpAccept implements CommandExecutor{
                     player.teleport(requester.getLocation());
                     plugin.getTpahere().remove(player);
 
-                    FileConfiguration requesterConfig = YamlConfiguration.loadConfiguration(plugin.getPlayerFile(requester.getUniqueId().toString()));
-                    String requesterLanguage = requesterConfig.getString("language", serverLanguage);
+                    String requesterLanguage = playersManager.getPlayerLanguage(requester);
                     String teleportedPlayer = langsManager.getMessage(requesterLanguage, "TPAHERE_TELEPORTED", "Successfully teleported #target# to you.");
                     requester.sendMessage(formatString(teleportedPlayer, player.getName(), requester));
                 }

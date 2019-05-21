@@ -2,11 +2,11 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.langsManager;
+import fr.choco70.mysticessentials.utils.playersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 public class CommandTpDeny implements CommandExecutor{
@@ -14,19 +14,18 @@ public class CommandTpDeny implements CommandExecutor{
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
     private langsManager langsManager = new langsManager();
-    private String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+    private playersManager playersManager = new playersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
+        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
         if(sender instanceof Player){
             Player player = (Player)sender;
-            FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(plugin.getPlayerFile(player.getUniqueId().toString()));
-            String playerLanguage = playerConfig.getString("language", serverLanguage);
+            String playerLanguage = playersManager.getPlayerLanguage(player);
             String teleportationDeniedSender = langsManager.getMessage(playerLanguage, "TELEPORTATION_DENIED_SENDER", "Teleportation request denied.");
             if(plugin.getTpa().containsKey(player)){
                 Player requester = plugin.getTpa().get(player);
-                FileConfiguration requesterConfig = YamlConfiguration.loadConfiguration(plugin.getPlayerFile(requester.getUniqueId().toString()));
-                String requesterLanguage = requesterConfig.getString("language", serverLanguage);
+                String requesterLanguage = playersManager.getPlayerLanguage(requester);
                 String teleportationDeniedRequester = langsManager.getMessage(requesterLanguage, "TELEPORTATION_DENIED_REQUESTER", "#target# denied your teleportation request.");
                 player.sendMessage(teleportationDeniedSender);
                 requester.sendMessage(formatString(teleportationDeniedRequester, player));
@@ -34,8 +33,7 @@ public class CommandTpDeny implements CommandExecutor{
             }
             else if(plugin.getTpahere().containsKey(player)){
                 Player requester = plugin.getTpahere().get(player);
-                FileConfiguration requesterConfig = YamlConfiguration.loadConfiguration(plugin.getPlayerFile(requester.getUniqueId().toString()));
-                String requesterLanguage = requesterConfig.getString("language", serverLanguage);
+                String requesterLanguage = playersManager.getPlayerLanguage(requester);
                 String teleportationDeniedRequester = langsManager.getMessage(requesterLanguage, "TELEPORTATION_DENIED_REQUESTER", "#target# denied your teleportation request.");
                 player.sendMessage(teleportationDeniedSender);
                 requester.sendMessage(formatString(teleportationDeniedRequester, player));
@@ -55,7 +53,6 @@ public class CommandTpDeny implements CommandExecutor{
 
     public String formatString(String string, Player target){
         String target_placeholder = "#target#";
-        String formatedString = string.replaceAll(target_placeholder, target.getName());
-        return formatedString;
+        return string.replaceAll(target_placeholder, target.getName());
     }
 }

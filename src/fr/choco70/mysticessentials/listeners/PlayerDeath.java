@@ -2,9 +2,9 @@ package fr.choco70.mysticessentials.listeners;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.langsManager;
+import fr.choco70.mysticessentials.utils.playersManager;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,17 +15,16 @@ public class PlayerDeath implements Listener{
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
     private langsManager langsManager = new langsManager();
+    private playersManager playersManager = new playersManager();
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e){
         Player player = e.getEntity();
         Location deathLocation = player.getLocation().clone();
-        String playerUUID = player.getUniqueId().toString();
-        FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(plugin.getPlayerFile(playerUUID));
-        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+        FileConfiguration playerConfig = playersManager.getPlayerConfig(player);
 
         if(config.getBoolean("SETTINGS.showDeathCoordinates", true)){
-            String playerLanguage = playerConfig.getString("language", serverLanguage);
+            String playerLanguage = playersManager.getPlayerLanguage(player);
             String deathLocationMessage = langsManager.getMessage(playerLanguage, "DEATH_LOCATION_MESSAGE", "Death location: /nWorld: #world#/nX: #x#/nY: #y#/nZ: #z#");
             player.sendMessage(formatString(deathLocationMessage, player));
         }
@@ -42,7 +41,7 @@ public class PlayerDeath implements Listener{
         playerConfig.set("last_location.pitch", deathLocation.getPitch());
         playerConfig.set("last_location.yaw", deathLocation.getYaw());
 
-        plugin.savePlayerConfig(playerConfig, playerUUID);
+        playersManager.savePlayerConfig(player, playerConfig);
     }
 
     public String formatString(String string, Player player){
