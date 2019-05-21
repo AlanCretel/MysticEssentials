@@ -25,7 +25,7 @@ public class CommandFeed implements CommandExecutor{
             if(target != null){
                 target.setFoodLevel(20);
                 target.setSaturation(20);
-                if(sender instanceof Player){
+                if(sender instanceof Player && ((Player)sender).hasPermission("mysticessentials.feed.others")){
                     Player player = (Player)sender;
                     String playerFed = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_FED", "Player #target# was successfully fed.");
                     player.sendMessage(formatString(playerFed, null, target.getName()));

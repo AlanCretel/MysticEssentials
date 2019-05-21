@@ -59,10 +59,6 @@ public class MysticEssentials extends JavaPlugin {
         this.getCommand("warplist").setExecutor(new CommandWarpList());
         this.getCommand("feed").setExecutor(new CommandFeed());
         //this.getCommand("mysticessentialsreload").setExecutor(new CommandReload());
-        // Vault required commands
-        if(this.getServer().getPluginManager().isPluginEnabled("Vault")){
-            this.getCommand("balance").setExecutor(new CommandBalance());
-        }
     }
 
     @Override

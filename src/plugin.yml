@@ -3,7 +3,7 @@ author: Choco70
 main: fr.choco70.mysticessentials.MysticEssentials
 version: 1.3.2
 api-version: 1.14
-softdepend: [Vault]
+softdepend: [Vault, TNE]
 commands:
   spawn:
     description: Teleport to spawn.
@@ -90,12 +90,6 @@ commands:
     permission: mysticessentials.feed
     permission-message: You don't have permission to use feed command.
     usage: "Correct usage: /feed [player]"
-  balance:
-    description: See your money or money from an other player.
-    permission: mysticessentials.balance
-    permission-message: You don't have permission to use balance command.
-    usage: "Correct usage: /balance [player] - Needs Vault with a valid economy plugin."
-    aliases: [bal, money]
 #  mysticessentialsreload:
 #    aliases: [mereload, mysticereload, messentialsreload, mer, mysticer, messentialsr]
 #    description: Reload plugin's configuration.
@@ -158,14 +152,6 @@ permissions:
     description: Allows to use /feed command on another player
     children:
       mysticessentials.feed: false
-  mysticessentials.balance:
-    default: true
-    description: Allows to use /balance command.
-  mysticessentials.balance.others:
-    default: true
-    description: Allows to use /balance [player] command.
-    children:
-      mysticessentials.balance: true
 #  mysticessentials.reload:
 #    default: op
 #    description: Allows to use /mysticessentialsreload command
