@@ -71,12 +71,12 @@ public class playersManager{
 
     public void setLastLocation(Player player){
         FileConfiguration playerConfig = getPlayerConfig(player);
-        playerConfig.set("lastlocation.world", player.getLocation().getWorld().getName());
-        playerConfig.set("lastlocation.x", player.getLocation().getX());
-        playerConfig.set("lastlocation.y", player.getLocation().getY());
-        playerConfig.set("lastlocation.z", player.getLocation().getZ());
-        playerConfig.set("lastlocation.pitch", player.getLocation().getPitch());
-        playerConfig.set("lastlocation.yaw", player.getLocation().getYaw());
+        playerConfig.set("last_location.world", player.getLocation().getWorld().getName());
+        playerConfig.set("last_location.x", player.getLocation().getX());
+        playerConfig.set("last_location.y", player.getLocation().getY());
+        playerConfig.set("last_location.z", player.getLocation().getZ());
+        playerConfig.set("last_location.pitch", player.getLocation().getPitch());
+        playerConfig.set("last_location.yaw", player.getLocation().getYaw());
         savePlayerConfig(player, playerConfig);
     }
 
