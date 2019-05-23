@@ -17,7 +17,7 @@ public class homeTabCompleter implements TabCompleter{
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] arguments){
-        if((command.getName().equalsIgnoreCase("home") || command.getName().equalsIgnoreCase("delhome")) && sender instanceof Player){
+        if((command.getName().equalsIgnoreCase("home") || command.getName().equalsIgnoreCase("delhome") || command.getName().equalsIgnoreCase("sethome")) && sender instanceof Player){
             Player player = (Player)sender;
             if(arguments.length == 1){
                 ArrayList<String> homes = new ArrayList<String>();
