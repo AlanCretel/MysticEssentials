@@ -139,6 +139,9 @@ permissions:
   mysticessentials.home:
     default: true
     description: Allows to use /home command
+  mysticessentials.delhome:
+    default: true
+    description: Allows to use /delhome command
   mysticessentials.sethome:
     default: true
     description: Allows to use /sethome command
