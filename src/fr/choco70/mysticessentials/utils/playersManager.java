@@ -5,9 +5,11 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 public class playersManager{
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
@@ -76,5 +78,40 @@ public class playersManager{
         playerConfig.set("lastlocation.pitch", player.getLocation().getPitch());
         playerConfig.set("lastlocation.yaw", player.getLocation().getYaw());
         savePlayerConfig(player, playerConfig);
+    }
+
+    public Integer getHomesLimit(Player player){
+        Set<PermissionAttachmentInfo> permissions = player.getEffectivePermissions();
+        Integer homesLimit = 1;
+        for (PermissionAttachmentInfo permission : permissions) {
+            if(permission.getPermission().contains("mysticessentials.homeslimit.")){
+                String limit = permission.getPermission().replace("mysticessentials.homeslimit.", "");
+                if(limit.equalsIgnoreCase("nolimit")){
+                    return 1000;
+                }
+                else{
+                    return Integer.parseInt(limit);
+                }
+            }
+        }
+        return homesLimit;
+    }
+
+    public Integer getHomesNumber(Player player){
+        if(getPlayerConfig(player).isConfigurationSection("homes")){
+            return getHomeList(player).size();
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public Set<String> getHomeList(Player player){
+        if(getPlayerConfig(player).isConfigurationSection("homes")){
+            return getPlayerConfig(player).getConfigurationSection("homes").getKeys(false);
+        }
+        else{
+            return null;
+        }
     }
 }

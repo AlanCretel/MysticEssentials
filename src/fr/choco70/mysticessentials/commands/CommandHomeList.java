@@ -24,9 +24,8 @@ public class CommandHomeList implements CommandExecutor{
 
         if(sender instanceof Player){
             Player player = (Player)sender;
-            FileConfiguration playerConfig = playersManager.getPlayerConfig(player);
             String playerLanguage = playersManager.getPlayerLanguage(player);
-            Set<String> homes = playerConfig.getConfigurationSection("homes").getKeys(false);
+            Set<String> homes = playersManager.getHomeList(player);
 
             if(homes.size() == 0){
                 String noHomesMessage = langsManager.getMessage(playerLanguage, "NO_HOMES", "You don't have any home.");

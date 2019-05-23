@@ -25,7 +25,6 @@ public class CommandReload implements CommandExecutor{
         }
         else{
             String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
-
             String configReloaded = langsManager.getMessage(serverLanguage, "CONFIG_RELOADED", "MysticEssentials's configuration reloaded");
             sender.sendMessage(configReloaded);
         }

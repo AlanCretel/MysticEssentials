@@ -1,9 +1,8 @@
 name: MysticEssentials
 author: Choco70
 main: fr.choco70.mysticessentials.MysticEssentials
-version: 1.3.3
+version: 1.3.5
 api-version: 1.14
-softdepend: [Vault, TNE]
 commands:
   spawn:
     description: Teleport to spawn.
@@ -90,6 +89,38 @@ commands:
     permission: mysticessentials.feed
     permission-message: You don't have permission to use feed command.
     usage: "Correct usage: /feed [player]"
+  fly:
+    description: Allows to fly.
+    permission: mysticessentials.fly
+    permission-message: You don't have permission to use fly command.
+    usage: "Correct usage: /fly [player]"
+  msg:
+    description: Used to send private messages.
+    permission: mysticessentials.msg
+    permission-message: You don't have permission to use msg command.
+    usage: "Correct usage: /msg <player> <message>"
+    aliases: [message, w]
+  reply:
+    description: Used to reply to a private message.
+    permission: mysticessentials.reply
+    permission-message: You don't have permission to use reply command.
+    usage: "Correct usage: /reply [player] <message>"
+    aliases: [r]
+  ignore:
+    description: Ignore private messages from a player.
+    permission: mysticessentials.ignore
+    permission-message: You don't have permission to use ignore command.
+    usage: "Correct usage: /ignore <player or list>"
+  ignorelist:
+    description: View the list of players you ignore.
+    permission: mysticessentials.ignorelist
+    permission-message: You don't have permission to use ignorelist command.
+    usage: "Correct usage: /ignorelist"
+  broadcast:
+    description: Send an anonymous message to the whole server.
+    permission: mysticessentials.broadcast
+    permission-message: You don't have permission to use broadcast command.
+    usage: "Correct usage: /broadcast <message>"
 #  mysticessentialsreload:
 #    aliases: [mereload, mysticereload, messentialsreload, mer, mysticer, messentialsr]
 #    description: Reload plugin's configuration.
@@ -152,6 +183,35 @@ permissions:
     description: Allows to use /feed command on another player
     children:
       mysticessentials.feed: false
+  mysticessentials.fly:
+    default: op
+    description: Allows to use /fly command
+  mysticessentials.fly.others:
+    default: op
+    description: Allows to use /fly command on another player
+    children:
+      mysticessentials.feed: false
+  mysticessentials.msg:
+    default: true
+    description: Allows to use /msg command
+  mysticessentials.reply:
+    default: true
+    description: Allows to use /reply command
+  mysticessentials.ignore:
+    default: true
+    description: Allows to use /ignore command
+  mysticessentials.ignorelist:
+    default: true
+    description: Allows to use /ignorelist command
+  mysticessentials.broadcast:
+    default: op
+    description: Allows to use /broadcast command
+  mysticessentials.homeslimit.nolimit:
+    default: op
+    description: Allows to set an unlimited homes number
+  mysticessentials.homeslimit:
+    default: false
+    description: Allows to set a limit of homes set
 #  mysticessentials.reload:
 #    default: op
 #    description: Allows to use /mysticessentialsreload command

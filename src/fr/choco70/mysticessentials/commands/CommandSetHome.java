@@ -21,15 +21,22 @@ public class CommandSetHome implements CommandExecutor {
         String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
         if(sender instanceof Player){
             Player player = (Player)sender;
-            if(arguments.length != 1 && arguments.length != 0){
-                player.sendMessage(command.getUsage());
-            }
-            else if(arguments.length == 0){
-                addHome(player, "home");
+            Integer homesLimit = playersManager.getHomesLimit(player);
+            if(homesLimit > playersManager.getHomesNumber(player)){
+                if(arguments.length != 1 && arguments.length != 0){
+                    player.sendMessage(command.getUsage());
+                }
+                else if(arguments.length == 0){
+                    addHome(player, "home");
+                }
+                else{
+                    String homeName = arguments[0];
+                    addHome(player, homeName);
+                }
             }
             else{
-                String homeName = arguments[0];
-                addHome(player, homeName);
+                String homesLimitReached = langsManager.getMessage(playersManager.getPlayerLanguage(player), "HOMES_LIMIT_REACHED", "Your homes limit reached (#homes_limit#)");
+                player.sendMessage(homesLimitReached.replaceAll("#homes_limit#", homesLimit.toString()));
             }
         }
         else{

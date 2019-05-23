@@ -31,7 +31,7 @@ public class CommandTpa implements CommandExecutor {
                     String targetLanguage = playersManager.getPlayerLanguage(target);
                     String targetName = target.getName();
                     if(!plugin.getTpa().containsKey(player)){
-                        String tpaRequestTarget = langsManager.getMessage(targetLanguage, "TPA_REQUEST_TARGET", "#requester# requested to teleport to you./n Type /tpaccept to accept them./n Type /tpdeny to deny them.");
+                        String tpaRequestTarget = langsManager.getMessage(targetLanguage, "TPA_REQUEST_TARGET", "#sender# requested to teleport to you./n Type /tpaccept to accept them./n Type /tpdeny to deny them.");
                         target.sendMessage(formatString(tpaRequestTarget, player, targetName));
 
                         String tpaRequestSender = langsManager.getMessage(playerLanguage, "TPA_REQUEST_SENDER", "Sent a teleportation request to #target#.");

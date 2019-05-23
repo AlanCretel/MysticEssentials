@@ -25,7 +25,7 @@ public class CommandHome implements CommandExecutor {
         if(sender instanceof Player){
             Player player = (Player)sender;
             FileConfiguration playerConfig = playersManager.getPlayerConfig(player);
-            Set<String> homes = playerConfig.getConfigurationSection("homes").getKeys(false);
+            Set<String> homes = playersManager.getHomeList(player);
             String playerLanguage = playersManager.getPlayerLanguage(player);
             if(arguments.length != 0){
                 if(arguments.length == 1){
@@ -65,7 +65,7 @@ public class CommandHome implements CommandExecutor {
         return true;
     }
 
-    public void toHome(Player player, String homeName, FileConfiguration playerConfig, String playerLanguage){
+    private void toHome(Player player, String homeName, FileConfiguration playerConfig, String playerLanguage){
         String teleportToHome = langsManager.getMessage(playerLanguage, "TELEPORT_TO_HOME", "Teleportation to your home #home_name#.");
         player.sendMessage(formatString(teleportToHome, homeName, null));
         Location homeLocation = player.getLocation().clone();

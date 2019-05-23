@@ -5,6 +5,7 @@ import fr.choco70.mysticessentials.listeners.PlayerDeath;
 import fr.choco70.mysticessentials.listeners.PlayerJoin;
 import fr.choco70.mysticessentials.listeners.PlayerRespawn;
 import fr.choco70.mysticessentials.utils.langsManager;
+import fr.choco70.mysticessentials.utils.tabCompleter;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,6 +19,7 @@ public class MysticEssentials extends JavaPlugin {
 
     private HashMap<Player, Player> tpa = new HashMap<Player, Player>();
     private HashMap<Player, Player> tpahere = new HashMap<Player, Player>();
+    private HashMap<Player, Player> conversations = new HashMap<Player, Player>();
 
     @Override
     public void onEnable(){
@@ -58,6 +60,14 @@ public class MysticEssentials extends JavaPlugin {
         this.getCommand("delwarp").setExecutor(new CommandDelWarp());
         this.getCommand("warplist").setExecutor(new CommandWarpList());
         this.getCommand("feed").setExecutor(new CommandFeed());
+        this.getCommand("fly").setExecutor(new CommandFly());
+        this.getCommand("msg").setExecutor(new CommandMsg());
+        this.getCommand("reply").setExecutor(new CommandReply());
+        this.getCommand("ignore").setExecutor(new CommandIgnore());
+        this.getCommand("ignorelist").setExecutor(new CommandIgnoreList());
+        this.getCommand("broadcast").setExecutor(new CommandBroadcast());
+        this.getCommand("home").setTabCompleter(new tabCompleter());
+
         //this.getCommand("mysticessentialsreload").setExecutor(new CommandReload());
     }
 
@@ -72,6 +82,10 @@ public class MysticEssentials extends JavaPlugin {
 
     public HashMap<Player, Player> getTpahere(){
         return tpahere;
+    }
+
+    public HashMap<Player, Player> getConversations(){
+        return conversations;
     }
 
     public void toSpawn(Player player, String message){
