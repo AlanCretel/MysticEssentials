@@ -4,8 +4,8 @@ import fr.choco70.mysticessentials.commands.*;
 import fr.choco70.mysticessentials.listeners.PlayerDeath;
 import fr.choco70.mysticessentials.listeners.PlayerJoin;
 import fr.choco70.mysticessentials.listeners.PlayerRespawn;
+import fr.choco70.mysticessentials.tabCompleters.homeTabCompleter;
 import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.tabCompleter;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -68,7 +68,8 @@ public class MysticEssentials extends JavaPlugin {
         this.getCommand("broadcast").setExecutor(new CommandBroadcast());
         //this.getCommand("mysticessentialsreload").setExecutor(new CommandReload());
 
-        this.getCommand("home").setTabCompleter(new tabCompleter());
+        this.getCommand("home").setTabCompleter(new homeTabCompleter());
+        this.getCommand("delhome").setTabCompleter(new homeTabCompleter());
     }
 
     @Override

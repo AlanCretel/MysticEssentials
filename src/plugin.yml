@@ -1,7 +1,7 @@
 name: MysticEssentials
 author: Choco70
 main: fr.choco70.mysticessentials.MysticEssentials
-version: 1.3.5
+version: 1.4.0
 api-version: 1.14
 commands:
   spawn:

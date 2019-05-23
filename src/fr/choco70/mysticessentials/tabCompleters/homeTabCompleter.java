@@ -1,5 +1,6 @@
-package fr.choco70.mysticessentials.utils;
+package fr.choco70.mysticessentials.tabCompleters;
 
+import fr.choco70.mysticessentials.utils.playersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -10,13 +11,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class tabCompleter implements TabCompleter{
+public class homeTabCompleter implements TabCompleter{
 
-    private playersManager playersManager = new playersManager();
+    private fr.choco70.mysticessentials.utils.playersManager playersManager = new playersManager();
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] arguments){
-        if(command.getName().equalsIgnoreCase("home") && sender instanceof Player){
+        if((command.getName().equalsIgnoreCase("home") || command.getName().equalsIgnoreCase("delhome")) && sender instanceof Player){
             Player player = (Player)sender;
             if(arguments.length == 1){
                 ArrayList<String> homes = new ArrayList<String>();
