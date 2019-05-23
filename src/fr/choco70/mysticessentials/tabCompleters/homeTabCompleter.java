@@ -19,7 +19,7 @@ public class homeTabCompleter implements TabCompleter{
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] arguments){
         if((command.getName().equalsIgnoreCase("home") || command.getName().equalsIgnoreCase("delhome") || command.getName().equalsIgnoreCase("sethome")) && sender instanceof Player){
             Player player = (Player)sender;
-            if(arguments.length == 1){
+            if(arguments.length == 1 && playersManager.getHomeList(player) != null){
                 ArrayList<String> homes = new ArrayList<String>();
                 Set<String> homeList = playersManager.getHomeList(player);
                 if(!arguments[0].equals("")){

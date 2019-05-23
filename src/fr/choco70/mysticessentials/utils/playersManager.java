@@ -107,6 +107,11 @@ public class playersManager{
     }
 
     public Set<String> getHomeList(Player player){
-        return getPlayerConfig(player).getConfigurationSection("homes").getKeys(false);
+        if(getPlayerConfig(player).isConfigurationSection("homes")){
+            return getPlayerConfig(player).getConfigurationSection("homes").getKeys(false);
+        }
+        else{
+            return null;
+        }
     }
 }
