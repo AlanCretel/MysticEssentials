@@ -42,6 +42,17 @@ public class MysticEssentials extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new PlayerRespawn(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerDeath(), this);
 
+        setupCommands();
+        setupAutoComplete();
+        //this.getCommand("mysticessentialsreload").setExecutor(new CommandReload());
+    }
+
+    @Override
+    public void onDisable(){
+        this.getServer().getConsoleSender().sendMessage(ChatColor.RED + "MysticEssentials: Disabled");
+    }
+
+    private void setupCommands(){
         this.getCommand("setspawn").setExecutor(new CommandSetSpawn());
         this.getCommand("spawn").setExecutor(new CommandSpawn());
         this.getCommand("delspawn").setExecutor(new CommandDelSpawn());
@@ -66,15 +77,12 @@ public class MysticEssentials extends JavaPlugin {
         this.getCommand("ignore").setExecutor(new CommandIgnore());
         this.getCommand("ignorelist").setExecutor(new CommandIgnoreList());
         this.getCommand("broadcast").setExecutor(new CommandBroadcast());
-        //this.getCommand("mysticessentialsreload").setExecutor(new CommandReload());
-
-        this.getCommand("home").setTabCompleter(new homeTabCompleter());
-        this.getCommand("delhome").setTabCompleter(new homeTabCompleter());
     }
 
-    @Override
-    public void onDisable(){
-        this.getServer().getConsoleSender().sendMessage(ChatColor.RED + "MysticEssentials: Disabled");
+    private void setupAutoComplete(){
+        this.getCommand("home").setTabCompleter(new homeTabCompleter());
+        this.getCommand("delhome").setTabCompleter(new homeTabCompleter());
+        this.getCommand("sethome").setTabCompleter(new homeTabCompleter());
     }
 
     public HashMap<Player, Player> getTpa(){

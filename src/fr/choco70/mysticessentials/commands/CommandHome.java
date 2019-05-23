@@ -25,7 +25,6 @@ public class CommandHome implements CommandExecutor {
         if(sender instanceof Player){
             Player player = (Player)sender;
             FileConfiguration playerConfig = playersManager.getPlayerConfig(player);
-            Set<String> homes = playersManager.getHomeList(player);
             String playerLanguage = playersManager.getPlayerLanguage(player);
             if(arguments.length != 0){
                 if(arguments.length == 1){
@@ -35,7 +34,7 @@ public class CommandHome implements CommandExecutor {
                     }
                     else{
                         String homeNotFoundMessage = langsManager.getMessage(playerLanguage, "HOME_NOT_EXIST", "You don't have any home called #home_name#.");
-                        player.sendMessage(formatString(homeNotFoundMessage, homeName, homes.toString()));
+                        player.sendMessage(formatString(homeNotFoundMessage, homeName, playersManager.getHomeList(player).toString()));
                     }
                 }
                 else{
@@ -43,7 +42,8 @@ public class CommandHome implements CommandExecutor {
                 }
             }
             else{
-                if(homes != null && homes.size() != 0){
+                if(playersManager.getHomeList(player) != null && playersManager.getHomeList(player).size() != 0){
+                    Set<String> homes = playersManager.getHomeList(player);
                     if(homes.contains("home")){
                         toHome(player, "home", playerConfig, playerLanguage);
                     }
@@ -54,7 +54,7 @@ public class CommandHome implements CommandExecutor {
                 }
                 else{
                     String noHomesMessage = langsManager.getMessage(playerLanguage, "NO_HOMES", "You don't have any home.");
-                    player.sendMessage(formatString(noHomesMessage, null, homes.toString()));
+                    player.sendMessage(formatString(noHomesMessage, null, playersManager.getHomeList(player).toString()));
                 }
             }
         }
