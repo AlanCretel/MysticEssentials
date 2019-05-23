@@ -66,9 +66,9 @@ public class MysticEssentials extends JavaPlugin {
         this.getCommand("ignore").setExecutor(new CommandIgnore());
         this.getCommand("ignorelist").setExecutor(new CommandIgnoreList());
         this.getCommand("broadcast").setExecutor(new CommandBroadcast());
-        this.getCommand("home").setTabCompleter(new tabCompleter());
-
         //this.getCommand("mysticessentialsreload").setExecutor(new CommandReload());
+
+        this.getCommand("home").setTabCompleter(new tabCompleter());
     }
 
     @Override

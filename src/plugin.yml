@@ -190,7 +190,7 @@ permissions:
     default: op
     description: Allows to use /fly command on another player
     children:
-      mysticessentials.feed: false
+      mysticessentials.fly: false
   mysticessentials.msg:
     default: true
     description: Allows to use /msg command

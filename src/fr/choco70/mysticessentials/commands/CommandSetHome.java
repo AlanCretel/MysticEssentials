@@ -22,7 +22,7 @@ public class CommandSetHome implements CommandExecutor {
         if(sender instanceof Player){
             Player player = (Player)sender;
             Integer homesLimit = playersManager.getHomesLimit(player);
-            if(homesLimit > playersManager.getHomesNumber(player)){
+            if((homesLimit > playersManager.getHomesNumber(player)) || player.hasPermission("mysticessentials.homeslimit.nolimit")){
                 if(arguments.length != 1 && arguments.length != 0){
                     player.sendMessage(command.getUsage());
                 }
