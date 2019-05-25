@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class homeTabCompleter implements TabCompleter{
 
-    private fr.choco70.mysticessentials.utils.playersManager playersManager = new playersManager();
+    private playersManager playersManager = new playersManager();
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] arguments){

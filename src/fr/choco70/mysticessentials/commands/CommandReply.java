@@ -26,6 +26,7 @@ public class CommandReply implements CommandExecutor{
                 if(plugin.getConversations().containsKey(player)){
                     Player receiver = plugin.getConversations().get(player);
                     if(receiver.isOnline()){
+                        plugin.getConversations().put(receiver, player);
                         String senderMessagePrefix = langsManager.getMessage(playersManager.getPlayerLanguage(player), "REPLY_PREFIX_SENDER", "Message to #receiver#: ");
                         String receiverMessagePrefix = langsManager.getMessage(playersManager.getPlayerLanguage(receiver), "REPLY_PREFIX_RECEIVER", "#sender# to you: ");
                         String finalMessage = "";

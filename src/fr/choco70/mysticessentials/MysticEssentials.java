@@ -5,6 +5,7 @@ import fr.choco70.mysticessentials.listeners.PlayerDeath;
 import fr.choco70.mysticessentials.listeners.PlayerJoin;
 import fr.choco70.mysticessentials.listeners.PlayerRespawn;
 import fr.choco70.mysticessentials.tabCompleters.homeTabCompleter;
+import fr.choco70.mysticessentials.tabCompleters.msgCompleter;
 import fr.choco70.mysticessentials.utils.langsManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -44,7 +45,6 @@ public class MysticEssentials extends JavaPlugin {
 
         setupCommands();
         setupAutoComplete();
-        //this.getCommand("mysticessentialsreload").setExecutor(new CommandReload());
     }
 
     @Override
@@ -53,6 +53,7 @@ public class MysticEssentials extends JavaPlugin {
     }
 
     private void setupCommands(){
+        //No dependencies commands
         this.getCommand("setspawn").setExecutor(new CommandSetSpawn());
         this.getCommand("spawn").setExecutor(new CommandSpawn());
         this.getCommand("delspawn").setExecutor(new CommandDelSpawn());
@@ -77,12 +78,18 @@ public class MysticEssentials extends JavaPlugin {
         this.getCommand("ignore").setExecutor(new CommandIgnore());
         this.getCommand("ignorelist").setExecutor(new CommandIgnoreList());
         this.getCommand("broadcast").setExecutor(new CommandBroadcast());
+        //this.getCommand("mysticessentialsreload").setExecutor(new CommandReload());
+        //Vault commands
+        if(getServer().getPluginManager().isPluginEnabled("Vault")){
+            this.getCommand("balance").setExecutor(new CommandBalance());
+        }
     }
 
     private void setupAutoComplete(){
         this.getCommand("home").setTabCompleter(new homeTabCompleter());
         this.getCommand("delhome").setTabCompleter(new homeTabCompleter());
         this.getCommand("sethome").setTabCompleter(new homeTabCompleter());
+        this.getCommand("msg").setTabCompleter(new msgCompleter());
     }
 
     public HashMap<Player, Player> getTpa(){
@@ -105,7 +112,6 @@ public class MysticEssentials extends JavaPlugin {
     }
 
     public Location getSpawnLocation(){
-        Location spawn = new Location(getServer().getWorld(getConfig().get("SPAWN.world").toString()), Double.valueOf(getConfig().get("SPAWN.x").toString()), Double.valueOf(getConfig().get("SPAWN.y").toString()), Double.valueOf(getConfig().get("SPAWN.z").toString()), Float.valueOf(getConfig().get("SPAWN.yaw").toString()), Float.valueOf(getConfig().get("SPAWN.pitch").toString()));
-        return spawn;
+        return new Location(getServer().getWorld(getConfig().get("SPAWN.world").toString()), Double.valueOf(getConfig().get("SPAWN.x").toString()), Double.valueOf(getConfig().get("SPAWN.y").toString()), Double.valueOf(getConfig().get("SPAWN.z").toString()), Float.valueOf(getConfig().get("SPAWN.yaw").toString()), Float.valueOf(getConfig().get("SPAWN.pitch").toString()));
     }
 }

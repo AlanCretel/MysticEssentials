@@ -9,7 +9,10 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class playersManager{
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
@@ -113,5 +116,78 @@ public class playersManager{
         else{
             return null;
         }
+    }
+
+    public void addIgnoredPlayer(Player player, Player ignored){
+        List<String> ignoredPlayers = getIgnoredPlayers(player);
+        if(ignoredPlayers == null){
+            List<String> ignoredPlayer = new ArrayList<>();
+            ignoredPlayer.add(ignored.getUniqueId().toString());
+            FileConfiguration playerConfig = getPlayerConfig(player);
+            playerConfig.set("ignored_players", ignoredPlayer);
+            savePlayerConfig(player, playerConfig);
+        }
+        else{
+            if(!ignoredPlayers.contains(ignored.getUniqueId().toString())){
+                FileConfiguration playerConfig = getPlayerConfig(player);
+                ignoredPlayers.add(ignored.getUniqueId().toString());
+                playerConfig.set("ignored_players", ignoredPlayers);
+                savePlayerConfig(player, playerConfig);
+            }
+        }
+    }
+
+    public void delIgnoredPlayer(Player player, Player ignored){
+        List<UUID> ignoredPlayers = getPlayersIgnored(player);
+        if(ignoredPlayers != null && ignoredPlayers.contains(ignored.getUniqueId())){
+            FileConfiguration playerConfig = getPlayerConfig(player);
+            ignoredPlayers.remove(ignored.getUniqueId());
+            playerConfig.set("ignored_players", ignoredPlayers);
+            savePlayerConfig(player, playerConfig);
+        }
+        else{
+            if(ignoredPlayers != null){
+                FileConfiguration playerConfig = getPlayerConfig(player);
+                ignoredPlayers.remove(ignored.getUniqueId());
+                playerConfig.set("ignored_players", ignoredPlayers);
+                savePlayerConfig(player, playerConfig);
+            }
+        }
+    }
+
+    public List<String> getIgnoredPlayers(Player player){
+        List<?> ignoredList = getPlayerConfig(player).getList("ignored_players");
+        if(ignoredList == null){
+            return null;
+        }
+        else{
+            List<String> ignoredPlayers = new ArrayList<>();
+            for (Object o : ignoredList) {
+                ignoredPlayers.add(plugin.getServer().getOfflinePlayer(UUID.fromString(o.toString())).getName());
+            }
+            return ignoredPlayers;
+        }
+    }
+
+    public List<UUID> getPlayersIgnored(Player player){
+        List<?> ignoredList = getPlayerConfig(player).getList("ignored_players");
+        if(ignoredList == null){
+            return null;
+        }
+        else{
+            List<UUID> playersUUID = new ArrayList<>();
+            for (Object o : ignoredList) {
+                playersUUID.add(UUID.fromString(o.toString()));
+            }
+            return playersUUID;
+        }
+    }
+
+    public List<String> toUserName(List<UUID> userUUIDS){
+        List<String> playerNames = new ArrayList<>();
+        for (UUID userUUID : userUUIDS){
+            playerNames.add(plugin.getServer().getOfflinePlayer(userUUID).getName());
+        }
+        return playerNames;
     }
 }

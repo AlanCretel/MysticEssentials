@@ -3,6 +3,7 @@ author: Choco70
 main: fr.choco70.mysticessentials.MysticEssentials
 version: 1.4.0
 api-version: 1.14
+softdepend: [Vault]
 commands:
   spawn:
     description: Teleport to spawn.
@@ -121,6 +122,42 @@ commands:
     permission: mysticessentials.broadcast
     permission-message: You don't have permission to use broadcast command.
     usage: "Correct usage: /broadcast <message>"
+  rules:
+    description: See the server's rules.
+    permission: mysticessentials.rules
+    permission-message: You don't have permission to use rules command.
+    usage: "Correct usage: /rules [number]"
+  sun:
+    description: Set weather to sun.
+    permission: mysticessentials.weather.sun
+    permission-message: You don't have permission to use sun command.
+    usage: "Correct usage: /sun"
+  rain:
+    description: Set weather to rain.
+    permission: mysticessentials.weather.rain
+    permission-message: You don't have permission to use rain command.
+    usage: "Correct usage: /rain"
+  storm:
+    description: Set weather to storm.
+    permission: mysticessentials.weather.storm
+    permission-message: You don't have permission to use storm command.
+    usage: "Correct usage: /storm"
+  day:
+    description: Set time to day.
+    permission: mysticessentials.time.day
+    permission-message: You don't have permission to use day command.
+    usage: "Correct usage: /day"
+  night:
+    description: Set time to night.
+    permission: mysticessentials.time.night
+    permission-message: You don't have permission to use night command.
+    usage: "Correct usage: /night"
+  balance:
+    description: See your money or money from an other player.
+    permission: mysticessentials.balance
+    permission-message: You don't have permission to use balance command.
+    usage: "Correct usage: /balance [player] - Needs Vault with a valid economy plugin."
+    aliases: [bal, money]
 #  mysticessentialsreload:
 #    aliases: [mereload, mysticereload, messentialsreload, mer, mysticer, messentialsr]
 #    description: Reload plugin's configuration.
@@ -129,92 +166,134 @@ commands:
 permissions:
   mysticessentials.spawn:
     default: true
-    description: Allows to use /spawn command
+    description: Allows to use /spawn command.
   mysticessentials.setspawn:
     default: op
-    description: Allows to set the spawn
+    description: Allows to set the spawn.
   mysticessentials.delspawn:
     default: op
-    description: Allows to remove the spawn
+    description: Allows to remove the spawn.
   mysticessentials.home:
     default: true
-    description: Allows to use /home command
+    description: Allows to use /home command.
   mysticessentials.delhome:
     default: true
-    description: Allows to use /delhome command
+    description: Allows to use /delhome command.
   mysticessentials.sethome:
     default: true
-    description: Allows to use /sethome command
+    description: Allows to use /sethome command.
   mysticessentials.tpa:
     default: true
-    description: Allows to use /tpa command
+    description: Allows to use /tpa command.
   mysticessentials.tpahere:
     default: true
-    description: Allows to use /tpahere command
+    description: Allows to use /tpahere command.
   mysticessentials.tpaccept:
     default: true
-    description: Allows to use /tpaccept command
+    description: Allows to use /tpaccept command.
   mysticessentials.tpdeny:
     default: true
-    description: Allows to use /tpdeny command
+    description: Allows to use /tpdeny command.
   mysticessentials.back:
     default: op
-    description: Allows to use /back command
+    description: Allows to use /back command.
   mysticessentials.setlanguage:
     default: true
-    description: Allows to use /setlanguage command
+    description: Allows to use /setlanguage command.
   mysticessentials.homelist:
     default: true
-    description: Allows to use /homelist command
+    description: Allows to use /homelist command.
   mysticessentials.warp:
     default: true
-    description: Allows to use /warp command
+    description: Allows to use /warp command.
   mysticessentials.setwarp:
     default: op
-    description: Allows to use /setwarp command
+    description: Allows to use /setwarp command.
   mysticessentials.delwarp:
     default: op
-    description: Allows to use /delwarp command
+    description: Allows to use /delwarp command.
   mysticessentials.warplist:
     default: true
-    description: Allows to use /warplist command
+    description: Allows to use /warplist command.
   mysticessentials.feed:
     default: op
-    description: Allows to use /feed command
+    description: Allows to use /feed command.
   mysticessentials.feed.others:
     default: op
-    description: Allows to use /feed command on another player
+    description: Allows to use /feed command on another player.
     children:
       mysticessentials.feed: false
   mysticessentials.fly:
     default: op
-    description: Allows to use /fly command
+    description: Allows to use /fly command.
   mysticessentials.fly.others:
     default: op
-    description: Allows to use /fly command on another player
+    description: Allows to use /fly command on another player.
     children:
       mysticessentials.fly: false
   mysticessentials.msg:
     default: true
-    description: Allows to use /msg command
+    description: Allows to use /msg command.
   mysticessentials.reply:
     default: true
-    description: Allows to use /reply command
+    description: Allows to use /reply command.
   mysticessentials.ignore:
     default: true
-    description: Allows to use /ignore command
+    description: Allows to use /ignore command.
+  mysticessentials.ignore.bypass:
+    default: op
+    description: Allow a player to don't be ignored.
   mysticessentials.ignorelist:
     default: true
-    description: Allows to use /ignorelist command
+    description: Allows to use /ignorelist command.
   mysticessentials.broadcast:
     default: op
-    description: Allows to use /broadcast command
+    description: Allows to use /broadcast command.
   mysticessentials.homeslimit.nolimit:
     default: op
-    description: Allows to set an unlimited homes number
+    description: Allows to set an unlimited homes number.
   mysticessentials.homeslimit:
     default: false
-    description: Allows to set a limit of homes set
+    description: Allows to set a limit of homes set.
+  mysticessentials.balance:
+    default: true
+    description: Allows to use /balance command.
+  mysticessentials.balance.others:
+    default: true
+    description: Allows to use /balance [player] command.
+    children:
+      mysticessentials.balance: true
+  mysticessentials.rules:
+    default: true
+    description: Allows to use /rules command.
+  mysticessentials.weather.sun:
+    default: op
+    description: Allows to use /sun command.
+  mysticessentials.weather.rain:
+    default: op
+    description: Allows to use /rain command.
+  mysticessentials.weather.storm:
+    default: op
+    description: Allows to use /storm command.
+  mysticessentials.weather.*:
+    default: op
+    description: Allows to use weather commands.
+    children:
+      mysticessentials.weather.sun: true
+      mysticessentials.weather.rain: true
+      mysticessentials.weather.storm: true
+  mysticessentials.time.day:
+    default: op
+    description: Allows to use /day command.
+  mysticessentials.time.night:
+    default: op
+    description: Allows to use /night command.
+  mysticessentials.time.*:
+    default: op
+    description: Allows to use time commands.
+    children:
+      mysticessentials.time.day: true
+      mysticessentials.time.night: true
 #  mysticessentials.reload:
 #    default: op
 #    description: Allows to use /mysticessentialsreload command
