@@ -16,8 +16,8 @@ public class CommandBalance implements CommandExecutor{
     private static Economy economy = null;
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private playersManager playersManager = new playersManager();
-    private langsManager langsManager = new langsManager();
+    private playersManager playersManager = plugin.getPlayersManager();
+    private langsManager langsManager = plugin.getLangsManager();
 
     private boolean setupEconomy(){
         RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);

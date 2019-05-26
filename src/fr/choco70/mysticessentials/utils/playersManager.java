@@ -64,6 +64,7 @@ public class playersManager{
         playerConfig.set("homes." + homeName + ".z", playerLocation.getZ());
         playerConfig.set("homes." + homeName + ".pitch", playerLocation.getPitch());
         playerConfig.set("homes." + homeName + ".yaw", playerLocation.getYaw());
+        playerConfig.set("homes." + homeName + ".default", false);
         savePlayerConfig(player, playerConfig);
     }
 
@@ -115,6 +116,35 @@ public class playersManager{
         }
         else{
             return null;
+        }
+    }
+
+    public String getDefaultHome(Player player){
+        Set<String> homeList = getHomeList(player);
+        FileConfiguration playerConfig = getPlayerConfig(player);
+        for (String s : homeList) {
+            if(playerConfig.getBoolean("homes." + s + ".default", false)){
+                return s;
+            }
+        }
+        if(homeList.contains("home")){
+            return "home";
+        }
+        else{
+            return null;
+        }
+    }
+
+    public void setDefaultHome(Player player, String homeName){
+        FileConfiguration playerConfig = getPlayerConfig(player);
+        if(getDefaultHome(player) == null){
+            playerConfig.set("homes." + homeName + ".default", true);
+            savePlayerConfig(player, playerConfig);
+        }
+        else{
+            playerConfig.set("homes." + getDefaultHome(player) + ".default", false);
+            playerConfig.set("homes." + homeName + ".default", true);
+            savePlayerConfig(player, playerConfig);
         }
     }
 

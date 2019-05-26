@@ -1,5 +1,6 @@
 package fr.choco70.mysticessentials.tabCompleters;
 
+import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.playersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -13,11 +14,12 @@ import java.util.Set;
 
 public class homeTabCompleter implements TabCompleter{
 
-    private playersManager playersManager = new playersManager();
+    private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
+    private playersManager playersManager = plugin.getPlayersManager();
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] arguments){
-        if((command.getName().equalsIgnoreCase("home") || command.getName().equalsIgnoreCase("delhome") || command.getName().equalsIgnoreCase("sethome")) && sender instanceof Player){
+        if((command.getName().equalsIgnoreCase("home") || command.getName().equalsIgnoreCase("delhome") || command.getName().equalsIgnoreCase("sethome") || command.getName().equalsIgnoreCase("setdefaulthome")) && sender instanceof Player){
             Player player = (Player)sender;
             if(arguments.length == 1 && playersManager.getHomeList(player) != null){
                 ArrayList<String> homes = new ArrayList<String>();

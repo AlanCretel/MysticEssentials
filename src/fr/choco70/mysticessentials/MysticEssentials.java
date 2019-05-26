@@ -6,7 +6,11 @@ import fr.choco70.mysticessentials.listeners.PlayerJoin;
 import fr.choco70.mysticessentials.listeners.PlayerRespawn;
 import fr.choco70.mysticessentials.tabCompleters.homeTabCompleter;
 import fr.choco70.mysticessentials.tabCompleters.msgCompleter;
+import fr.choco70.mysticessentials.tabCompleters.noCompleter;
+import fr.choco70.mysticessentials.utils.kitsManager;
 import fr.choco70.mysticessentials.utils.langsManager;
+import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.rulesManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,9 +26,13 @@ public class MysticEssentials extends JavaPlugin {
     private HashMap<Player, Player> tpahere = new HashMap<Player, Player>();
     private HashMap<Player, Player> conversations = new HashMap<Player, Player>();
 
+    private langsManager langsManager;
+    private playersManager playersManager;
+    private rulesManager rulesManager;
+    private kitsManager kitsManager;
+
     @Override
     public void onEnable(){
-        langsManager langsManager = new langsManager();
         FileConfiguration config = this.getConfig();
         config.options().copyDefaults(true);
         try {
@@ -32,6 +40,8 @@ public class MysticEssentials extends JavaPlugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        setupManagers();
 
         String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
         langsManager.createLanguageFile(serverLanguage);
@@ -50,6 +60,13 @@ public class MysticEssentials extends JavaPlugin {
     @Override
     public void onDisable(){
         this.getServer().getConsoleSender().sendMessage(ChatColor.RED + "MysticEssentials: Disabled");
+    }
+
+    private void setupManagers(){
+        langsManager = new langsManager();
+        playersManager = new playersManager();
+        rulesManager = new rulesManager();
+        kitsManager = new kitsManager();
     }
 
     private void setupCommands(){
@@ -78,6 +95,7 @@ public class MysticEssentials extends JavaPlugin {
         this.getCommand("ignore").setExecutor(new CommandIgnore());
         this.getCommand("ignorelist").setExecutor(new CommandIgnoreList());
         this.getCommand("broadcast").setExecutor(new CommandBroadcast());
+        this.getCommand("setdefaulthome").setExecutor(new CommandSetDefaultHome());
         //this.getCommand("mysticessentialsreload").setExecutor(new CommandReload());
         //Vault commands
         if(getServer().getPluginManager().isPluginEnabled("Vault")){
@@ -89,7 +107,9 @@ public class MysticEssentials extends JavaPlugin {
         this.getCommand("home").setTabCompleter(new homeTabCompleter());
         this.getCommand("delhome").setTabCompleter(new homeTabCompleter());
         this.getCommand("sethome").setTabCompleter(new homeTabCompleter());
+        this.getCommand("setdefaulthome").setTabCompleter(new homeTabCompleter());
         this.getCommand("msg").setTabCompleter(new msgCompleter());
+        this.getCommand("broadcast").setTabCompleter(new noCompleter());
     }
 
     public HashMap<Player, Player> getTpa(){
@@ -113,5 +133,21 @@ public class MysticEssentials extends JavaPlugin {
 
     public Location getSpawnLocation(){
         return new Location(getServer().getWorld(getConfig().get("SPAWN.world").toString()), Double.valueOf(getConfig().get("SPAWN.x").toString()), Double.valueOf(getConfig().get("SPAWN.y").toString()), Double.valueOf(getConfig().get("SPAWN.z").toString()), Float.valueOf(getConfig().get("SPAWN.yaw").toString()), Float.valueOf(getConfig().get("SPAWN.pitch").toString()));
+    }
+
+    public kitsManager getKitsManager(){
+        return this.kitsManager;
+    }
+
+    public langsManager getLangsManager(){
+        return this.langsManager;
+    }
+
+    public playersManager getPlayersManager(){
+        return this.playersManager;
+    }
+
+    public rulesManager getRulesManager(){
+        return this.rulesManager;
     }
 }

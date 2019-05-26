@@ -9,7 +9,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public class CommandDelHome implements CommandExecutor{
+import java.util.Set;
+
+public class CommandSetDefaultHome implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
@@ -21,18 +23,28 @@ public class CommandDelHome implements CommandExecutor{
         String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
         if(sender instanceof Player){
             Player player = (Player)sender;
+            String playerLanguage = playersManager.getPlayerLanguage(player);
             if(arguments.length == 0){
-                delHome(player, "home");
-                return true;
-            }
-            else if(arguments.length == 1){
-                String homeName = arguments[0];
-                delHome(player, homeName);
-                return true;
+                player.sendMessage(command.getUsage());
             }
             else{
-                player.sendMessage(command.getUsage());
-                return true;
+                String homeName = arguments[0];
+                Set<String> homes = playersManager.getHomeList(player);
+                if(playersManager.getHomeList(player) == null){
+                    String noHomesMessage = langsManager.getMessage(playerLanguage, "NO_HOMES", "You don't have any home.");
+                    player.sendMessage(noHomesMessage);
+                }
+                else{
+                    if(homes.contains(arguments[0])){
+                        playersManager.setDefaultHome(player, arguments[0]);
+                        String defaultHomeSet = langsManager.getMessage(playerLanguage, "DEFAULT_HOME_SET", "Your default home is now: #home_name#.");
+                        player.sendMessage(formatString(defaultHomeSet, arguments[0]));
+                    }
+                    else{
+                        String homeNotFoundMessage = langsManager.getMessage(playerLanguage, "HOME_NOT_EXIST", "You don't have any home called #home_name#.");
+                        player.sendMessage(formatString(homeNotFoundMessage, arguments[0]));
+                    }
+                }
             }
         }
         else{
@@ -40,22 +52,6 @@ public class CommandDelHome implements CommandExecutor{
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;
-    }
-
-    public void delHome(Player player, String homeName){
-        FileConfiguration playerConfig = playersManager.getPlayerConfig(player);
-        String playerLanguage = playersManager.getPlayerLanguage(player);
-
-        if(playerConfig.isConfigurationSection("homes." + homeName)){
-            playerConfig.set("homes." + homeName, null);
-            playersManager.savePlayerConfig(player, playerConfig);
-            String homeRemovedMessage = langsManager.getMessage(playerLanguage, "HOME_REMOVED", "Home #home_name# successfully removed.");
-            player.sendMessage(formatString(homeRemovedMessage, homeName));
-        }
-        else{
-            String homeNotFoundMessage = langsManager.getMessage(playerLanguage, "HOME_NOT_EXIST", "You don't have any home called #home_name#.");
-            player.sendMessage(formatString(homeNotFoundMessage, homeName));
-        }
     }
 
     public String formatString(String string, String homeName){

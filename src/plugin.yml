@@ -122,6 +122,7 @@ commands:
     permission: mysticessentials.broadcast
     permission-message: You don't have permission to use broadcast command.
     usage: "Correct usage: /broadcast <message>"
+    aliases: [bc, bcast]
   rules:
     description: See the server's rules.
     permission: mysticessentials.rules
@@ -158,6 +159,11 @@ commands:
     permission-message: You don't have permission to use balance command.
     usage: "Correct usage: /balance [player] - Needs Vault with a valid economy plugin."
     aliases: [bal, money]
+  setdefaulthome:
+    description: Set your default home.
+    permission: mysticessentials.setdefaulthome
+    permission-message: You don't have permission to define your default home.
+    usage: "Correct usage: /setdefaulthome <home>"
 #  mysticessentialsreload:
 #    aliases: [mereload, mysticereload, messentialsreload, mer, mysticer, messentialsr]
 #    description: Reload plugin's configuration.
@@ -294,6 +300,9 @@ permissions:
     children:
       mysticessentials.time.day: true
       mysticessentials.time.night: true
+  mysticessentials.setdefaulthome:
+    default: true
+    description: Allows to use /setdefaulthome command.
 #  mysticessentials.reload:
 #    default: op
 #    description: Allows to use /mysticessentialsreload command

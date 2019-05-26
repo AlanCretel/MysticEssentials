@@ -16,8 +16,8 @@ public class CommandHome implements CommandExecutor {
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private playersManager playersManager = new playersManager();
-    private langsManager langsManager = new langsManager();
+    private playersManager playersManager = plugin.getPlayersManager();
+    private langsManager langsManager = plugin.getLangsManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
@@ -26,26 +26,17 @@ public class CommandHome implements CommandExecutor {
             Player player = (Player)sender;
             FileConfiguration playerConfig = playersManager.getPlayerConfig(player);
             String playerLanguage = playersManager.getPlayerLanguage(player);
-            if(arguments.length != 0){
-                if(arguments.length == 1){
-                    String homeName = arguments[0];
-                    if(playerConfig.isConfigurationSection("homes." + homeName)){
-                        toHome(player, homeName, playerConfig, playerLanguage);
-                    }
-                    else{
-                        String homeNotFoundMessage = langsManager.getMessage(playerLanguage, "HOME_NOT_EXIST", "You don't have any home called #home_name#.");
-                        player.sendMessage(formatString(homeNotFoundMessage, homeName, playersManager.getHomeList(player).toString()));
-                    }
-                }
-                else{
-                    player.sendMessage(command.getUsage());
-                }
-            }
-            else{
+            if(arguments.length == 0){
                 if(playersManager.getHomeList(player) != null && playersManager.getHomeList(player).size() != 0){
                     Set<String> homes = playersManager.getHomeList(player);
-                    if(homes.contains("home")){
-                        toHome(player, "home", playerConfig, playerLanguage);
+                    if(homes.contains("home") || playersManager.getDefaultHome(player) != null){
+                        if(playersManager.getDefaultHome(player) != null){
+                            String homeName = playersManager.getDefaultHome(player);
+                            toHome(player, homeName, playerConfig, playerLanguage);
+                        }
+                        else{
+                            toHome(player, "home", playerConfig, playerLanguage);
+                        }
                     }
                     else{
                         String homeListMessage = langsManager.getMessage(playerLanguage, "HOME_LIST", "Your homes: #home_list#.");
@@ -55,6 +46,25 @@ public class CommandHome implements CommandExecutor {
                 else{
                     String noHomesMessage = langsManager.getMessage(playerLanguage, "NO_HOMES", "You don't have any home.");
                     player.sendMessage(formatString(noHomesMessage, null, playersManager.getHomeList(player).toString()));
+                }
+            }
+            else{
+                if(arguments.length == 1 && playersManager.getHomeList(player) != null){
+                    String homeName = arguments[0];
+                    if(playerConfig.isConfigurationSection("homes." + homeName)){
+                        toHome(player, homeName, playerConfig, playerLanguage);
+                    }
+                    else{
+                        String homeNotFoundMessage = langsManager.getMessage(playerLanguage, "HOME_NOT_EXIST", "You don't have any home called #home_name#.");
+                        player.sendMessage(formatString(homeNotFoundMessage, homeName, playersManager.getHomeList(player).toString()));
+                    }
+                }
+                else if(playersManager.getHomeList(player) == null){
+                    String homeNotFoundMessage = langsManager.getMessage(playerLanguage, "HOME_NOT_EXIST", "You don't have any home called #home_name#.");
+                    player.sendMessage(formatString(homeNotFoundMessage, arguments[0], null));
+                }
+                else{
+                    player.sendMessage(command.getUsage());
                 }
             }
         }
@@ -82,7 +92,10 @@ public class CommandHome implements CommandExecutor {
     public String formatString(String string, String homeName, String homeList){
         String homeName_placeholder = "#home_name#";
         String homeList_placeholder = "#home_list#";
-        if(homeList == null){
+        if(homeList == null && homeName == null){
+            return string;
+        }
+        else if(homeList == null){
             return string.replaceAll(homeName_placeholder, homeName);
         }
         else if(homeName == null){

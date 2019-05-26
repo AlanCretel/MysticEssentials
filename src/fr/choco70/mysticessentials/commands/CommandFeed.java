@@ -13,8 +13,8 @@ public class CommandFeed implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private playersManager playersManager = new playersManager();
-    private langsManager langsManager = new langsManager();
+    private playersManager playersManager = plugin.getPlayersManager();
+    private langsManager langsManager = plugin.getLangsManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){

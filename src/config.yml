@@ -8,6 +8,8 @@ SETTINGS:
   showDeathCoordinates: true
   serverLanguage: en_us
   perWarpPermission: false
+  #You can use #sender# placeholder to see the sender's name (nothing if from console).
+  broadcastPrefix: "§7[§4#server_name#§7]§f: "
 SPAWN:
   world:
   x:

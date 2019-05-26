@@ -13,8 +13,8 @@ public class CommandSpawn implements CommandExecutor {
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private langsManager langsManager = new langsManager();
-    private playersManager playersManager = new playersManager();
+    private langsManager langsManager = plugin.getLangsManager();
+    private playersManager playersManager = plugin.getPlayersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] arguments){
