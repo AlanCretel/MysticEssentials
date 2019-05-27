@@ -228,7 +228,7 @@ permissions:
     default: op
     description: Allows to use /feed command on another player.
     children:
-      mysticessentials.feed: false
+      mysticessentials.feed: true
   mysticessentials.fly:
     default: op
     description: Allows to use /fly command.
@@ -236,7 +236,7 @@ permissions:
     default: op
     description: Allows to use /fly command on another player.
     children:
-      mysticessentials.fly: false
+      mysticessentials.fly: true
   mysticessentials.msg:
     default: true
     description: Allows to use /msg command.
