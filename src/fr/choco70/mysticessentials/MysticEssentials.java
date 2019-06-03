@@ -7,6 +7,7 @@ import fr.choco70.mysticessentials.listeners.PlayerRespawn;
 import fr.choco70.mysticessentials.tabCompleters.homeTabCompleter;
 import fr.choco70.mysticessentials.tabCompleters.msgCompleter;
 import fr.choco70.mysticessentials.tabCompleters.noCompleter;
+import fr.choco70.mysticessentials.tabCompleters.rulesCompleter;
 import fr.choco70.mysticessentials.utils.kitsManager;
 import fr.choco70.mysticessentials.utils.langsManager;
 import fr.choco70.mysticessentials.utils.playersManager;
@@ -42,6 +43,8 @@ public class MysticEssentials extends JavaPlugin {
         }
 
         setupManagers();
+
+        rulesManager.createRulesFile();
 
         String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
         langsManager.createLanguageFile(serverLanguage);
@@ -96,6 +99,11 @@ public class MysticEssentials extends JavaPlugin {
         this.getCommand("ignorelist").setExecutor(new CommandIgnoreList());
         this.getCommand("broadcast").setExecutor(new CommandBroadcast());
         this.getCommand("setdefaulthome").setExecutor(new CommandSetDefaultHome());
+        this.getCommand("rules").setExecutor(new CommandRules());
+        this.getCommand("addrule").setExecutor(new CommandAddRule());
+        this.getCommand("setrule").setExecutor(new CommandSetRule());
+        this.getCommand("delrule").setExecutor(new CommandDelRule());
+        this.getCommand("rule").setExecutor(new CommandRule());
         //this.getCommand("mysticessentialsreload").setExecutor(new CommandReload());
         //Vault commands
         if(getServer().getPluginManager().isPluginEnabled("Vault")){
@@ -110,6 +118,11 @@ public class MysticEssentials extends JavaPlugin {
         this.getCommand("setdefaulthome").setTabCompleter(new homeTabCompleter());
         this.getCommand("msg").setTabCompleter(new msgCompleter());
         this.getCommand("broadcast").setTabCompleter(new noCompleter());
+        this.getCommand("rules").setTabCompleter(new noCompleter());
+        this.getCommand("addrule").setTabCompleter(new noCompleter());
+        this.getCommand("setrule").setTabCompleter(new rulesCompleter());
+        this.getCommand("delrule").setTabCompleter(new rulesCompleter());
+        this.getCommand("rule").setTabCompleter(new rulesCompleter());
     }
 
     public HashMap<Player, Player> getTpa(){

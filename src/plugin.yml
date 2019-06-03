@@ -127,7 +127,26 @@ commands:
     description: See the server's rules.
     permission: mysticessentials.rules
     permission-message: You don't have permission to use rules command.
-    usage: "Correct usage: /rules [number]"
+  addrule:
+    description: Add a rule.
+    permission: mysticessentials.addrule
+    permission-message: You don't have permission to use addrule command.
+    usage: "Correct usage: /addrule rule"
+  setrule:
+    description: Correct or replace a rule.
+    permission: mysticessentials.setrule
+    permission-message: You don't have permission to use setrule command.
+    usage: "Correct usage: /setrule <number> rule"
+  delrule:
+    description: Remove a rule.
+    permission: mysticessentials.delrule
+    permission-message: You don't have permission to use delrule command.
+    usage: "Correct usage: /delrule <number>"
+  rule:
+    description: Show a rule.
+    permission: mysticessentials.rule
+    permission-message: You don't have permission to use rule command.
+    usage: "Correct usage: /rule <number>"
   sun:
     description: Set weather to sun.
     permission: mysticessentials.weather.sun
@@ -272,6 +291,18 @@ permissions:
   mysticessentials.rules:
     default: true
     description: Allows to use /rules command.
+  mysticessentials.addrules:
+    default: false
+    description: Allows to use /addrule command.
+  mysticessentials.setrules:
+    default: false
+    description: Allows to use /setrule command.
+  mysticessentials.delrules:
+    default: false
+    description: Allows to use /delrule command.
+  mysticessentials.rule:
+    default: true
+    description: Allows to use /rule command.
   mysticessentials.weather.sun:
     default: op
     description: Allows to use /sun command.

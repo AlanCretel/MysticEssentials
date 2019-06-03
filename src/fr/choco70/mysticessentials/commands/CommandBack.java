@@ -30,6 +30,7 @@ public class CommandBack implements CommandExecutor{
                 player.sendMessage(teleportToLastLocationMessage);
                 Location lastLocation = new Location(plugin.getServer().getWorld(playerConfig.get("last_location.world").toString()), playerConfig.getDouble("last_location.x"), playerConfig.getDouble("last_location.y"), playerConfig.getDouble("last_location.z"), Float.valueOf(playerConfig.getString("last_location.yaw","0")), Float.valueOf(playerConfig.getString("last_location.pitch","0")));
                 player.teleport(lastLocation);
+                playersManager.setLastLocation(player);
             }
             else{
                 String noLastLocationMessage = langsManager.getMessage(playerLanguage, "NO_LAST_LOCATION", "You don't have any last location registered.");

@@ -26,6 +26,7 @@ public class CommandTpAccept implements CommandExecutor{
                 Player requester = plugin.getTpa().get(player);
                 if(requester != null && requester.isOnline()){
                     requester.teleport(player.getLocation());
+                    playersManager.setLastLocation(requester);
                     plugin.getTpa().remove(player);
                     String requesterLanguage = playersManager.getPlayerLanguage(requester);
                     String teleportedTo = langsManager.getMessage(requesterLanguage, "TPA_TELEPORTED", "Successfully teleported to #target#.");
@@ -41,6 +42,7 @@ public class CommandTpAccept implements CommandExecutor{
                 Player requester = plugin.getTpahere().get(player);
                 if(requester != null && requester.isOnline()){
                     player.teleport(requester.getLocation());
+                    playersManager.setLastLocation(player);
                     plugin.getTpahere().remove(player);
 
                     String requesterLanguage = playersManager.getPlayerLanguage(requester);
