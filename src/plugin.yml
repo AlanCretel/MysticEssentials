@@ -292,13 +292,13 @@ permissions:
     default: true
     description: Allows to use /rules command.
   mysticessentials.addrules:
-    default: false
+    default: op
     description: Allows to use /addrule command.
   mysticessentials.setrules:
-    default: false
+    default: op
     description: Allows to use /setrule command.
   mysticessentials.delrules:
-    default: false
+    default: op
     description: Allows to use /delrule command.
   mysticessentials.rule:
     default: true
