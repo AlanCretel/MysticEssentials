@@ -9,10 +9,7 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class playersManager{
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
@@ -86,7 +83,8 @@ public class playersManager{
 
     public Integer getHomesLimit(Player player){
         Set<PermissionAttachmentInfo> permissions = player.getEffectivePermissions();
-        Integer homesLimit = 1;
+        ArrayList<Integer> homesLimits = new ArrayList<>();
+        homesLimits.add(plugin.getConfig().getInt("SETTINGS.default_homes_limit", 1));
         for (PermissionAttachmentInfo permission : permissions) {
             if(permission.getPermission().contains("mysticessentials.homeslimit.")){
                 String limit = permission.getPermission().replace("mysticessentials.homeslimit.", "");
@@ -94,11 +92,11 @@ public class playersManager{
                     return 1000;
                 }
                 else{
-                    return Integer.parseInt(limit);
+                    homesLimits.add(Integer.parseInt(limit));
                 }
             }
         }
-        return homesLimit;
+        return Collections.max(homesLimits);
     }
 
     public Integer getHomesNumber(Player player){
@@ -213,7 +211,7 @@ public class playersManager{
         }
     }
 
-    public List<String> toUserName(List<UUID> userUUIDS){
+    public List<String> toUserNames(List<UUID> userUUIDS){
         List<String> playerNames = new ArrayList<>();
         for (UUID userUUID : userUUIDS){
             playerNames.add(plugin.getServer().getOfflinePlayer(userUUID).getName());

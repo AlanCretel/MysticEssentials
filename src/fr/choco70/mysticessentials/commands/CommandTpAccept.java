@@ -29,11 +29,11 @@ public class CommandTpAccept implements CommandExecutor{
                     playersManager.setLastLocation(requester);
                     plugin.getTpa().remove(player);
                     String requesterLanguage = playersManager.getPlayerLanguage(requester);
-                    String teleportedTo = langsManager.getMessage(requesterLanguage, "TPA_TELEPORTED", "Successfully teleported to #target#.");
+                    String teleportedTo = langsManager.getMessage(requesterLanguage, "TPA_TELEPORTED");
                     requester.sendMessage(formatString(teleportedTo, player.getName(), requester));
                 }
                 else{
-                    String playerOffline = langsManager.getMessage(playerLanguage, "PLAYER_OFFLINE", "Player #target# is offline.");
+                    String playerOffline = langsManager.getMessage(playerLanguage, "PLAYER_OFFLINE");
                     player.sendMessage(formatString(playerOffline, arguments[0], player));
                     plugin.getTpa().remove(player);
                 }
@@ -46,22 +46,22 @@ public class CommandTpAccept implements CommandExecutor{
                     plugin.getTpahere().remove(player);
 
                     String requesterLanguage = playersManager.getPlayerLanguage(requester);
-                    String teleportedPlayer = langsManager.getMessage(requesterLanguage, "TPAHERE_TELEPORTED", "Successfully teleported #target# to you.");
+                    String teleportedPlayer = langsManager.getMessage(requesterLanguage, "TPAHERE_TELEPORTED");
                     requester.sendMessage(formatString(teleportedPlayer, player.getName(), requester));
                 }
                 else{
-                    String playerOffline = langsManager.getMessage(playerLanguage, "PLAYER_OFFLINE", "Player #target# is offline.");
+                    String playerOffline = langsManager.getMessage(playerLanguage, "PLAYER_OFFLINE");
                     player.sendMessage(formatString(playerOffline, arguments[0], player));
                     plugin.getTpahere().remove(player);
                 }
             }
             else{
-                String noTeleportationRequest = langsManager.getMessage(playerLanguage, "NO_TELEPORTATION_REQUEST", "You don't have any teleportation request.");
+                String noTeleportationRequest = langsManager.getMessage(playerLanguage, "NO_TELEPORTATION_REQUEST");
                 player.sendMessage(noTeleportationRequest);
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

@@ -1,8 +1,8 @@
 name: MysticEssentials
 author: Choco70
 main: fr.choco70.mysticessentials.MysticEssentials
-version: 1.4.0
-api-version: 1.14
+version: 1.5.0
+api-version: "1.14"
 softdepend: [Vault]
 commands:
   spawn:
@@ -183,6 +183,27 @@ commands:
     permission: mysticessentials.setdefaulthome
     permission-message: You don't have permission to define your default home.
     usage: "Correct usage: /setdefaulthome <home>"
+  discord:
+    description: See the server's discord.
+    permission: mysticessentials.discord
+    permission-message: You don't have permission to see the server's discord.
+    usage: "Correct usage: /discord"
+  website:
+    description: See the server's website.
+    permission: mysticessentials.website
+    permission-message: You don't have permission to see the server's website address.
+    usage: "Correct usage: /website"
+    aliases: [web]
+  tpall:
+    description: Teleport all players to another player.
+    permission: mysticessentials.tpall
+    permission-message: You don't have permission to teleport all players.
+    usage: "Correct usage: /tpall <player>"
+#  vanish:
+#    description: Become invisible to players.
+#    permission: mysticessentials.vanish
+#    permission-message: You don't have permission to become vanish.
+#    usage: "Correct usage: /vanish"
 #  mysticessentialsreload:
 #    aliases: [mereload, mysticereload, messentialsreload, mer, mysticer, messentialsr]
 #    description: Reload plugin's configuration.
@@ -334,6 +355,18 @@ permissions:
   mysticessentials.setdefaulthome:
     default: true
     description: Allows to use /setdefaulthome command.
+  mysticessentials.discord:
+    default: true
+    description: Allows to use /discord command.
+  mysticessentials.website:
+    default: true
+    description: Allows to use /website command.
+  mysticessentials.tpall:
+    default: op
+    description: Allows to teleport all players to another player.
+#  mysticessentials.vanish:
+#    default: op
+#    description: Allows you to use the vanish command.
 #  mysticessentials.reload:
 #    default: op
 #    description: Allows to use /mysticessentialsreload command

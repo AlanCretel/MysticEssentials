@@ -25,7 +25,7 @@ public class PlayerDeath implements Listener{
 
         if(config.getBoolean("SETTINGS.showDeathCoordinates", true)){
             String playerLanguage = playersManager.getPlayerLanguage(player);
-            String deathLocationMessage = langsManager.getMessage(playerLanguage, "DEATH_LOCATION_MESSAGE", "Death location: /nWorld: #world#/nX: #x#/nY: #y#/nZ: #z#");
+            String deathLocationMessage = langsManager.getMessage(playerLanguage, "DEATH_LOCATION_MESSAGE");
             player.sendMessage(formatString(deathLocationMessage, player));
         }
         playerConfig.set("last_death.world", deathLocation.getWorld().getName());

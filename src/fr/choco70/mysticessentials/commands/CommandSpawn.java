@@ -18,22 +18,22 @@ public class CommandSpawn implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] arguments){
-        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+        String serverLanguage = langsManager.getServerLanguage();
         if(sender instanceof Player){
             Player player = (Player)sender;
             String playerLanguage = playersManager.getPlayerLanguage(player);
 
             if(config.isSet("SPAWN.x") && config.isSet("SPAWN.y") && config.isSet("SPAWN.z") && config.isSet("SPAWN.pitch") && config.isSet("SPAWN.yaw") && config.isSet("SPAWN.world")){
-                String teleportedToSpawn = langsManager.getMessage(playerLanguage, "TELEPORT_TO_SPAWN", "Teleported to spawn.");
+                String teleportedToSpawn = langsManager.getMessage(playerLanguage, "TELEPORT_TO_SPAWN");
                 playersManager.setLastLocation(player);
                 plugin.toSpawn(player, teleportedToSpawn);
             }
             else{
-                player.sendMessage(langsManager.getMessage(playerLanguage, "NO_SPAWN", "No spawn set."));
+                player.sendMessage(langsManager.getMessage(playerLanguage, "NO_SPAWN"));
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

@@ -24,16 +24,16 @@ public class CommandIgnoreList implements CommandExecutor{
         if(sender instanceof Player){
             Player player = (Player)sender;
             if(playersManager.getIgnoredPlayers(player) != null){
-                String ignoredList = langsManager.getMessage(playersManager.getPlayerLanguage(player), "IGNORED_LIST", "Players you ignore: /n#ignored_list#");
-                player.sendMessage(formatString(ignoredList, playersManager.toUserName(playersManager.getPlayersIgnored(player))));
+                String ignoredList = langsManager.getMessage(playersManager.getPlayerLanguage(player), "IGNORED_LIST");
+                player.sendMessage(formatString(ignoredList, playersManager.toUserNames(playersManager.getPlayersIgnored(player))));
             }
             else{
-                String noIgnoredPlayers = langsManager.getMessage(playersManager.getPlayerLanguage(player), "NO_IGNORED_PLAYERS", "You don't ignore anyone.");
+                String noIgnoredPlayers = langsManager.getMessage(playersManager.getPlayerLanguage(player), "NO_IGNORED_PLAYERS");
                 player.sendMessage(noIgnoredPlayers);
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

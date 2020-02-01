@@ -36,7 +36,7 @@ public class CommandAddRule implements CommandExecutor{
                 else{
                     rulesManager.addRule(newRule);
                 }
-                player.sendMessage(langsManager.getMessage(playersManager.getPlayerLanguage(player), "RULE_ADDED", "Successfully added a new rule."));
+                player.sendMessage(langsManager.getMessage(playersManager.getPlayerLanguage(player), "RULE_ADDED"));
             }
         }
         else{
@@ -54,7 +54,7 @@ public class CommandAddRule implements CommandExecutor{
                 else{
                     rulesManager.addRule(newRule);
                 }
-                sender.sendMessage(langsManager.getMessage(config.getString("SETTINGS.serverLanguage", "en_us"), "RULE_ADDED", "Successfully added a new rule."));
+                sender.sendMessage(langsManager.getMessage(config.getString("SETTINGS.serverLanguage", "en_us"), "RULE_ADDED"));
             }
         }
         return true;

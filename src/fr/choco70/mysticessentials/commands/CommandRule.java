@@ -31,11 +31,11 @@ public class CommandRule implements CommandExecutor{
                 Integer rule = Integer.parseInt(arguments[0]) - 1;
                 Integer ruleNumber = rule + 1;
                 if(rulesManager.getRulesList().size() == 0 || (rulesManager.getRulesList().size() == 1 && rulesManager.getRule(0).equals(""))){
-                    player.sendMessage(langsManager.getMessage(playerLanguage, "NO_RULES", "No rules were set."));
+                    player.sendMessage(langsManager.getMessage(playerLanguage, "NO_RULES"));
                 }
                 else{
                     if(ruleNumber > rulesManager.getRulesNumber() || ruleNumber <= 0){
-                        player.sendMessage(formatString(langsManager.getMessage(playerLanguage, "RULE_NOT_EXIST", "This rule does not exist."), ruleNumber));
+                        player.sendMessage(formatString(langsManager.getMessage(playerLanguage, "RULE_NOT_EXIST"), ruleNumber));
                     }
                     else{
                         String rulePrefix = "Rule " + ruleNumber + ": ";
@@ -45,7 +45,7 @@ public class CommandRule implements CommandExecutor{
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

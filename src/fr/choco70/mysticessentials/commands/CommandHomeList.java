@@ -28,16 +28,16 @@ public class CommandHomeList implements CommandExecutor{
             Set<String> homes = playersManager.getHomeList(player);
 
             if(homes != null && homes.size() == 0){
-                String noHomesMessage = langsManager.getMessage(playerLanguage, "NO_HOMES", "You don't have any home.");
+                String noHomesMessage = langsManager.getMessage(playerLanguage, "NO_HOMES");
                 player.sendMessage(formatString(noHomesMessage, homes.toString()));
             }
             else{
-                String homeListMessage = langsManager.getMessage(playerLanguage, "HOME_LIST", "Your homes: #home_list#.");
+                String homeListMessage = langsManager.getMessage(playerLanguage, "HOME_LIST");
                 player.sendMessage(formatString(homeListMessage, homes.toString()));
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

@@ -6,59 +6,57 @@ import fr.choco70.mysticessentials.utils.playersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class CommandTpaHere implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private FileConfiguration config = plugin.getConfig();
     private langsManager langsManager = plugin.getLangsManager();
     private playersManager playersManager = plugin.getPlayersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
-        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+        String serverLanguage = langsManager.getServerLanguage();
         if(sender instanceof Player){
             Player player = (Player)sender;
             String playerLanguage = playersManager.getPlayerLanguage(player);
-            if(arguments.length != 1){
+            if(arguments.length == 0){
                 player.sendMessage(command.getUsage());
             }
-            else if(arguments.length == 1){
+            else{
                 Player target = sender.getServer().getPlayer(arguments[0]);
                 if(target != null && target.isOnline() && target != player){
                     String targetLanguage = playersManager.getPlayerLanguage(target);
                     String targetName = target.getName();
                     if(!plugin.getTpahere().containsKey(player)){
-                        String tpaRequestTarget = langsManager.getMessage(targetLanguage, "TPAHERE_REQUEST_TARGET", "#requester# requested you to teleport to them./n Type /tpaccept to accept them./n Type /tpdeny to deny them.");
+                        String tpaRequestTarget = langsManager.getMessage(targetLanguage, "TPAHERE_REQUEST_TARGET");
                         target.sendMessage(formatString(tpaRequestTarget, player, targetName));
 
-                        String tpaRequestSender = langsManager.getMessage(playerLanguage, "TPAHERE_REQUEST_SENDER", "Sent a teleportation request to #target#.");
+                        String tpaRequestSender = langsManager.getMessage(playerLanguage, "TPAHERE_REQUEST_SENDER");
                         player.sendMessage(formatString(tpaRequestSender, player, targetName));
                         plugin.getTpahere().put(target, player);
                     }
                     else{
-                        String requestAlreadySent = langsManager.getMessage(playerLanguage, "REQUEST_ALREADY_SENT", "You already sent a teleportation request to #target#.");
+                        String requestAlreadySent = langsManager.getMessage(playerLanguage, "REQUEST_ALREADY_SENT");
                         player.sendMessage(formatString(requestAlreadySent, player, targetName));
                     }
                 }
                 else if(player == target){
-                    String selfRequested = langsManager.getMessage(playerLanguage, "SELF_REQUESTED", "You can't send a request to yourself.");
+                    String selfRequested = langsManager.getMessage(playerLanguage, "SELF_REQUESTED");
                     player.sendMessage(formatString(selfRequested, player, player.getName()));
                 }
                 else if(target == null){
-                    String playerNotFound = langsManager.getMessage(playerLanguage, "PLAYER_NOT_FOUND", "Player #target# was not found.");
+                    String playerNotFound = langsManager.getMessage(playerLanguage, "PLAYER_NOT_FOUND");
                     player.sendMessage(formatString(playerNotFound, player, arguments[0]));
                 }
                 else{
-                    String playerOffline = langsManager.getMessage(playerLanguage, "PLAYER_OFFLINE", "Player #target# is offline.");
+                    String playerOffline = langsManager.getMessage(playerLanguage, "PLAYER_OFFLINE");
                     player.sendMessage(formatString(playerOffline, player, arguments[0]));
                 }
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

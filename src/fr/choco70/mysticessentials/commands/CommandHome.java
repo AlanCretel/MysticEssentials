@@ -39,12 +39,12 @@ public class CommandHome implements CommandExecutor {
                         }
                     }
                     else{
-                        String homeListMessage = langsManager.getMessage(playerLanguage, "HOME_LIST", "Your homes: #home_list#.");
+                        String homeListMessage = langsManager.getMessage(playerLanguage, "HOME_LIST");
                         player.sendMessage(formatString(homeListMessage, null, homes.toString()));
                     }
                 }
                 else{
-                    String noHomesMessage = langsManager.getMessage(playerLanguage, "NO_HOMES", "You don't have any home.");
+                    String noHomesMessage = langsManager.getMessage(playerLanguage, "NO_HOMES");
                     player.sendMessage(formatString(noHomesMessage, null, playersManager.getHomeList(player).toString()));
                 }
             }
@@ -55,12 +55,12 @@ public class CommandHome implements CommandExecutor {
                         toHome(player, homeName, playerConfig, playerLanguage);
                     }
                     else{
-                        String homeNotFoundMessage = langsManager.getMessage(playerLanguage, "HOME_NOT_EXIST", "You don't have any home called #home_name#.");
+                        String homeNotFoundMessage = langsManager.getMessage(playerLanguage, "HOME_NOT_EXIST");
                         player.sendMessage(formatString(homeNotFoundMessage, homeName, playersManager.getHomeList(player).toString()));
                     }
                 }
                 else if(playersManager.getHomeList(player) == null){
-                    String homeNotFoundMessage = langsManager.getMessage(playerLanguage, "HOME_NOT_EXIST", "You don't have any home called #home_name#.");
+                    String homeNotFoundMessage = langsManager.getMessage(playerLanguage, "HOME_NOT_EXIST");
                     player.sendMessage(formatString(homeNotFoundMessage, arguments[0], null));
                 }
                 else{
@@ -69,14 +69,14 @@ public class CommandHome implements CommandExecutor {
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;
     }
 
     private void toHome(Player player, String homeName, FileConfiguration playerConfig, String playerLanguage){
-        String teleportToHome = langsManager.getMessage(playerLanguage, "TELEPORT_TO_HOME", "Teleportation to your home #home_name#.");
+        String teleportToHome = langsManager.getMessage(playerLanguage, "TELEPORT_TO_HOME");
         player.sendMessage(formatString(teleportToHome, homeName, null));
         Location homeLocation = player.getLocation().clone();
         homeLocation.setWorld(player.getServer().getWorld(playerConfig.get("homes." + homeName + ".world").toString()));

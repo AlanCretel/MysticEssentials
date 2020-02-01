@@ -29,25 +29,25 @@ public class CommandBalance implements CommandExecutor{
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
-        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+        String serverLanguage = langsManager.getServerLanguage();
         if(setupEconomy()){
             if(sender instanceof Player){
                 Player player = (Player)sender;
                 if(arguments.length == 1){
                     Player target = sender.getServer().getPlayer(arguments[0]);
                     if(target != null){
-                        String targetBalanceMessage = langsManager.getMessage(playersManager.getPlayerLanguage(player), "BALANCE_OTHER", "#target#'s balance: #balance##symbol#");
+                        String targetBalanceMessage = langsManager.getMessage(playersManager.getPlayerLanguage(player), "BALANCE_OTHER");
                         Double targetBalance = economy.getBalance(target);
                         player.sendMessage(formatString(targetBalanceMessage, target.getName(), targetBalance));
                     }
                     else{
-                        String playerNotFound = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND", "Player #target# was not found.");
+                        String playerNotFound = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
                         player.sendMessage(playerNotFound);
                     }
                 }
                 else{
                     Double playerBalance = economy.getBalance(player);
-                    String balanceMessage = langsManager.getMessage(playersManager.getPlayerLanguage(player), "BALANCE_SELF", "Your balance: #balance##symbol#");
+                    String balanceMessage = langsManager.getMessage(playersManager.getPlayerLanguage(player), "BALANCE_SELF");
                     player.sendMessage(formatString(balanceMessage, null, playerBalance));
                 }
             }
@@ -55,12 +55,12 @@ public class CommandBalance implements CommandExecutor{
                 if(arguments.length == 1){
                     Player target = sender.getServer().getPlayer(arguments[0]);
                     if(target != null){
-                        String targetBalanceMessage = langsManager.getMessage(serverLanguage, "BALANCE_OTHER", "#target#'s balance: #balance##symbol#");
+                        String targetBalanceMessage = langsManager.getMessage(serverLanguage, "BALANCE_OTHER");
                         Double targetBalance = economy.getBalance(target);
                         sender.sendMessage(formatString(targetBalanceMessage, target.getName(), targetBalance));
                     }
                     else{
-                        String playerNotFound = langsManager.getMessage(serverLanguage, "PLAYER_NOT_FOUND", "Player #target# was not found.");
+                        String playerNotFound = langsManager.getMessage(serverLanguage, "PLAYER_NOT_FOUND");
                         sender.sendMessage(playerNotFound);
                     }
                 }
@@ -72,11 +72,11 @@ public class CommandBalance implements CommandExecutor{
         else{
             if(sender instanceof Player){
                 Player player = (Player)sender;
-                String noEconomy = langsManager.getMessage(playersManager.getPlayerLanguage(player), "NO_ECONOMY", "No economy present on this server.");
+                String noEconomy = langsManager.getMessage(playersManager.getPlayerLanguage(player), "NO_ECONOMY");
                 player.sendMessage(noEconomy);
             }
             else{
-                String noEconomy = langsManager.getMessage(serverLanguage, "NO_ECONOMY", "No economy present on this server.");
+                String noEconomy = langsManager.getMessage(serverLanguage, "NO_ECONOMY");
                 sender.sendMessage(noEconomy);
             }
         }

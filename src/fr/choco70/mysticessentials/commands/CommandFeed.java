@@ -27,26 +27,26 @@ public class CommandFeed implements CommandExecutor{
                 target.setSaturation(20);
                 if(sender instanceof Player && ((Player)sender).hasPermission("mysticessentials.feed.others")){
                     Player player = (Player)sender;
-                    String playerFed = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_FED", "Player #target# was successfully fed.");
+                    String playerFed = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_FED");
                     player.sendMessage(formatString(playerFed, null, target.getName()));
-                    String targetFed = langsManager.getMessage(playersManager.getPlayerLanguage(target), "TARGET_FED", "You were fed by #player#.");
+                    String targetFed = langsManager.getMessage(playersManager.getPlayerLanguage(target), "TARGET_FED");
                     target.sendMessage(formatString(targetFed, player, null));
                 }
                 else{
-                    String playerFed = langsManager.getMessage(serverLanguage, "PLAYER_FED", "Player #target# was successfully fed.");
+                    String playerFed = langsManager.getMessage(serverLanguage, "PLAYER_FED");
                     sender.sendMessage(formatString(playerFed, null, target.getName()));
-                    String targetFed = langsManager.getMessage(playersManager.getPlayerLanguage(target), "TARGET_FED", "You were fed by #player#.");
+                    String targetFed = langsManager.getMessage(playersManager.getPlayerLanguage(target), "TARGET_FED");
                     target.sendMessage(formatString(targetFed, null, null));
                 }
             }
             else{
                 if(sender instanceof Player){
                     Player player = (Player)sender;
-                    String playerNotFound = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND", "Player #target# was not found.");
+                    String playerNotFound = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
                     player.sendMessage(formatString(playerNotFound, player, targetName));
                 }
                 else{
-                    String playerNotFound = langsManager.getMessage(serverLanguage, "PLAYER_NOT_FOUND", "Player #target# was not found.");
+                    String playerNotFound = langsManager.getMessage(serverLanguage, "PLAYER_NOT_FOUND");
                     sender.sendMessage(formatString(playerNotFound, null, targetName));
                 }
             }
@@ -56,11 +56,11 @@ public class CommandFeed implements CommandExecutor{
                 Player player = (Player)sender;
                 player.setSaturation(20);
                 player.setFoodLevel(20);
-                String playerFed = langsManager.getMessage(serverLanguage, "PLAYER_FED_SELF", "You were fed.");
+                String playerFed = langsManager.getMessage(serverLanguage, "PLAYER_FED_SELF");
                 sender.sendMessage(formatString(playerFed, null, null));
             }
             else{
-                String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+                String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
                 sender.sendMessage(onlyPlayersWarn);
             }
         }

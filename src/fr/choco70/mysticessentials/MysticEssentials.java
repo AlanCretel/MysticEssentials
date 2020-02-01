@@ -4,11 +4,7 @@ import fr.choco70.mysticessentials.commands.*;
 import fr.choco70.mysticessentials.listeners.PlayerDeath;
 import fr.choco70.mysticessentials.listeners.PlayerJoin;
 import fr.choco70.mysticessentials.listeners.PlayerRespawn;
-import fr.choco70.mysticessentials.tabCompleters.homeTabCompleter;
-import fr.choco70.mysticessentials.tabCompleters.msgCompleter;
-import fr.choco70.mysticessentials.tabCompleters.noCompleter;
-import fr.choco70.mysticessentials.tabCompleters.rulesCompleter;
-import fr.choco70.mysticessentials.utils.kitsManager;
+import fr.choco70.mysticessentials.tabCompleters.*;
 import fr.choco70.mysticessentials.utils.langsManager;
 import fr.choco70.mysticessentials.utils.playersManager;
 import fr.choco70.mysticessentials.utils.rulesManager;
@@ -23,14 +19,20 @@ import java.util.HashMap;
 
 public class MysticEssentials extends JavaPlugin {
 
-    private HashMap<Player, Player> tpa = new HashMap<Player, Player>();
-    private HashMap<Player, Player> tpahere = new HashMap<Player, Player>();
-    private HashMap<Player, Player> conversations = new HashMap<Player, Player>();
+    private HashMap<Player, Player> tpa = new HashMap<>();
+    private HashMap<Player, Player> tpahere = new HashMap<>();
+
+    private HashMap<Player, Player> conversations = new HashMap<>();
+
+    private HashMap<Player, Integer> delays_tpa = new HashMap<>();
+    private HashMap<Player, Integer> delays_tpahere = new HashMap<>();
+    private HashMap<Player, Integer> delays_home = new HashMap<>();
+    private HashMap<Player, Integer> delays_back = new HashMap<>();
+    private HashMap<Player, Integer> delays_spawn = new HashMap<>();
 
     private langsManager langsManager;
     private playersManager playersManager;
     private rulesManager rulesManager;
-    private kitsManager kitsManager;
 
     @Override
     public void onEnable(){
@@ -46,11 +48,14 @@ public class MysticEssentials extends JavaPlugin {
 
         rulesManager.createRulesFile();
 
+        getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "MysticEssentials: Rules file loaded");
+
+        langsManager.setupDefaultLanguages();
         String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
         langsManager.createLanguageFile(serverLanguage);
+        langsManager.updateLanguagesConfigs();
 
-        String configLoadedMessage = langsManager.getMessage(serverLanguage,"CONFIG_LOADED", "§2MysticEssential: Configuration loaded.");
-        getServer().getConsoleSender().sendMessage(configLoadedMessage);
+        getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "MysticEssentials: Config loaded");
 
         this.getServer().getPluginManager().registerEvents(new PlayerJoin(),this);
         this.getServer().getPluginManager().registerEvents(new PlayerRespawn(), this);
@@ -58,6 +63,7 @@ public class MysticEssentials extends JavaPlugin {
 
         setupCommands();
         setupAutoComplete();
+        getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "MysticEssentials: Plugin enabled");
     }
 
     @Override
@@ -69,7 +75,6 @@ public class MysticEssentials extends JavaPlugin {
         langsManager = new langsManager();
         playersManager = new playersManager();
         rulesManager = new rulesManager();
-        kitsManager = new kitsManager();
     }
 
     private void setupCommands(){
@@ -104,8 +109,17 @@ public class MysticEssentials extends JavaPlugin {
         this.getCommand("setrule").setExecutor(new CommandSetRule());
         this.getCommand("delrule").setExecutor(new CommandDelRule());
         this.getCommand("rule").setExecutor(new CommandRule());
+        this.getCommand("discord").setExecutor(new CommandDiscord());
+        this.getCommand("website").setExecutor(new CommandWebsite());
+        this.getCommand("day").setExecutor(new CommandsTime());
+        this.getCommand("night").setExecutor(new CommandsTime());
+        this.getCommand("sun").setExecutor(new CommandsWeather());
+        this.getCommand("rain").setExecutor(new CommandsWeather());
+        this.getCommand("storm").setExecutor(new CommandsWeather());
+        this.getCommand("tpall").setExecutor(new CommandTpAll());
+        //this.getCommand("vanish").setExecutor(new CommandVanish());
         //this.getCommand("mysticessentialsreload").setExecutor(new CommandReload());
-        //Vault commands
+        //Vault required commands
         if(getServer().getPluginManager().isPluginEnabled("Vault")){
             this.getCommand("balance").setExecutor(new CommandBalance());
         }
@@ -117,12 +131,14 @@ public class MysticEssentials extends JavaPlugin {
         this.getCommand("sethome").setTabCompleter(new homeTabCompleter());
         this.getCommand("setdefaulthome").setTabCompleter(new homeTabCompleter());
         this.getCommand("msg").setTabCompleter(new msgCompleter());
+        this.getCommand("reply").setTabCompleter(new noCompleter());
         this.getCommand("broadcast").setTabCompleter(new noCompleter());
         this.getCommand("rules").setTabCompleter(new noCompleter());
         this.getCommand("addrule").setTabCompleter(new noCompleter());
         this.getCommand("setrule").setTabCompleter(new rulesCompleter());
         this.getCommand("delrule").setTabCompleter(new rulesCompleter());
         this.getCommand("rule").setTabCompleter(new rulesCompleter());
+        this.getCommand("setlanguage").setTabCompleter(new languageTabCompleter());
     }
 
     public HashMap<Player, Player> getTpa(){
@@ -146,10 +162,6 @@ public class MysticEssentials extends JavaPlugin {
 
     public Location getSpawnLocation(){
         return new Location(getServer().getWorld(getConfig().get("SPAWN.world").toString()), Double.valueOf(getConfig().get("SPAWN.x").toString()), Double.valueOf(getConfig().get("SPAWN.y").toString()), Double.valueOf(getConfig().get("SPAWN.z").toString()), Float.valueOf(getConfig().get("SPAWN.yaw").toString()), Float.valueOf(getConfig().get("SPAWN.pitch").toString()));
-    }
-
-    public kitsManager getKitsManager(){
-        return this.kitsManager;
     }
 
     public langsManager getLangsManager(){

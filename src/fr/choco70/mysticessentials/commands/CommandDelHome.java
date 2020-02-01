@@ -36,7 +36,7 @@ public class CommandDelHome implements CommandExecutor{
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;
@@ -49,11 +49,11 @@ public class CommandDelHome implements CommandExecutor{
         if(playerConfig.isConfigurationSection("homes." + homeName)){
             playerConfig.set("homes." + homeName, null);
             playersManager.savePlayerConfig(player, playerConfig);
-            String homeRemovedMessage = langsManager.getMessage(playerLanguage, "HOME_REMOVED", "Home #home_name# successfully removed.");
+            String homeRemovedMessage = langsManager.getMessage(playerLanguage, "HOME_REMOVED");
             player.sendMessage(formatString(homeRemovedMessage, homeName));
         }
         else{
-            String homeNotFoundMessage = langsManager.getMessage(playerLanguage, "HOME_NOT_EXIST", "You don't have any home called #home_name#.");
+            String homeNotFoundMessage = langsManager.getMessage(playerLanguage, "HOME_NOT_EXIST");
             player.sendMessage(formatString(homeNotFoundMessage, homeName));
         }
     }

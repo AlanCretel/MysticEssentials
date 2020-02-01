@@ -28,14 +28,14 @@ public class CommandRules implements CommandExecutor{
             String playerLanguage = playersManager.getPlayerLanguage(player);
             ArrayList<String> rules = rulesManager.getRulesList();
             if(rules.size() == 0){
-                player.sendMessage(langsManager.getMessage(playerLanguage, "NO_RULES", "No rules were set."));
+                player.sendMessage(langsManager.getMessage(playerLanguage, "NO_RULES"));
             }
             else{
                 if(rules.size() == 1 && rules.get(0).equals("")){
-                    player.sendMessage(langsManager.getMessage(playerLanguage, "NO_RULES", "No rules were set."));
+                    player.sendMessage(langsManager.getMessage(playerLanguage, "NO_RULES"));
                 }
                 else{
-                    player.sendMessage(langsManager.getMessage(playerLanguage, "RULES_HEAD", "Rules: "));
+                    player.sendMessage(langsManager.getMessage(playerLanguage, "RULES_HEAD"));
                     for (int i = 0; i < rules.size(); i++) {
                         String rulePrefix = "  " + (i+1) + ": ";
                         player.sendMessage(rulePrefix + rulesManager.getRule(i));
@@ -44,7 +44,7 @@ public class CommandRules implements CommandExecutor{
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

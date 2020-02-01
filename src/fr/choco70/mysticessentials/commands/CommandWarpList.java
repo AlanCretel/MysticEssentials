@@ -20,27 +20,27 @@ public class CommandWarpList implements CommandExecutor{
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
-        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+        String serverLanguage = langsManager.getServerLanguage();
         Set<String> warps = config.getConfigurationSection("WARPS.").getKeys(false);
         if(sender instanceof Player){
             Player player = (Player)sender;
             String playerLanguage = playersManager.getPlayerLanguage(player);
             if(warps.size() == 0){
-                String noWarps = langsManager.getMessage(playerLanguage, "NO_WARPS", "No warps were set.");
+                String noWarps = langsManager.getMessage(playerLanguage, "NO_WARPS");
                 player.sendMessage(noWarps);
             }
             else{
-                String warpListMessage = langsManager.getMessage(playerLanguage, "WARP_LIST", "Available warps: #warp_list#.");
+                String warpListMessage = langsManager.getMessage(playerLanguage, "WARP_LIST");
                 player.sendMessage(formatString(warpListMessage, warps.toString()));
             }
         }
         else{
             if(warps.size() == 0){
-                String noWarps = langsManager.getMessage(serverLanguage, "NO_WARPS", "No warps were set.");
+                String noWarps = langsManager.getMessage(serverLanguage, "NO_WARPS");
                 sender.sendMessage(noWarps);
             }
             else{
-                String warpListMessage = langsManager.getMessage(serverLanguage, "WARP_LIST", "Available warps: #warp_list#.");
+                String warpListMessage = langsManager.getMessage(serverLanguage, "WARP_LIST");
                 sender.sendMessage(formatString(warpListMessage, warps.toString()));
             }
         }

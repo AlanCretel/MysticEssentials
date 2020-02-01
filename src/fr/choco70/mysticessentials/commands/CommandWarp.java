@@ -22,7 +22,7 @@ public class CommandWarp implements CommandExecutor{
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
-        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+        String serverLanguage = langsManager.getServerLanguage();
         if(sender instanceof Player){
             Player player = (Player)sender;
             String playerLanguage = playersManager.getPlayerLanguage(player);
@@ -45,27 +45,27 @@ public class CommandWarp implements CommandExecutor{
 
                     playersManager.setLastLocation(player);
 
-                    String teleportedToWarp = langsManager.getMessage(playerLanguage, "TELEPORTED_TO_WARP", "Successfully teleported to warp #warp#");
+                    String teleportedToWarp = langsManager.getMessage(playerLanguage, "TELEPORTED_TO_WARP");
                     player.sendMessage(formatString(teleportedToWarp, warpName));
                     player.teleport(warpLocation);
                 }
                 else if(config.isConfigurationSection("WARPS." + warpName) && !player.hasPermission("mysticessentials.warps." + warpName) && config.getBoolean("SETTINGS.perWarpPermission", false)){
-                    String noWarpPermission = langsManager.getMessage(playerLanguage, "NO_WARP_PERMISSION", "You don't have permission to teleport to this warp. (#permission#)");
+                    String noWarpPermission = langsManager.getMessage(playerLanguage, "NO_WARP_PERMISSION");
                     player.sendMessage(formatString(noWarpPermission, warpName));
                 }
                 else if(warpName.equalsIgnoreCase("list") && player.hasPermission("mysticessentials.warplist")){
                     Set<String> warps = config.getConfigurationSection("WARPS.").getKeys(false);
                     if(warps.size() == 0){
-                        String noWarps = langsManager.getMessage(playerLanguage, "NO_WARPS", "No warps were set.");
+                        String noWarps = langsManager.getMessage(playerLanguage, "NO_WARPS");
                         player.sendMessage(noWarps);
                     }
                     else{
-                        String warpListMessage = langsManager.getMessage(playerLanguage, "WARP_LIST", "Available warps: #warp_list#.");
+                        String warpListMessage = langsManager.getMessage(playerLanguage, "WARP_LIST");
                         player.sendMessage(formatString(warpListMessage, warps));
                     }
                 }
                 else{
-                    String noWarpFound = langsManager.getMessage(playerLanguage, "WARP_NOT_EXIST", "The warp #warp# does not exist.");
+                    String noWarpFound = langsManager.getMessage(playerLanguage, "WARP_NOT_EXIST");
                     player.sendMessage(formatString(noWarpFound, warpName));
                 }
             }
@@ -74,7 +74,7 @@ public class CommandWarp implements CommandExecutor{
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

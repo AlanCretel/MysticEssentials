@@ -27,8 +27,8 @@ public class CommandMsg implements CommandExecutor{
                 if(receiver != null){
                     if(receiver != player && (playersManager.getPlayersIgnored(receiver) == null || !playersManager.getPlayersIgnored(receiver).contains(player.getUniqueId()))){
                         plugin.getConversations().put(receiver, player);
-                        String senderMessagePrefix = langsManager.getMessage(playersManager.getPlayerLanguage(player), "MSG_PREFIX_SENDER", "Message to #receiver#: ");
-                        String receiverMessagePrefix = langsManager.getMessage(playersManager.getPlayerLanguage(receiver), "MSG_PREFIX_RECEIVER", "#sender# to you: ");
+                        String senderMessagePrefix = langsManager.getMessage(playersManager.getPlayerLanguage(player), "MSG_PREFIX_SENDER");
+                        String receiverMessagePrefix = langsManager.getMessage(playersManager.getPlayerLanguage(receiver), "MSG_PREFIX_RECEIVER");
                         String finalMessage = "";
                         for (int i = 1; i < arguments.length; i++) {
                             finalMessage = finalMessage + arguments[i] + " ";
@@ -38,15 +38,15 @@ public class CommandMsg implements CommandExecutor{
                         receiver.playSound(receiver.getLocation(), Sound.BLOCK_BELL_USE, 1, 1);
                     }
                     else if(playersManager.getPlayersIgnored(receiver).contains(player.getUniqueId())){
-                        String ignored = langsManager.getMessage(playersManager.getPlayerLanguage(player), "IGNORED", "You can't send a message to #player#, it ignores you.");
+                        String ignored = langsManager.getMessage(playersManager.getPlayerLanguage(player), "IGNORED");
                         player.sendMessage(formatString(ignored, receiver.getName()));
                     }
                     else{
-                        player.sendMessage(langsManager.getMessage(playersManager.getPlayerLanguage(player), "SELF_MESSAGE", "You can't send a message to yourself."));
+                        player.sendMessage(langsManager.getMessage(playersManager.getPlayerLanguage(player), "SELF_MESSAGE"));
                     }
                 }
                 else{
-                    String playerNotFound = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND", "Player #target# was not found.");
+                    String playerNotFound = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
                     player.sendMessage(formatString(playerNotFound, arguments[0]));
                 }
             }
@@ -55,7 +55,7 @@ public class CommandMsg implements CommandExecutor{
             }
         }
         else{
-            sender.sendMessage(langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command."));
+            sender.sendMessage(langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND"));
         }
         return true;
     }

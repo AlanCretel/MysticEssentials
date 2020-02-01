@@ -10,6 +10,20 @@ SETTINGS:
   perWarpPermission: false
   #You can use #sender# placeholder to see the sender's name (nothing if from console).
   broadcastPrefix: "§7[§4#server_name#§7]§f: "
+  website: ""
+  discord: ""
+  change_all_worlds_time: true
+  change_all_worlds_weather: true
+  new_weather_duration: 10000
+  default_homes_limit: 1
+  default_delays:
+    home: 2
+    tpa: 2
+    tpahere: 2
+    back: 2
+    warp: 2
+    spawn: 0
+  per_warp_delay: false
 SPAWN:
   world:
   x:

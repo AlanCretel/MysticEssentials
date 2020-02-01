@@ -24,20 +24,20 @@ public class CommandDelSpawn implements CommandExecutor{
             if(sender instanceof Player){
                 Player player = (Player)sender;
                 String playerLanguage = playersManager.getPlayerLanguage(player);
-                player.sendMessage(langsManager.getMessage(playerLanguage, "SPAWN_REMOVED", "Successfully removed spawn location."));
+                player.sendMessage(langsManager.getMessage(playerLanguage, "SPAWN_REMOVED"));
             }
             else{
-                sender.sendMessage(langsManager.getMessage(serverLanguage, "SPAWN_REMOVED", "Successfully removed spawn location."));
+                sender.sendMessage(langsManager.getMessage(serverLanguage, "SPAWN_REMOVED"));
             }
         }
         else{
             if(sender instanceof Player){
                 Player player = (Player)sender;
                 String playerLanguage = playersManager.getPlayerLanguage(player);
-                player.sendMessage(langsManager.getMessage(playerLanguage, "NO_SPAWN", "No spawn set."));
+                player.sendMessage(langsManager.getMessage(playerLanguage, "NO_SPAWN"));
             }
             else{
-                sender.sendMessage(langsManager.getMessage(serverLanguage, "NO_SPAWN", "No spawn set."));
+                sender.sendMessage(langsManager.getMessage(serverLanguage, "NO_SPAWN"));
             }
         }
         return true;

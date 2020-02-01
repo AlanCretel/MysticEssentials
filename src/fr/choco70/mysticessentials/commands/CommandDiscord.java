@@ -9,24 +9,28 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public class CommandReload implements CommandExecutor{
+public class CommandDiscord implements CommandExecutor{
+
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private FileConfiguration config = plugin.getConfig();
-    private langsManager langsManager = plugin.getLangsManager();
     private playersManager playersManager = plugin.getPlayersManager();
+    private langsManager langsManager = plugin.getLangsManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
+        FileConfiguration config = plugin.getConfig();
+        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+
         if(sender instanceof Player){
             Player player = (Player)sender;
             String playerLanguage = playersManager.getPlayerLanguage(player);
-            String configReloaded = langsManager.getMessage(playerLanguage, "CONFIG_RELOADED");
-            player.sendMessage(configReloaded);
+            String discordHead = langsManager.getMessage(playerLanguage, "DISCORD_HEAD");
+            String discordAddress = config.getString("SETTINGS.discord", "No discord server available.");
+            player.sendMessage(discordHead + discordAddress);
         }
         else{
-            String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
-            String configReloaded = langsManager.getMessage(serverLanguage, "CONFIG_RELOADED");
-            sender.sendMessage(configReloaded);
+            String discordHead = langsManager.getMessage(serverLanguage, "DISCORD_HEAD");
+            String discordAddress = config.getString("SETTINGS.discord", "No discord server available.");
+            sender.sendMessage(discordHead + discordAddress);
         }
         return true;
     }

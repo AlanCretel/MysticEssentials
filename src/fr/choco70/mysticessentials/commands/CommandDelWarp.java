@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.File;
 import java.io.IOException;
 
 public class CommandDelWarp implements CommandExecutor{
@@ -28,11 +29,11 @@ public class CommandDelWarp implements CommandExecutor{
                 String warpName = arguments[0];
                 if(config.isConfigurationSection("WARPS." + warpName)){
                     config.set("WARPS." + warpName, null);
-                    String warpRemoved = langsManager.getMessage(playerLanguage, "WARP_REMOVED", "Successfully removed warp #warp#.");
+                    String warpRemoved = langsManager.getMessage(playerLanguage, "WARP_REMOVED");
                     player.sendMessage(formatString(warpRemoved, warpName));
                 }
                 else{
-                    String noWarpFound = langsManager.getMessage(playerLanguage, "WARP_NOT_EXIST", "The warp #warp# does not exist.");
+                    String noWarpFound = langsManager.getMessage(playerLanguage, "WARP_NOT_EXIST");
                     player.sendMessage(formatString(noWarpFound, warpName));
                 }
             }
@@ -45,11 +46,11 @@ public class CommandDelWarp implements CommandExecutor{
                 String warpName = arguments[0];
                 if(config.isConfigurationSection("WARPS." + warpName)){
                     config.set("WARPS." + warpName, null);
-                    String warpRemoved = langsManager.getMessage(serverLanguage, "WARP_REMOVED", "Successfully removed warp #warp#.");
+                    String warpRemoved = langsManager.getMessage(serverLanguage, "WARP_REMOVED");
                     sender.sendMessage(formatString(warpRemoved, warpName));
                 }
                 else{
-                    String noWarpFound = langsManager.getMessage(serverLanguage, "WARP_NOT_EXIST", "The warp #warp# does not exist.");
+                    String noWarpFound = langsManager.getMessage(serverLanguage, "WARP_NOT_EXIST");
                     sender.sendMessage(formatString(noWarpFound, warpName));
                 }
             }
@@ -58,7 +59,7 @@ public class CommandDelWarp implements CommandExecutor{
             }
         }
         try {
-            config.save(plugin.getDataFolder() + "/config.yml");
+            config.save(plugin.getDataFolder() + File.separator + "config.yml");
         } catch (IOException e) {
             e.printStackTrace();
         }

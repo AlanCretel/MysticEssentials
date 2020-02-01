@@ -31,15 +31,15 @@ public class CommandSetLanguage implements CommandExecutor{
             if(langsManager.getLanguageFile(arguments[0].toLowerCase()).exists() && !newLanguage.equalsIgnoreCase(playerLanguage)){
                 playerConfig.set("language", newLanguage);
                 playersManager.savePlayerConfig(player, playerConfig);
-                String languageChanged = langsManager.getMessage(newLanguage, "LANGUAGE_CHANGED", "Language changed to #player_language#.");
+                String languageChanged = langsManager.getMessage(newLanguage, "LANGUAGE_CHANGED");
                 player.sendMessage(formatString(languageChanged, player));
             }
             else if(playerLanguage.equalsIgnoreCase(newLanguage)){
-                String sameLanguage = langsManager.getMessage(playerLanguage, "ALREADY_YOUR_LANGUAGE", "Language #player_language# is already your language.");
+                String sameLanguage = langsManager.getMessage(playerLanguage, "ALREADY_YOUR_LANGUAGE");
                 player.sendMessage(formatString(sameLanguage, player));
             }
             else{
-                String languageUnavailable = langsManager.getMessage(playerLanguage, "LANGUAGE_UNAVAILABLE", "Language unavailable.");
+                String languageUnavailable = langsManager.getMessage(playerLanguage, "LANGUAGE_UNAVAILABLE");
                 player.sendMessage(formatString(languageUnavailable, player));
             }
             return true;
@@ -49,7 +49,7 @@ public class CommandSetLanguage implements CommandExecutor{
                 sender.sendMessage(command.getUsage());
             }
             else{
-                String onlyPlayerCanUse = serverLanguageConfig.getString("ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+                String onlyPlayerCanUse = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
                 sender.sendMessage(formatString(onlyPlayerCanUse, null));
             }
             return true;

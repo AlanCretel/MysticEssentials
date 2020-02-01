@@ -32,7 +32,7 @@ public class CommandSetSpawn implements CommandExecutor {
             config.set("SPAWN.yaw", player.getLocation().getYaw());
             try {
                 config.save(plugin.getDataFolder().toString() + "/config.yml");
-                String spawnSet = langsManager.getMessage(playerLanguage, "SPAWN_SET", "Successfully set spawn location.");
+                String spawnSet = langsManager.getMessage(playerLanguage, "SPAWN_SET");
                 player.sendMessage(spawnSet);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -40,7 +40,7 @@ public class CommandSetSpawn implements CommandExecutor {
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

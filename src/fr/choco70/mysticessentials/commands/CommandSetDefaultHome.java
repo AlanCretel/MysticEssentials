@@ -31,24 +31,24 @@ public class CommandSetDefaultHome implements CommandExecutor{
                 String homeName = arguments[0];
                 Set<String> homes = playersManager.getHomeList(player);
                 if(playersManager.getHomeList(player) == null){
-                    String noHomesMessage = langsManager.getMessage(playerLanguage, "NO_HOMES", "You don't have any home.");
+                    String noHomesMessage = langsManager.getMessage(playerLanguage, "NO_HOMES");
                     player.sendMessage(noHomesMessage);
                 }
                 else{
-                    if(homes.contains(arguments[0])){
-                        playersManager.setDefaultHome(player, arguments[0]);
-                        String defaultHomeSet = langsManager.getMessage(playerLanguage, "DEFAULT_HOME_SET", "Your default home is now: #home_name#.");
-                        player.sendMessage(formatString(defaultHomeSet, arguments[0]));
+                    if(homes.contains(homeName)){
+                        playersManager.setDefaultHome(player, homeName);
+                        String defaultHomeSet = langsManager.getMessage(playerLanguage, "DEFAULT_HOME_SET");
+                        player.sendMessage(formatString(defaultHomeSet, homeName));
                     }
                     else{
-                        String homeNotFoundMessage = langsManager.getMessage(playerLanguage, "HOME_NOT_EXIST", "You don't have any home called #home_name#.");
-                        player.sendMessage(formatString(homeNotFoundMessage, arguments[0]));
+                        String homeNotFoundMessage = langsManager.getMessage(playerLanguage, "HOME_NOT_EXIST");
+                        player.sendMessage(formatString(homeNotFoundMessage, homeName));
                     }
                 }
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

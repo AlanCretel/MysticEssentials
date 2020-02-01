@@ -18,7 +18,7 @@ public class CommandTpa implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] arguments){
-        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+        String serverLanguage = langsManager.getServerLanguage();
         if(sender instanceof Player){
             Player player = (Player)sender;
             String playerLanguage = playersManager.getPlayerLanguage(player);
@@ -31,34 +31,34 @@ public class CommandTpa implements CommandExecutor {
                     String targetLanguage = playersManager.getPlayerLanguage(target);
                     String targetName = target.getName();
                     if(!plugin.getTpa().containsKey(player)){
-                        String tpaRequestTarget = langsManager.getMessage(targetLanguage, "TPA_REQUEST_TARGET", "#sender# requested to teleport to you./n Type /tpaccept to accept them./n Type /tpdeny to deny them.");
+                        String tpaRequestTarget = langsManager.getMessage(targetLanguage, "TPA_REQUEST_TARGET");
                         target.sendMessage(formatString(tpaRequestTarget, player, targetName));
 
-                        String tpaRequestSender = langsManager.getMessage(playerLanguage, "TPA_REQUEST_SENDER", "Sent a teleportation request to #target#.");
+                        String tpaRequestSender = langsManager.getMessage(playerLanguage, "TPA_REQUEST_SENDER");
                         player.sendMessage(formatString(tpaRequestSender, player, targetName));
                         plugin.getTpa().put(target, player);
                     }
                     else{
-                        String requestAlreadySent = langsManager.getMessage(playerLanguage, "REQUEST_ALREADY_SENT", "You already sent a teleportation request to #target#.");
+                        String requestAlreadySent = langsManager.getMessage(playerLanguage, "REQUEST_ALREADY_SENT");
                         player.sendMessage(formatString(requestAlreadySent, player, targetName));
                     }
                 }
                 else if(player == target){
-                    String selfRequested = langsManager.getMessage(playerLanguage, "SELF_REQUESTED", "You can't send a request to yourself.");
+                    String selfRequested = langsManager.getMessage(playerLanguage, "SELF_REQUESTED");
                     player.sendMessage(formatString(selfRequested, player, player.getName()));
                 }
                 else if(target == null){
-                    String playerNotFound = langsManager.getMessage(playerLanguage, "PLAYER_NOT_FOUND", "Player #target# was not found.");
+                    String playerNotFound = langsManager.getMessage(playerLanguage, "PLAYER_NOT_FOUND");
                     player.sendMessage(formatString(playerNotFound, player, arguments[0]));
                 }
                 else{
-                    String playerOffline = langsManager.getMessage(playerLanguage, "PLAYER_OFFLINE", "Player #target# is offline.");
+                    String playerOffline = langsManager.getMessage(playerLanguage, "PLAYER_OFFLINE");
                     player.sendMessage(formatString(playerOffline, player, arguments[0]));
                 }
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

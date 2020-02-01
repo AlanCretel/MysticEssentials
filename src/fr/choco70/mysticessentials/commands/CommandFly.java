@@ -26,33 +26,33 @@ public class CommandFly implements CommandExecutor{
                 if(target != null){
                     if(target.getAllowFlight()){
                         target.setAllowFlight(false);
-                        String unableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(target), "UNABLE_TO_FLY", "You're now unable to fly");
-                        String unallowedToFly = langsManager.getMessage(playersManager.getPlayerLanguage(player), "UNALLOWED_TO_FLY", "You unallowed #target# to fly.");
+                        String unableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(target), "UNABLE_TO_FLY");
+                        String unallowedToFly = langsManager.getMessage(playersManager.getPlayerLanguage(player), "UNALLOWED_TO_FLY");
                         target.sendMessage(unableToFly);
                         player.sendMessage(formatString(unallowedToFly, target.getName()));
                     }
                     else{
                         target.setAllowFlight(true);
-                        String ableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(target), "ABLE_TO_FLY", "You're now able to fly");
-                        String allowedToFly = langsManager.getMessage(playersManager.getPlayerLanguage(player), "ALLOWED_TO_FLY", "You allowed #target# to fly.");
+                        String ableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(target), "ABLE_TO_FLY");
+                        String allowedToFly = langsManager.getMessage(playersManager.getPlayerLanguage(player), "ALLOWED_TO_FLY");
                         target.sendMessage(ableToFly);
                         player.sendMessage(formatString(allowedToFly, target.getName()));
                     }
                 }
                 else{
-                    String playerNotFound = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND", "Player #target# was not found.");
+                    String playerNotFound = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
                     player.sendMessage(formatString(playerNotFound, arguments[0]));
                 }
             }
             else{
                 if(player.getAllowFlight()){
                     player.setAllowFlight(false);
-                    String unableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(player), "UNABLE_TO_FLY", "You're now unable to fly");
+                    String unableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(player), "UNABLE_TO_FLY");
                     player.sendMessage(unableToFly);
                 }
                 else{
                     player.setAllowFlight(true);
-                    String ableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(player), "ABLE_TO_FLY", "You're now able to fly");
+                    String ableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(player), "ABLE_TO_FLY");
                     player.sendMessage(ableToFly);
                 }
             }
@@ -63,21 +63,21 @@ public class CommandFly implements CommandExecutor{
                 if(target != null){
                     if(target.getAllowFlight()){
                         target.setAllowFlight(false);
-                        String unableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(target), "UNABLE_TO_FLY", "You're now unable to fly");
-                        String unallowedToFly = langsManager.getMessage(serverLanguage, "UNALLOWED_TO_FLY", "You unallowed #target# to fly.");
+                        String unableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(target), "UNABLE_TO_FLY");
+                        String unallowedToFly = langsManager.getMessage(serverLanguage, "UNALLOWED_TO_FLY");
                         target.sendMessage(unableToFly);
                         sender.sendMessage(formatString(unallowedToFly, target.getName()));
                     }
                     else{
                         target.setAllowFlight(true);
-                        String ableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(target), "ABLE_TO_FLY", "You're now able to fly");
-                        String allowedToFly = langsManager.getMessage(serverLanguage, "ALLOWED_TO_FLY", "You allowed #target# to fly.");
+                        String ableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(target), "ABLE_TO_FLY");
+                        String allowedToFly = langsManager.getMessage(serverLanguage, "ALLOWED_TO_FLY");
                         target.sendMessage(ableToFly);
                         sender.sendMessage(formatString(allowedToFly, target.getName()));
                     }
                 }
                 else{
-                    String playerNotFound = langsManager.getMessage(serverLanguage, "PLAYER_NOT_FOUND", "Player #target# was not found.");
+                    String playerNotFound = langsManager.getMessage(serverLanguage, "PLAYER_NOT_FOUND");
                     sender.sendMessage(formatString(playerNotFound, arguments[0]));
                 }
             }

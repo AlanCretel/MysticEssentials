@@ -35,12 +35,12 @@ public class CommandSetHome implements CommandExecutor {
                 }
             }
             else{
-                String homesLimitReached = langsManager.getMessage(playersManager.getPlayerLanguage(player), "HOMES_LIMIT_REACHED", "Your homes limit reached (#homes_limit#)");
+                String homesLimitReached = langsManager.getMessage(playersManager.getPlayerLanguage(player), "HOMES_LIMIT_REACHED");
                 player.sendMessage(homesLimitReached.replaceAll("#homes_limit#", homesLimit.toString()));
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;
@@ -48,7 +48,7 @@ public class CommandSetHome implements CommandExecutor {
 
     public void addHome(Player player, String homeName){
         playersManager.addHome(player, homeName);
-        String homeSet = langsManager.getMessage(playersManager.getPlayerLanguage(player), "HOME_SET", "Successfully set home #home#.");
+        String homeSet = langsManager.getMessage(playersManager.getPlayerLanguage(player), "HOME_SET");
         player.sendMessage(formatString(homeSet, homeName));
     }
 

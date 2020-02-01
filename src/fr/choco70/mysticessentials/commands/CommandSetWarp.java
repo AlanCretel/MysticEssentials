@@ -10,18 +10,19 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.File;
 import java.io.IOException;
 
 public class CommandSetWarp implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private FileConfiguration config = plugin.getConfig();
     private langsManager langsManager = plugin.getLangsManager();
     private playersManager playersManager = plugin.getPlayersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
-        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+        FileConfiguration config = plugin.getConfig();
+        String serverLanguage = langsManager.getServerLanguage();
         if(sender instanceof Player){
             Player player = (Player)sender;
             String playerLanguage = playersManager.getPlayerLanguage(player);
@@ -35,8 +36,8 @@ public class CommandSetWarp implements CommandExecutor{
                 config.set("WARPS." + warpName + ".pitch", playerLocation.getPitch());
                 config.set("WARPS." + warpName + ".yaw", playerLocation.getYaw());
                 try {
-                    config.save(plugin.getDataFolder() + "/config.yml");
-                    String warpSet = langsManager.getMessage(playerLanguage, "WARP_SET", "Successfully set warp #warp#.");
+                    config.save(plugin.getDataFolder() + File.separator + "config.yml");
+                    String warpSet = langsManager.getMessage(playerLanguage, "WARP_SET");
                     player.sendMessage(formatString(warpSet, warpName));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -47,7 +48,7 @@ public class CommandSetWarp implements CommandExecutor{
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

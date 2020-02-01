@@ -26,33 +26,33 @@ public class CommandIgnore implements CommandExecutor{
                     if(player.getServer().getPlayer(arguments[0]) != player){
                         Player ignored = player.getServer().getPlayer(arguments[0]);
                         if(ignored.hasPermission("mysticessentials.ignore.bypass")){
-                            String cantIgnore = langsManager.getMessage(playersManager.getPlayerLanguage(player), "CANT_IGNORE", "You can't ignore #ignored#.");
+                            String cantIgnore = langsManager.getMessage(playersManager.getPlayerLanguage(player), "CANT_IGNORE");
                             player.sendMessage(formatString(cantIgnore, player, ignored.getName()));
                         }
                         else{
                             if(playersManager.getIgnoredPlayers(player) == null || !playersManager.getIgnoredPlayers(player).contains(ignored.getName())){
                                 playersManager.addIgnoredPlayer(player, ignored);
-                                String playerIgnored = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_IGNORED", "You now ignore #ignored#.");
+                                String playerIgnored = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_IGNORED");
                                 player.sendMessage(formatString(playerIgnored, player, ignored.getName()));
-                                String nowIgnored = langsManager.getMessage(playersManager.getPlayerLanguage(ignored), "NOW_IGNORED", "You're now ignored by #player#.");
+                                String nowIgnored = langsManager.getMessage(playersManager.getPlayerLanguage(ignored), "NOW_IGNORED");
                                 ignored.sendMessage(formatString(nowIgnored, player, ignored.getName()));
                             }
                             else{
                                 playersManager.delIgnoredPlayer(player, ignored);
-                                String playerUnignored = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_UNIGNORED", "#ignored# is no more ignored.");
+                                String playerUnignored = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_UNIGNORED");
                                 player.sendMessage(formatString(playerUnignored, player, ignored.getName()));
-                                String nowUnignored = langsManager.getMessage(playersManager.getPlayerLanguage(ignored), "NOW_UNIGNORED", "You're no more ignored by #player#.");
+                                String nowUnignored = langsManager.getMessage(playersManager.getPlayerLanguage(ignored), "NOW_UNIGNORED");
                                 ignored.sendMessage(formatString(nowUnignored, player, ignored.getName()));
                             }
                         }
                     }
                     else{
-                        String selfRequested = langsManager.getMessage(playersManager.getPlayerLanguage(player), "SELF_IGNORED", "You can't ignore yourself.");
+                        String selfRequested = langsManager.getMessage(playersManager.getPlayerLanguage(player), "SELF_IGNORED");
                         player.sendMessage(formatString(selfRequested, player, player.getName()));
                     }
                 }
                 else{
-                    String playerNotFound = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND", "Player #target# was not found.");
+                    String playerNotFound = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
                     player.sendMessage(formatString(playerNotFound, player, arguments[0]));
                 }
             }
@@ -61,7 +61,7 @@ public class CommandIgnore implements CommandExecutor{
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

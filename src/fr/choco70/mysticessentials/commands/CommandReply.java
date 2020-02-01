@@ -27,23 +27,23 @@ public class CommandReply implements CommandExecutor{
                     Player receiver = plugin.getConversations().get(player);
                     if(receiver.isOnline()){
                         plugin.getConversations().put(receiver, player);
-                        String senderMessagePrefix = langsManager.getMessage(playersManager.getPlayerLanguage(player), "REPLY_PREFIX_SENDER", "Message to #receiver#: ");
-                        String receiverMessagePrefix = langsManager.getMessage(playersManager.getPlayerLanguage(receiver), "REPLY_PREFIX_RECEIVER", "#sender# to you: ");
+                        String senderMessagePrefix = langsManager.getMessage(playersManager.getPlayerLanguage(player), "REPLY_PREFIX_SENDER");
+                        String receiverMessagePrefix = langsManager.getMessage(playersManager.getPlayerLanguage(receiver), "REPLY_PREFIX_RECEIVER");
                         String finalMessage = "";
                         for (int i = 0; i < arguments.length; i++) {
-                            finalMessage = finalMessage + arguments[i];
+                            finalMessage = finalMessage + arguments[i] + " ";
                         }
                         player.sendMessage(formatString(senderMessagePrefix, receiver.getName()) + finalMessage);
                         receiver.sendMessage(formatString(receiverMessagePrefix, player) + finalMessage);
                         receiver.playSound(receiver.getLocation(), Sound.BLOCK_BELL_USE, 1, 1);
                     }
                     else{
-                        String playerOffline = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_OFFLINE", "Player #receiver# is offline.");
+                        String playerOffline = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_OFFLINE");
                         player.sendMessage(formatString(playerOffline, receiver.getName()));
                     }
                 }
                 else{
-                    String noConversationToReply = langsManager.getMessage(playersManager.getPlayerLanguage(player), "NO_CONVERSATION_TO_REPLY", "You don't have any conversation to which to reply.");
+                    String noConversationToReply = langsManager.getMessage(playersManager.getPlayerLanguage(player), "NO_CONVERSATION_TO_REPLY");
                     player.sendMessage(noConversationToReply);
                 }
             }
@@ -52,7 +52,7 @@ public class CommandReply implements CommandExecutor{
             }
         }
         else{
-            sender.sendMessage(langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command."));
+            sender.sendMessage(langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND"));
         }
         return true;
     }

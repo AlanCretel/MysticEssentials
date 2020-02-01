@@ -25,7 +25,7 @@ public class CommandBack implements CommandExecutor{
             String playerLanguage = playersManager.getPlayerLanguage(player);
 
             if(playerConfig.isSet("last_location.world")){
-                String teleportToLastLocationMessage = langsManager.getMessage(playerLanguage, "TELEPORT_LAST_LOCATION", "Teleporting to your last location...");
+                String teleportToLastLocationMessage = langsManager.getMessage(playerLanguage, "TELEPORT_LAST_LOCATION");
 
                 player.sendMessage(teleportToLastLocationMessage);
                 Location lastLocation = new Location(plugin.getServer().getWorld(playerConfig.get("last_location.world").toString()), playerConfig.getDouble("last_location.x"), playerConfig.getDouble("last_location.y"), playerConfig.getDouble("last_location.z"), Float.valueOf(playerConfig.getString("last_location.yaw","0")), Float.valueOf(playerConfig.getString("last_location.pitch","0")));
@@ -33,13 +33,13 @@ public class CommandBack implements CommandExecutor{
                 playersManager.setLastLocation(player);
             }
             else{
-                String noLastLocationMessage = langsManager.getMessage(playerLanguage, "NO_LAST_LOCATION", "You don't have any last location registered.");
+                String noLastLocationMessage = langsManager.getMessage(playerLanguage, "NO_LAST_LOCATION");
                 player.sendMessage(noLastLocationMessage);
             }
         }
         else{
             String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND", "Only players can use this command.");
+            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;
