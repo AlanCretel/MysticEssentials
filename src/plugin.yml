@@ -1,7 +1,7 @@
 name: MysticEssentials
 author: Choco70
 main: fr.choco70.mysticessentials.MysticEssentials
-version: 1.5.0
+version: 1.6.0
 api-version: "1.14"
 softdepend: [Vault]
 commands:
@@ -199,6 +199,16 @@ commands:
     permission: mysticessentials.tpall
     permission-message: You don't have permission to teleport all players.
     usage: "Correct usage: /tpall <player>"
+  pay:
+    description: Send money to another player.
+    permission: mysticessentials.pay
+    permission-message: You don't have permission to pay others players.
+    usage: "Correct usage: /pay <player> <amount>"
+  eco:
+    description: Basic economy commands all in one.
+    permission: mysticessentials.eco
+    permission-message: You don't have permission to use this command.
+    usage: "Correct usage: /eco <<set> || <add> || <remove> || <defaul>> <<player> || all> [amount]"
 #  vanish:
 #    description: Become invisible to players.
 #    permission: mysticessentials.vanish
@@ -364,6 +374,12 @@ permissions:
   mysticessentials.tpall:
     default: op
     description: Allows to teleport all players to another player.
+  mysticessentials.pay:
+    default: true
+    description: Allows players to pay another player.
+  mysticessentials.eco:
+    default: op
+    description: Admin command to manage economy.
 #  mysticessentials.vanish:
 #    default: op
 #    description: Allows you to use the vanish command.

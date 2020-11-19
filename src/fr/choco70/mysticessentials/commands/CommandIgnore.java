@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,8 +13,8 @@ public class CommandIgnore implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private langsManager langsManager = plugin.getLangsManager();
-    private playersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
@@ -26,33 +26,33 @@ public class CommandIgnore implements CommandExecutor{
                     if(player.getServer().getPlayer(arguments[0]) != player){
                         Player ignored = player.getServer().getPlayer(arguments[0]);
                         if(ignored.hasPermission("mysticessentials.ignore.bypass")){
-                            String cantIgnore = langsManager.getMessage(playersManager.getPlayerLanguage(player), "CANT_IGNORE");
+                            String cantIgnore = localesManager.getMessage(playersManager.getPlayerLanguage(player), "CANT_IGNORE");
                             player.sendMessage(formatString(cantIgnore, player, ignored.getName()));
                         }
                         else{
                             if(playersManager.getIgnoredPlayers(player) == null || !playersManager.getIgnoredPlayers(player).contains(ignored.getName())){
                                 playersManager.addIgnoredPlayer(player, ignored);
-                                String playerIgnored = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_IGNORED");
+                                String playerIgnored = localesManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_IGNORED");
                                 player.sendMessage(formatString(playerIgnored, player, ignored.getName()));
-                                String nowIgnored = langsManager.getMessage(playersManager.getPlayerLanguage(ignored), "NOW_IGNORED");
+                                String nowIgnored = localesManager.getMessage(playersManager.getPlayerLanguage(ignored), "NOW_IGNORED");
                                 ignored.sendMessage(formatString(nowIgnored, player, ignored.getName()));
                             }
                             else{
                                 playersManager.delIgnoredPlayer(player, ignored);
-                                String playerUnignored = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_UNIGNORED");
+                                String playerUnignored = localesManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_UNIGNORED");
                                 player.sendMessage(formatString(playerUnignored, player, ignored.getName()));
-                                String nowUnignored = langsManager.getMessage(playersManager.getPlayerLanguage(ignored), "NOW_UNIGNORED");
+                                String nowUnignored = localesManager.getMessage(playersManager.getPlayerLanguage(ignored), "NOW_UNIGNORED");
                                 ignored.sendMessage(formatString(nowUnignored, player, ignored.getName()));
                             }
                         }
                     }
                     else{
-                        String selfRequested = langsManager.getMessage(playersManager.getPlayerLanguage(player), "SELF_IGNORED");
+                        String selfRequested = localesManager.getMessage(playersManager.getPlayerLanguage(player), "SELF_IGNORED");
                         player.sendMessage(formatString(selfRequested, player, player.getName()));
                     }
                 }
                 else{
-                    String playerNotFound = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
+                    String playerNotFound = localesManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
                     player.sendMessage(formatString(playerNotFound, player, arguments[0]));
                 }
             }
@@ -61,7 +61,7 @@ public class CommandIgnore implements CommandExecutor{
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
+            String onlyPlayersWarn = localesManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

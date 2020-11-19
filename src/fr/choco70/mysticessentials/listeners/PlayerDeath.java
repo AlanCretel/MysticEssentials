@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.listeners;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -14,8 +14,8 @@ public class PlayerDeath implements Listener{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private langsManager langsManager = plugin.getLangsManager();
-    private playersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e){
@@ -25,7 +25,7 @@ public class PlayerDeath implements Listener{
 
         if(config.getBoolean("SETTINGS.showDeathCoordinates", true)){
             String playerLanguage = playersManager.getPlayerLanguage(player);
-            String deathLocationMessage = langsManager.getMessage(playerLanguage, "DEATH_LOCATION_MESSAGE");
+            String deathLocationMessage = localesManager.getMessage(playerLanguage, "DEATH_LOCATION_MESSAGE");
             player.sendMessage(formatString(deathLocationMessage, player));
         }
         playerConfig.set("last_death.world", deathLocation.getWorld().getName());

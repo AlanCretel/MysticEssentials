@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,8 +13,8 @@ public class CommandFly implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private langsManager langsManager = plugin.getLangsManager();
-    private playersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
@@ -26,33 +26,33 @@ public class CommandFly implements CommandExecutor{
                 if(target != null){
                     if(target.getAllowFlight()){
                         target.setAllowFlight(false);
-                        String unableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(target), "UNABLE_TO_FLY");
-                        String unallowedToFly = langsManager.getMessage(playersManager.getPlayerLanguage(player), "UNALLOWED_TO_FLY");
+                        String unableToFly = localesManager.getMessage(playersManager.getPlayerLanguage(target), "UNABLE_TO_FLY");
+                        String unallowedToFly = localesManager.getMessage(playersManager.getPlayerLanguage(player), "UNALLOWED_TO_FLY");
                         target.sendMessage(unableToFly);
                         player.sendMessage(formatString(unallowedToFly, target.getName()));
                     }
                     else{
                         target.setAllowFlight(true);
-                        String ableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(target), "ABLE_TO_FLY");
-                        String allowedToFly = langsManager.getMessage(playersManager.getPlayerLanguage(player), "ALLOWED_TO_FLY");
+                        String ableToFly = localesManager.getMessage(playersManager.getPlayerLanguage(target), "ABLE_TO_FLY");
+                        String allowedToFly = localesManager.getMessage(playersManager.getPlayerLanguage(player), "ALLOWED_TO_FLY");
                         target.sendMessage(ableToFly);
                         player.sendMessage(formatString(allowedToFly, target.getName()));
                     }
                 }
                 else{
-                    String playerNotFound = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
+                    String playerNotFound = localesManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
                     player.sendMessage(formatString(playerNotFound, arguments[0]));
                 }
             }
             else{
                 if(player.getAllowFlight()){
                     player.setAllowFlight(false);
-                    String unableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(player), "UNABLE_TO_FLY");
+                    String unableToFly = localesManager.getMessage(playersManager.getPlayerLanguage(player), "UNABLE_TO_FLY");
                     player.sendMessage(unableToFly);
                 }
                 else{
                     player.setAllowFlight(true);
-                    String ableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(player), "ABLE_TO_FLY");
+                    String ableToFly = localesManager.getMessage(playersManager.getPlayerLanguage(player), "ABLE_TO_FLY");
                     player.sendMessage(ableToFly);
                 }
             }
@@ -63,21 +63,21 @@ public class CommandFly implements CommandExecutor{
                 if(target != null){
                     if(target.getAllowFlight()){
                         target.setAllowFlight(false);
-                        String unableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(target), "UNABLE_TO_FLY");
-                        String unallowedToFly = langsManager.getMessage(serverLanguage, "UNALLOWED_TO_FLY");
+                        String unableToFly = localesManager.getMessage(playersManager.getPlayerLanguage(target), "UNABLE_TO_FLY");
+                        String unallowedToFly = localesManager.getMessage(serverLanguage, "UNALLOWED_TO_FLY");
                         target.sendMessage(unableToFly);
                         sender.sendMessage(formatString(unallowedToFly, target.getName()));
                     }
                     else{
                         target.setAllowFlight(true);
-                        String ableToFly = langsManager.getMessage(playersManager.getPlayerLanguage(target), "ABLE_TO_FLY");
-                        String allowedToFly = langsManager.getMessage(serverLanguage, "ALLOWED_TO_FLY");
+                        String ableToFly = localesManager.getMessage(playersManager.getPlayerLanguage(target), "ABLE_TO_FLY");
+                        String allowedToFly = localesManager.getMessage(serverLanguage, "ALLOWED_TO_FLY");
                         target.sendMessage(ableToFly);
                         sender.sendMessage(formatString(allowedToFly, target.getName()));
                     }
                 }
                 else{
-                    String playerNotFound = langsManager.getMessage(serverLanguage, "PLAYER_NOT_FOUND");
+                    String playerNotFound = localesManager.getMessage(serverLanguage, "PLAYER_NOT_FOUND");
                     sender.sendMessage(formatString(playerNotFound, arguments[0]));
                 }
             }

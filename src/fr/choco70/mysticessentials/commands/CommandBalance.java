@@ -1,83 +1,61 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
-import net.milkbowl.vault.economy.Economy;
+import fr.choco70.mysticessentials.utils.EconomyLink;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class CommandBalance implements CommandExecutor{
 
-    private static Economy economy = null;
-    private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private FileConfiguration config = plugin.getConfig();
-    private playersManager playersManager = plugin.getPlayersManager();
-    private langsManager langsManager = plugin.getLangsManager();
-
-    private boolean setupEconomy(){
-        RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-        if (economyProvider != null) {
-            economy = economyProvider.getProvider();
-        }
-        return (economy != null);
-    }
+    private final MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
+    private final FileConfiguration config = plugin.getConfig();
+    private final PlayersManager playersManager = plugin.getPlayersManager();
+    private final LocalesManager localesManager = plugin.getLocalesManager();
+    private final EconomyLink economyLink = plugin.getEconomyLink();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
-        String serverLanguage = langsManager.getServerLanguage();
-        if(setupEconomy()){
-            if(sender instanceof Player){
-                Player player = (Player)sender;
-                if(arguments.length == 1){
-                    Player target = sender.getServer().getPlayer(arguments[0]);
-                    if(target != null){
-                        String targetBalanceMessage = langsManager.getMessage(playersManager.getPlayerLanguage(player), "BALANCE_OTHER");
-                        Double targetBalance = economy.getBalance(target);
-                        player.sendMessage(formatString(targetBalanceMessage, target.getName(), targetBalance));
-                    }
-                    else{
-                        String playerNotFound = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
-                        player.sendMessage(playerNotFound);
-                    }
+        String serverLanguage = localesManager.getServerLocale();
+        if(sender instanceof Player){
+            Player player = (Player)sender;
+            if(arguments.length == 1){
+                Player target = sender.getServer().getPlayer(arguments[0]);
+                if(target != null){
+                    String targetBalanceMessage = localesManager.getMessage(playersManager.getPlayerLanguage(player), "BALANCE_OTHER");
+                    Double targetBalance = economyLink.getPlayerBalance(target);
+                    player.sendMessage(formatString(targetBalanceMessage, target.getName(), targetBalance));
                 }
                 else{
-                    Double playerBalance = economy.getBalance(player);
-                    String balanceMessage = langsManager.getMessage(playersManager.getPlayerLanguage(player), "BALANCE_SELF");
-                    player.sendMessage(formatString(balanceMessage, null, playerBalance));
+                    String playerNotFound = localesManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
+                    player.sendMessage(playerNotFound);
                 }
             }
             else{
-                if(arguments.length == 1){
-                    Player target = sender.getServer().getPlayer(arguments[0]);
-                    if(target != null){
-                        String targetBalanceMessage = langsManager.getMessage(serverLanguage, "BALANCE_OTHER");
-                        Double targetBalance = economy.getBalance(target);
-                        sender.sendMessage(formatString(targetBalanceMessage, target.getName(), targetBalance));
-                    }
-                    else{
-                        String playerNotFound = langsManager.getMessage(serverLanguage, "PLAYER_NOT_FOUND");
-                        sender.sendMessage(playerNotFound);
-                    }
-                }
-                else{
-                    sender.sendMessage(command.getUsage());
-                }
+                Double playerBalance = economyLink.getPlayerBalance(player);
+                String balanceMessage = localesManager.getMessage(playersManager.getPlayerLanguage(player), "BALANCE_SELF");
+                player.sendMessage(formatString(balanceMessage, null, playerBalance));
             }
         }
         else{
-            if(sender instanceof Player){
-                Player player = (Player)sender;
-                String noEconomy = langsManager.getMessage(playersManager.getPlayerLanguage(player), "NO_ECONOMY");
-                player.sendMessage(noEconomy);
+            if(arguments.length == 1){
+                Player target = sender.getServer().getPlayer(arguments[0]);
+                if(target != null){
+                    String targetBalanceMessage = localesManager.getMessage(serverLanguage, "BALANCE_OTHER");
+                    Double targetBalance = economyLink.getPlayerBalance(target);
+                    sender.sendMessage(formatString(targetBalanceMessage, target.getName(), targetBalance));
+                }
+                else{
+                    String playerNotFound = localesManager.getMessage(serverLanguage, "PLAYER_NOT_FOUND");
+                    sender.sendMessage(playerNotFound);
+                }
             }
             else{
-                String noEconomy = langsManager.getMessage(serverLanguage, "NO_ECONOMY");
-                sender.sendMessage(noEconomy);
+                sender.sendMessage(command.getUsage());
             }
         }
         return true;

@@ -1,11 +1,11 @@
 <component name="libraryTable">
   <library name="spigot-1.14">
     <CLASSES>
-      <root url="jar://$USER_HOME$/OneDrive/Documents/DEVELOPPEMENT/MINECRAFT/RESSOURCES/spigot-1.14.jar!/" />
+      <root url="jar://D:/Développement/MINECRAFT/RESSOURCES/spigot-1.14.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$USER_HOME$/OneDrive/Documents/DEVELOPPEMENT/MINECRAFT/RESSOURCES/spigot-1.14.jar!/" />
+      <root url="jar://D:/Développement/MINECRAFT/RESSOURCES/spigot-1.14.jar!/" />
     </SOURCES>
   </library>
 </component>

@@ -7,7 +7,7 @@ import org.bukkit.command.TabCompleter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class noCompleter implements TabCompleter{
+public class NoCompleter implements TabCompleter{
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] arguments) {

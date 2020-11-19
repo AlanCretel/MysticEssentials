@@ -1,9 +1,9 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
-import fr.choco70.mysticessentials.utils.rulesManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.RulesManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,9 +13,9 @@ import org.bukkit.entity.Player;
 public class CommandDelRule implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private rulesManager rulesManager = plugin.getRulesManager();
-    private playersManager playersManager = plugin.getPlayersManager();
-    private langsManager langsManager = plugin.getLangsManager();
+    private RulesManager rulesManager = plugin.getRulesManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
@@ -30,15 +30,15 @@ public class CommandDelRule implements CommandExecutor{
                 Integer rule = Integer.parseInt(arguments[0]) - 1;
                 Integer ruleNumber = rule + 1;
                 if(rulesManager.getRulesList().size() == 0 || (rulesManager.getRulesList().size() == 1 && rulesManager.getRule(0).equals(""))){
-                    player.sendMessage(langsManager.getMessage(playerLanguage, "NO_RULES"));
+                    player.sendMessage(localesManager.getMessage(playerLanguage, "NO_RULES"));
                 }
                 else{
                     if(ruleNumber > rulesManager.getRulesNumber() || ruleNumber <= 0){
-                        player.sendMessage(formatString(langsManager.getMessage(playerLanguage, "RULE_NOT_EXIST"), ruleNumber));
+                        player.sendMessage(formatString(localesManager.getMessage(playerLanguage, "RULE_NOT_EXIST"), ruleNumber));
                     }
                     else{
                         rulesManager.removeRule(rule);
-                        player.sendMessage(formatString(langsManager.getMessage(playerLanguage, "RULE_REMOVED"), ruleNumber));
+                        player.sendMessage(formatString(localesManager.getMessage(playerLanguage, "RULE_REMOVED"), ruleNumber));
                     }
                 }
             }
@@ -52,15 +52,15 @@ public class CommandDelRule implements CommandExecutor{
                 Integer rule = Integer.parseInt(arguments[0]) - 1;
                 Integer ruleNumber = rule + 1;
                 if(rulesManager.getRulesList().size() == 0 || (rulesManager.getRulesList().size() == 1 && rulesManager.getRule(0).equals(""))){
-                    sender.sendMessage(langsManager.getMessage(serverLanguage, "NO_RULES"));
+                    sender.sendMessage(localesManager.getMessage(serverLanguage, "NO_RULES"));
                 }
                 else{
                     if(ruleNumber > rulesManager.getRulesNumber() || ruleNumber <= 0){
-                        sender.sendMessage(formatString(langsManager.getMessage(serverLanguage, "RULE_NOT_EXIST"), ruleNumber));
+                        sender.sendMessage(formatString(localesManager.getMessage(serverLanguage, "RULE_NOT_EXIST"), ruleNumber));
                     }
                     else{
                         rulesManager.removeRule(rule);
-                        sender.sendMessage(formatString(langsManager.getMessage(serverLanguage, "RULE_REMOVED"), ruleNumber));
+                        sender.sendMessage(formatString(localesManager.getMessage(serverLanguage, "RULE_REMOVED"), ruleNumber));
                     }
                 }
             }

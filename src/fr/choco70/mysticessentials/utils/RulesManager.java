@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-public class rulesManager{
+public class RulesManager {
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private File dataFolder = plugin.getDataFolder();

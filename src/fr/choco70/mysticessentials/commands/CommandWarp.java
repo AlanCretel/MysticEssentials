@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -17,17 +17,17 @@ public class CommandWarp implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private langsManager langsManager = plugin.getLangsManager();
-    private playersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
-        String serverLanguage = langsManager.getServerLanguage();
+        String serverLanguage = localesManager.getServerLocale();
         if(sender instanceof Player){
             Player player = (Player)sender;
             String playerLanguage = playersManager.getPlayerLanguage(player);
             if(arguments.length == 1){
-                String warpName = arguments[0];
+                String warpName = arguments[0].toLowerCase();
                 if(config.isConfigurationSection("WARPS." + warpName) && (player.hasPermission("mysticessentials.warps." + warpName) || !config.getBoolean("SETTINGS.perWarpPermission", false)) && !warpName.equalsIgnoreCase("list")){
                     Location warpLocation = player.getLocation().clone();
                     Double x = Double.valueOf(config.get("WARPS." + warpName + ".x").toString());
@@ -45,27 +45,27 @@ public class CommandWarp implements CommandExecutor{
 
                     playersManager.setLastLocation(player);
 
-                    String teleportedToWarp = langsManager.getMessage(playerLanguage, "TELEPORTED_TO_WARP");
+                    String teleportedToWarp = localesManager.getMessage(playerLanguage, "TELEPORTED_TO_WARP");
                     player.sendMessage(formatString(teleportedToWarp, warpName));
                     player.teleport(warpLocation);
                 }
                 else if(config.isConfigurationSection("WARPS." + warpName) && !player.hasPermission("mysticessentials.warps." + warpName) && config.getBoolean("SETTINGS.perWarpPermission", false)){
-                    String noWarpPermission = langsManager.getMessage(playerLanguage, "NO_WARP_PERMISSION");
+                    String noWarpPermission = localesManager.getMessage(playerLanguage, "NO_WARP_PERMISSION");
                     player.sendMessage(formatString(noWarpPermission, warpName));
                 }
                 else if(warpName.equalsIgnoreCase("list") && player.hasPermission("mysticessentials.warplist")){
                     Set<String> warps = config.getConfigurationSection("WARPS.").getKeys(false);
                     if(warps.size() == 0){
-                        String noWarps = langsManager.getMessage(playerLanguage, "NO_WARPS");
+                        String noWarps = localesManager.getMessage(playerLanguage, "NO_WARPS");
                         player.sendMessage(noWarps);
                     }
                     else{
-                        String warpListMessage = langsManager.getMessage(playerLanguage, "WARP_LIST");
+                        String warpListMessage = localesManager.getMessage(playerLanguage, "WARP_LIST");
                         player.sendMessage(formatString(warpListMessage, warps));
                     }
                 }
                 else{
-                    String noWarpFound = langsManager.getMessage(playerLanguage, "WARP_NOT_EXIST");
+                    String noWarpFound = localesManager.getMessage(playerLanguage, "WARP_NOT_EXIST");
                     player.sendMessage(formatString(noWarpFound, warpName));
                 }
             }
@@ -74,7 +74,7 @@ public class CommandWarp implements CommandExecutor{
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
+            String onlyPlayersWarn = localesManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

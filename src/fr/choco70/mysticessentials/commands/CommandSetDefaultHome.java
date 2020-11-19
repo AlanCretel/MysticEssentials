@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,8 +15,8 @@ public class CommandSetDefaultHome implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private langsManager langsManager = plugin.getLangsManager();
-    private playersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
@@ -31,24 +31,24 @@ public class CommandSetDefaultHome implements CommandExecutor{
                 String homeName = arguments[0];
                 Set<String> homes = playersManager.getHomeList(player);
                 if(playersManager.getHomeList(player) == null){
-                    String noHomesMessage = langsManager.getMessage(playerLanguage, "NO_HOMES");
+                    String noHomesMessage = localesManager.getMessage(playerLanguage, "NO_HOMES");
                     player.sendMessage(noHomesMessage);
                 }
                 else{
                     if(homes.contains(homeName)){
                         playersManager.setDefaultHome(player, homeName);
-                        String defaultHomeSet = langsManager.getMessage(playerLanguage, "DEFAULT_HOME_SET");
+                        String defaultHomeSet = localesManager.getMessage(playerLanguage, "DEFAULT_HOME_SET");
                         player.sendMessage(formatString(defaultHomeSet, homeName));
                     }
                     else{
-                        String homeNotFoundMessage = langsManager.getMessage(playerLanguage, "HOME_NOT_EXIST");
+                        String homeNotFoundMessage = localesManager.getMessage(playerLanguage, "HOME_NOT_EXIST");
                         player.sendMessage(formatString(homeNotFoundMessage, homeName));
                     }
                 }
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
+            String onlyPlayersWarn = localesManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

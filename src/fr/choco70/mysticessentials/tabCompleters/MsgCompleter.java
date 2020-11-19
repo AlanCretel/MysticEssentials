@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class msgCompleter implements TabCompleter{
+public class MsgCompleter implements TabCompleter{
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] arguments){

@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,18 +16,18 @@ import java.io.IOException;
 public class CommandSetWarp implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private langsManager langsManager = plugin.getLangsManager();
-    private playersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
         FileConfiguration config = plugin.getConfig();
-        String serverLanguage = langsManager.getServerLanguage();
+        String serverLanguage = localesManager.getServerLocale();
         if(sender instanceof Player){
             Player player = (Player)sender;
             String playerLanguage = playersManager.getPlayerLanguage(player);
             if(arguments.length == 1){
-                String warpName = arguments[0];
+                String warpName = arguments[0].toLowerCase();
                 Location playerLocation = player.getLocation();
                 config.set("WARPS." + warpName + ".world", playerLocation.getWorld().getName());
                 config.set("WARPS." + warpName + ".x", playerLocation.getX());
@@ -37,7 +37,7 @@ public class CommandSetWarp implements CommandExecutor{
                 config.set("WARPS." + warpName + ".yaw", playerLocation.getYaw());
                 try {
                     config.save(plugin.getDataFolder() + File.separator + "config.yml");
-                    String warpSet = langsManager.getMessage(playerLanguage, "WARP_SET");
+                    String warpSet = localesManager.getMessage(playerLanguage, "WARP_SET");
                     player.sendMessage(formatString(warpSet, warpName));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -48,7 +48,7 @@ public class CommandSetWarp implements CommandExecutor{
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
+            String onlyPlayersWarn = localesManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

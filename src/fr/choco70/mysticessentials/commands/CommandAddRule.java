@@ -1,9 +1,9 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
-import fr.choco70.mysticessentials.utils.rulesManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.RulesManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,9 +13,9 @@ import org.bukkit.entity.Player;
 public class CommandAddRule implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private rulesManager rulesManager = plugin.getRulesManager();
-    private playersManager playersManager = plugin.getPlayersManager();
-    private langsManager langsManager = plugin.getLangsManager();
+    private RulesManager rulesManager = plugin.getRulesManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
@@ -36,7 +36,7 @@ public class CommandAddRule implements CommandExecutor{
                 else{
                     rulesManager.addRule(newRule);
                 }
-                player.sendMessage(langsManager.getMessage(playersManager.getPlayerLanguage(player), "RULE_ADDED"));
+                player.sendMessage(localesManager.getMessage(playersManager.getPlayerLanguage(player), "RULE_ADDED"));
             }
         }
         else{
@@ -54,7 +54,7 @@ public class CommandAddRule implements CommandExecutor{
                 else{
                     rulesManager.addRule(newRule);
                 }
-                sender.sendMessage(langsManager.getMessage(config.getString("SETTINGS.serverLanguage", "en_us"), "RULE_ADDED"));
+                sender.sendMessage(localesManager.getMessage(config.getString("SETTINGS.serverLanguage", "en_us"), "RULE_ADDED"));
             }
         }
         return true;

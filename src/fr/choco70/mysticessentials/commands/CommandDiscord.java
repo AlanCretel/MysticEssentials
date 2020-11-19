@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,8 +12,8 @@ import org.bukkit.entity.Player;
 public class CommandDiscord implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private playersManager playersManager = plugin.getPlayersManager();
-    private langsManager langsManager = plugin.getLangsManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
@@ -23,12 +23,12 @@ public class CommandDiscord implements CommandExecutor{
         if(sender instanceof Player){
             Player player = (Player)sender;
             String playerLanguage = playersManager.getPlayerLanguage(player);
-            String discordHead = langsManager.getMessage(playerLanguage, "DISCORD_HEAD");
+            String discordHead = localesManager.getMessage(playerLanguage, "DISCORD_HEAD");
             String discordAddress = config.getString("SETTINGS.discord", "No discord server available.");
             player.sendMessage(discordHead + discordAddress);
         }
         else{
-            String discordHead = langsManager.getMessage(serverLanguage, "DISCORD_HEAD");
+            String discordHead = localesManager.getMessage(serverLanguage, "DISCORD_HEAD");
             String discordAddress = config.getString("SETTINGS.discord", "No discord server available.");
             sender.sendMessage(discordHead + discordAddress);
         }

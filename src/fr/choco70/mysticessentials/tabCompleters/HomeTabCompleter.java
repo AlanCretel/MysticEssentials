@@ -1,7 +1,7 @@
 package fr.choco70.mysticessentials.tabCompleters;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -12,10 +12,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class homeTabCompleter implements TabCompleter{
+public class HomeTabCompleter implements TabCompleter{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private playersManager playersManager = plugin.getPlayersManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] arguments){

@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,8 +16,8 @@ public class CommandHome implements CommandExecutor {
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private playersManager playersManager = plugin.getPlayersManager();
-    private langsManager langsManager = plugin.getLangsManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
@@ -31,21 +31,20 @@ public class CommandHome implements CommandExecutor {
                     Set<String> homes = playersManager.getHomeList(player);
                     if(homes.contains("home") || playersManager.getDefaultHome(player) != null){
                         if(playersManager.getDefaultHome(player) != null){
-                            String homeName = playersManager.getDefaultHome(player);
-                            toHome(player, homeName, playerConfig, playerLanguage);
+                            toHome(player, playersManager.getDefaultHome(player), playerConfig, playerLanguage);
                         }
                         else{
                             toHome(player, "home", playerConfig, playerLanguage);
                         }
                     }
                     else{
-                        String homeListMessage = langsManager.getMessage(playerLanguage, "HOME_LIST");
+                        String homeListMessage = localesManager.getMessage(playerLanguage, "HOME_LIST");
                         player.sendMessage(formatString(homeListMessage, null, homes.toString()));
                     }
                 }
                 else{
-                    String noHomesMessage = langsManager.getMessage(playerLanguage, "NO_HOMES");
-                    player.sendMessage(formatString(noHomesMessage, null, playersManager.getHomeList(player).toString()));
+                    String noHomesMessage = localesManager.getMessage(playerLanguage, "NO_HOMES");
+                    player.sendMessage(formatString(noHomesMessage, null, null));
                 }
             }
             else{
@@ -55,12 +54,12 @@ public class CommandHome implements CommandExecutor {
                         toHome(player, homeName, playerConfig, playerLanguage);
                     }
                     else{
-                        String homeNotFoundMessage = langsManager.getMessage(playerLanguage, "HOME_NOT_EXIST");
+                        String homeNotFoundMessage = localesManager.getMessage(playerLanguage, "HOME_NOT_EXIST");
                         player.sendMessage(formatString(homeNotFoundMessage, homeName, playersManager.getHomeList(player).toString()));
                     }
                 }
                 else if(playersManager.getHomeList(player) == null){
-                    String homeNotFoundMessage = langsManager.getMessage(playerLanguage, "HOME_NOT_EXIST");
+                    String homeNotFoundMessage = localesManager.getMessage(playerLanguage, "HOME_NOT_EXIST");
                     player.sendMessage(formatString(homeNotFoundMessage, arguments[0], null));
                 }
                 else{
@@ -69,14 +68,14 @@ public class CommandHome implements CommandExecutor {
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
+            String onlyPlayersWarn = localesManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;
     }
 
     private void toHome(Player player, String homeName, FileConfiguration playerConfig, String playerLanguage){
-        String teleportToHome = langsManager.getMessage(playerLanguage, "TELEPORT_TO_HOME");
+        String teleportToHome = localesManager.getMessage(playerLanguage, "TELEPORT_TO_HOME");
         player.sendMessage(formatString(teleportToHome, homeName, null));
         Location homeLocation = player.getLocation().clone();
         homeLocation.setWorld(player.getServer().getWorld(playerConfig.get("homes." + homeName + ".world").toString()));

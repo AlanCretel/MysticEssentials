@@ -16,6 +16,7 @@ SETTINGS:
   change_all_worlds_weather: true
   new_weather_duration: 10000
   default_homes_limit: 1
+  default_money_balance: 0.0
   default_delays:
     home: 2
     tpa: 2

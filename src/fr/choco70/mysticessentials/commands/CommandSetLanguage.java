@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,13 +14,13 @@ public class CommandSetLanguage implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private langsManager langsManager = plugin.getLangsManager();
-    private playersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments) {
         String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
-        FileConfiguration serverLanguageConfig = YamlConfiguration.loadConfiguration(langsManager.getLanguageFile(serverLanguage));
+        FileConfiguration serverLanguageConfig = YamlConfiguration.loadConfiguration(localesManager.getLocaleFile(serverLanguage));
 
         if(sender instanceof Player && arguments.length == 1){
             Player player = (Player)sender;
@@ -28,18 +28,18 @@ public class CommandSetLanguage implements CommandExecutor{
             String playerLanguage = playersManager.getPlayerLanguage(player);
             String newLanguage = arguments[0].toLowerCase();
 
-            if(langsManager.getLanguageFile(arguments[0].toLowerCase()).exists() && !newLanguage.equalsIgnoreCase(playerLanguage)){
+            if(localesManager.getLocaleFile(arguments[0].toLowerCase()).exists() && !newLanguage.equalsIgnoreCase(playerLanguage)){
                 playerConfig.set("language", newLanguage);
                 playersManager.savePlayerConfig(player, playerConfig);
-                String languageChanged = langsManager.getMessage(newLanguage, "LANGUAGE_CHANGED");
+                String languageChanged = localesManager.getMessage(newLanguage, "LANGUAGE_CHANGED");
                 player.sendMessage(formatString(languageChanged, player));
             }
             else if(playerLanguage.equalsIgnoreCase(newLanguage)){
-                String sameLanguage = langsManager.getMessage(playerLanguage, "ALREADY_YOUR_LANGUAGE");
+                String sameLanguage = localesManager.getMessage(playerLanguage, "ALREADY_YOUR_LANGUAGE");
                 player.sendMessage(formatString(sameLanguage, player));
             }
             else{
-                String languageUnavailable = langsManager.getMessage(playerLanguage, "LANGUAGE_UNAVAILABLE");
+                String languageUnavailable = localesManager.getMessage(playerLanguage, "LANGUAGE_UNAVAILABLE");
                 player.sendMessage(formatString(languageUnavailable, player));
             }
             return true;
@@ -49,7 +49,7 @@ public class CommandSetLanguage implements CommandExecutor{
                 sender.sendMessage(command.getUsage());
             }
             else{
-                String onlyPlayerCanUse = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
+                String onlyPlayerCanUse = localesManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
                 sender.sendMessage(formatString(onlyPlayerCanUse, null));
             }
             return true;

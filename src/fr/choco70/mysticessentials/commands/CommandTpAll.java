@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,8 +14,8 @@ import java.util.ArrayList;
 public class CommandTpAll implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private playersManager playersManager = plugin.getPlayersManager();
-    private langsManager langsManager = plugin.getLangsManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args){
@@ -29,11 +29,11 @@ public class CommandTpAll implements CommandExecutor{
             onlinePlayers.remove(player);
         }
         else{
-            senderLanguage = langsManager.getServerLanguage();
+            senderLanguage = localesManager.getServerLocale();
         }
 
         if(onlinePlayers.size() == 0){
-            sender.sendMessage(langsManager.getMessage(senderLanguage, "NOT_ENOUGH_PLAYERS_ONLINE"));
+            sender.sendMessage(localesManager.getMessage(senderLanguage, "NOT_ENOUGH_PLAYERS_ONLINE"));
             return true;
         }
 
@@ -46,28 +46,28 @@ public class CommandTpAll implements CommandExecutor{
                     if(sender instanceof Player){
                         Player player = (Player)sender;
                         if(target == player){
-                            sender.sendMessage(formatMessage(langsManager.getMessage(senderLanguage, "TPALL_SELF"), target));
+                            sender.sendMessage(formatMessage(localesManager.getMessage(senderLanguage, "TPALL_SELF"), target));
                         }
                         else{
-                            sender.sendMessage(formatMessage(langsManager.getMessage(senderLanguage, "TPALL_SENDER"), target));
-                            target.sendMessage(formatMessage(langsManager.getMessage(playersManager.getPlayerLanguage(target), "TPALL_TARGET"), target));
+                            sender.sendMessage(formatMessage(localesManager.getMessage(senderLanguage, "TPALL_SENDER"), target));
+                            target.sendMessage(formatMessage(localesManager.getMessage(playersManager.getPlayerLanguage(target), "TPALL_TARGET"), target));
                         }
                         for(Player onlinePlayer : onlinePlayers){
                             onlinePlayer.teleport(teleportLocation);
-                            onlinePlayer.sendMessage(formatMessage(langsManager.getMessage(playersManager.getPlayerLanguage(onlinePlayer), "TPALL_TELEPORTED"), target));
+                            onlinePlayer.sendMessage(formatMessage(localesManager.getMessage(playersManager.getPlayerLanguage(onlinePlayer), "TPALL_TELEPORTED"), target));
                         }
                     }
                     else{
-                        sender.sendMessage(formatMessage(langsManager.getMessage(senderLanguage, "TPALL_SENDER"), target));
-                        target.sendMessage(formatMessage(langsManager.getMessage(playersManager.getPlayerLanguage(target), "TPALL_TARGET"), target));
+                        sender.sendMessage(formatMessage(localesManager.getMessage(senderLanguage, "TPALL_SENDER"), target));
+                        target.sendMessage(formatMessage(localesManager.getMessage(playersManager.getPlayerLanguage(target), "TPALL_TARGET"), target));
                         for(Player onlinePlayer : onlinePlayers){
                             onlinePlayer.teleport(teleportLocation);
-                            onlinePlayer.sendMessage(formatMessage(langsManager.getMessage(playersManager.getPlayerLanguage(onlinePlayer), "TPALL_TELEPORTED"), target));
+                            onlinePlayer.sendMessage(formatMessage(localesManager.getMessage(playersManager.getPlayerLanguage(onlinePlayer), "TPALL_TELEPORTED"), target));
                         }
                     }
                 }
                 else{
-                    sender.sendMessage(formatMessage(langsManager.getMessage(senderLanguage, "PLAYER_NOT_FOUND"), target));
+                    sender.sendMessage(formatMessage(localesManager.getMessage(senderLanguage, "PLAYER_NOT_FOUND"), target));
                 }
             }
             else{

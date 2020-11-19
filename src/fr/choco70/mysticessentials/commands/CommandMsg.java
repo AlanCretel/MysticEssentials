@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,8 +14,8 @@ public class CommandMsg implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private playersManager playersManager = plugin.getPlayersManager();
-    private langsManager langsManager = plugin.getLangsManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
@@ -27,8 +27,8 @@ public class CommandMsg implements CommandExecutor{
                 if(receiver != null){
                     if(receiver != player && (playersManager.getPlayersIgnored(receiver) == null || !playersManager.getPlayersIgnored(receiver).contains(player.getUniqueId()))){
                         plugin.getConversations().put(receiver, player);
-                        String senderMessagePrefix = langsManager.getMessage(playersManager.getPlayerLanguage(player), "MSG_PREFIX_SENDER");
-                        String receiverMessagePrefix = langsManager.getMessage(playersManager.getPlayerLanguage(receiver), "MSG_PREFIX_RECEIVER");
+                        String senderMessagePrefix = localesManager.getMessage(playersManager.getPlayerLanguage(player), "MSG_PREFIX_SENDER");
+                        String receiverMessagePrefix = localesManager.getMessage(playersManager.getPlayerLanguage(receiver), "MSG_PREFIX_RECEIVER");
                         String finalMessage = "";
                         for (int i = 1; i < arguments.length; i++) {
                             finalMessage = finalMessage + arguments[i] + " ";
@@ -38,15 +38,15 @@ public class CommandMsg implements CommandExecutor{
                         receiver.playSound(receiver.getLocation(), Sound.BLOCK_BELL_USE, 1, 1);
                     }
                     else if(playersManager.getPlayersIgnored(receiver).contains(player.getUniqueId())){
-                        String ignored = langsManager.getMessage(playersManager.getPlayerLanguage(player), "IGNORED");
+                        String ignored = localesManager.getMessage(playersManager.getPlayerLanguage(player), "IGNORED");
                         player.sendMessage(formatString(ignored, receiver.getName()));
                     }
                     else{
-                        player.sendMessage(langsManager.getMessage(playersManager.getPlayerLanguage(player), "SELF_MESSAGE"));
+                        player.sendMessage(localesManager.getMessage(playersManager.getPlayerLanguage(player), "SELF_MESSAGE"));
                     }
                 }
                 else{
-                    String playerNotFound = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
+                    String playerNotFound = localesManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
                     player.sendMessage(formatString(playerNotFound, arguments[0]));
                 }
             }
@@ -55,7 +55,7 @@ public class CommandMsg implements CommandExecutor{
             }
         }
         else{
-            sender.sendMessage(langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND"));
+            sender.sendMessage(localesManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND"));
         }
         return true;
     }

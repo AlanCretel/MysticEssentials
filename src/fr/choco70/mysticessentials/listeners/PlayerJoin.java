@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.listeners;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,8 +13,8 @@ public class PlayerJoin implements Listener {
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private langsManager langsManager = plugin.getLangsManager();
-    private playersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e){
@@ -24,17 +24,17 @@ public class PlayerJoin implements Listener {
         playersManager.createPlayerFile(player);
         FileConfiguration playerConfig = playersManager.getPlayerConfig(player);
 
-        String serverLanguage = langsManager.getServerLanguage();
+        String serverLanguage = localesManager.getServerLocale();
         String playerLocale = playersManager.getPlayerLanguage(player);
         playerConfig.set("language", playerLocale);
 
-        String welcome_back_message = langsManager.getMessage(playerLocale, "WELCOME_BACK_MESSAGE");
+        String welcome_back_message = localesManager.getMessage(playerLocale, "WELCOME_BACK_MESSAGE");
 
         if(!playerConfig.isSet("name")){
             playerConfig.set("name", player.getName());
             playerConfig.set("display_name", playerDisplayName);
 
-            String welcome_message = langsManager.getMessage(playerLocale, "WELCOME_MESSAGE");
+            String welcome_message = localesManager.getMessage(playerLocale, "WELCOME_MESSAGE");
 
             if(config.isSet("SPAWN.x") && config.isSet("SPAWN.y") && config.isSet("SPAWN.z") && config.isSet("SPAWN.pitch") && config.isSet("SPAWN.yaw") && config.isSet("SPAWN.world")){
                 plugin.toSpawn(player, formatString(welcome_message, player));
@@ -43,7 +43,7 @@ public class PlayerJoin implements Listener {
                 player.sendMessage(formatString(welcome_message, player));
             }
 
-            String welcome_broadcast = langsManager.getMessage(serverLanguage, "WELCOME_BROADCAST");
+            String welcome_broadcast = localesManager.getMessage(serverLanguage, "WELCOME_BROADCAST");
             plugin.getServer().broadcastMessage(formatString(welcome_broadcast, player));
         }
         else if(playerConfig.get("name").toString() == player.getName()){

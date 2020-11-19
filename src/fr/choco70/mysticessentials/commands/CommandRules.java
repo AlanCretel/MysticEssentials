@@ -1,9 +1,9 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
-import fr.choco70.mysticessentials.utils.rulesManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.RulesManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,9 +15,9 @@ import java.util.ArrayList;
 public class CommandRules implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private playersManager playersManager = plugin.getPlayersManager();
-    private rulesManager rulesManager = plugin.getRulesManager();
-    private langsManager langsManager = plugin.getLangsManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
+    private RulesManager rulesManager = plugin.getRulesManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
@@ -28,14 +28,14 @@ public class CommandRules implements CommandExecutor{
             String playerLanguage = playersManager.getPlayerLanguage(player);
             ArrayList<String> rules = rulesManager.getRulesList();
             if(rules.size() == 0){
-                player.sendMessage(langsManager.getMessage(playerLanguage, "NO_RULES"));
+                player.sendMessage(localesManager.getMessage(playerLanguage, "NO_RULES"));
             }
             else{
                 if(rules.size() == 1 && rules.get(0).equals("")){
-                    player.sendMessage(langsManager.getMessage(playerLanguage, "NO_RULES"));
+                    player.sendMessage(localesManager.getMessage(playerLanguage, "NO_RULES"));
                 }
                 else{
-                    player.sendMessage(langsManager.getMessage(playerLanguage, "RULES_HEAD"));
+                    player.sendMessage(localesManager.getMessage(playerLanguage, "RULES_HEAD"));
                     for (int i = 0; i < rules.size(); i++) {
                         String rulePrefix = "  " + (i+1) + ": ";
                         player.sendMessage(rulePrefix + rulesManager.getRule(i));
@@ -44,7 +44,7 @@ public class CommandRules implements CommandExecutor{
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
+            String onlyPlayersWarn = localesManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,8 +16,8 @@ public class CommandDelWarp implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private langsManager langsManager = plugin.getLangsManager();
-    private playersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
@@ -29,11 +29,11 @@ public class CommandDelWarp implements CommandExecutor{
                 String warpName = arguments[0];
                 if(config.isConfigurationSection("WARPS." + warpName)){
                     config.set("WARPS." + warpName, null);
-                    String warpRemoved = langsManager.getMessage(playerLanguage, "WARP_REMOVED");
+                    String warpRemoved = localesManager.getMessage(playerLanguage, "WARP_REMOVED");
                     player.sendMessage(formatString(warpRemoved, warpName));
                 }
                 else{
-                    String noWarpFound = langsManager.getMessage(playerLanguage, "WARP_NOT_EXIST");
+                    String noWarpFound = localesManager.getMessage(playerLanguage, "WARP_NOT_EXIST");
                     player.sendMessage(formatString(noWarpFound, warpName));
                 }
             }
@@ -46,11 +46,11 @@ public class CommandDelWarp implements CommandExecutor{
                 String warpName = arguments[0];
                 if(config.isConfigurationSection("WARPS." + warpName)){
                     config.set("WARPS." + warpName, null);
-                    String warpRemoved = langsManager.getMessage(serverLanguage, "WARP_REMOVED");
+                    String warpRemoved = localesManager.getMessage(serverLanguage, "WARP_REMOVED");
                     sender.sendMessage(formatString(warpRemoved, warpName));
                 }
                 else{
-                    String noWarpFound = langsManager.getMessage(serverLanguage, "WARP_NOT_EXIST");
+                    String noWarpFound = localesManager.getMessage(serverLanguage, "WARP_NOT_EXIST");
                     sender.sendMessage(formatString(noWarpFound, warpName));
                 }
             }

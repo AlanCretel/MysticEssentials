@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,8 +13,8 @@ public class CommandTpAccept implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private langsManager langsManager = plugin.getLangsManager();
-    private playersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
@@ -29,11 +29,11 @@ public class CommandTpAccept implements CommandExecutor{
                     playersManager.setLastLocation(requester);
                     plugin.getTpa().remove(player);
                     String requesterLanguage = playersManager.getPlayerLanguage(requester);
-                    String teleportedTo = langsManager.getMessage(requesterLanguage, "TPA_TELEPORTED");
+                    String teleportedTo = localesManager.getMessage(requesterLanguage, "TPA_TELEPORTED");
                     requester.sendMessage(formatString(teleportedTo, player.getName(), requester));
                 }
                 else{
-                    String playerOffline = langsManager.getMessage(playerLanguage, "PLAYER_OFFLINE");
+                    String playerOffline = localesManager.getMessage(playerLanguage, "PLAYER_OFFLINE");
                     player.sendMessage(formatString(playerOffline, arguments[0], player));
                     plugin.getTpa().remove(player);
                 }
@@ -46,22 +46,22 @@ public class CommandTpAccept implements CommandExecutor{
                     plugin.getTpahere().remove(player);
 
                     String requesterLanguage = playersManager.getPlayerLanguage(requester);
-                    String teleportedPlayer = langsManager.getMessage(requesterLanguage, "TPAHERE_TELEPORTED");
+                    String teleportedPlayer = localesManager.getMessage(requesterLanguage, "TPAHERE_TELEPORTED");
                     requester.sendMessage(formatString(teleportedPlayer, player.getName(), requester));
                 }
                 else{
-                    String playerOffline = langsManager.getMessage(playerLanguage, "PLAYER_OFFLINE");
+                    String playerOffline = localesManager.getMessage(playerLanguage, "PLAYER_OFFLINE");
                     player.sendMessage(formatString(playerOffline, arguments[0], player));
                     plugin.getTpahere().remove(player);
                 }
             }
             else{
-                String noTeleportationRequest = langsManager.getMessage(playerLanguage, "NO_TELEPORTATION_REQUEST");
+                String noTeleportationRequest = localesManager.getMessage(playerLanguage, "NO_TELEPORTATION_REQUEST");
                 player.sendMessage(noTeleportationRequest);
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
+            String onlyPlayersWarn = localesManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

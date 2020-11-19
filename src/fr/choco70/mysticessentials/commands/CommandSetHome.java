@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,8 +13,8 @@ public class CommandSetHome implements CommandExecutor {
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private langsManager langsManager = plugin.getLangsManager();
-    private playersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] arguments){
@@ -35,12 +35,12 @@ public class CommandSetHome implements CommandExecutor {
                 }
             }
             else{
-                String homesLimitReached = langsManager.getMessage(playersManager.getPlayerLanguage(player), "HOMES_LIMIT_REACHED");
+                String homesLimitReached = localesManager.getMessage(playersManager.getPlayerLanguage(player), "HOMES_LIMIT_REACHED");
                 player.sendMessage(homesLimitReached.replaceAll("#homes_limit#", homesLimit.toString()));
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
+            String onlyPlayersWarn = localesManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;
@@ -48,7 +48,7 @@ public class CommandSetHome implements CommandExecutor {
 
     public void addHome(Player player, String homeName){
         playersManager.addHome(player, homeName);
-        String homeSet = langsManager.getMessage(playersManager.getPlayerLanguage(player), "HOME_SET");
+        String homeSet = localesManager.getMessage(playersManager.getPlayerLanguage(player), "HOME_SET");
         player.sendMessage(formatString(homeSet, homeName));
     }
 

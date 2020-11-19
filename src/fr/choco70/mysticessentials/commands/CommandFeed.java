@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,8 +13,8 @@ public class CommandFeed implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private playersManager playersManager = plugin.getPlayersManager();
-    private langsManager langsManager = plugin.getLangsManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
@@ -27,26 +27,26 @@ public class CommandFeed implements CommandExecutor{
                 target.setSaturation(20);
                 if(sender instanceof Player && ((Player)sender).hasPermission("mysticessentials.feed.others")){
                     Player player = (Player)sender;
-                    String playerFed = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_FED");
+                    String playerFed = localesManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_FED");
                     player.sendMessage(formatString(playerFed, null, target.getName()));
-                    String targetFed = langsManager.getMessage(playersManager.getPlayerLanguage(target), "TARGET_FED");
+                    String targetFed = localesManager.getMessage(playersManager.getPlayerLanguage(target), "TARGET_FED");
                     target.sendMessage(formatString(targetFed, player, null));
                 }
                 else{
-                    String playerFed = langsManager.getMessage(serverLanguage, "PLAYER_FED");
+                    String playerFed = localesManager.getMessage(serverLanguage, "PLAYER_FED");
                     sender.sendMessage(formatString(playerFed, null, target.getName()));
-                    String targetFed = langsManager.getMessage(playersManager.getPlayerLanguage(target), "TARGET_FED");
+                    String targetFed = localesManager.getMessage(playersManager.getPlayerLanguage(target), "TARGET_FED");
                     target.sendMessage(formatString(targetFed, null, null));
                 }
             }
             else{
                 if(sender instanceof Player){
                     Player player = (Player)sender;
-                    String playerNotFound = langsManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
+                    String playerNotFound = localesManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
                     player.sendMessage(formatString(playerNotFound, player, targetName));
                 }
                 else{
-                    String playerNotFound = langsManager.getMessage(serverLanguage, "PLAYER_NOT_FOUND");
+                    String playerNotFound = localesManager.getMessage(serverLanguage, "PLAYER_NOT_FOUND");
                     sender.sendMessage(formatString(playerNotFound, null, targetName));
                 }
             }
@@ -56,11 +56,11 @@ public class CommandFeed implements CommandExecutor{
                 Player player = (Player)sender;
                 player.setSaturation(20);
                 player.setFoodLevel(20);
-                String playerFed = langsManager.getMessage(serverLanguage, "PLAYER_FED_SELF");
+                String playerFed = localesManager.getMessage(serverLanguage, "PLAYER_FED_SELF");
                 sender.sendMessage(formatString(playerFed, null, null));
             }
             else{
-                String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
+                String onlyPlayersWarn = localesManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
                 sender.sendMessage(onlyPlayersWarn);
             }
         }

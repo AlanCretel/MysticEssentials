@@ -11,20 +11,20 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class playersManager{
+public class PlayersManager {
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private File dataFolder = plugin.getDataFolder();
 
     public void createPlayerFile(Player player){
         String fileName = player.getUniqueId().toString();
-        File playersForlder = new File(dataFolder + File.separator + "players" + File.separator);
+        File playersFolder = new File(dataFolder + File.separator + "players" + File.separator);
         if(!dataFolder.exists()){
             dataFolder.mkdir();
         }
-        if(!playersForlder.exists()){
-            playersForlder.mkdir();
+        if(!playersFolder.exists()){
+            playersFolder.mkdir();
         }
-        File file = new File(playersForlder,fileName + ".yml");
+        File file = new File(playersFolder,fileName + ".yml");
 
         if(!file.exists()){
             try {
@@ -36,8 +36,8 @@ public class playersManager{
     }
 
     public File getPlayerFile(Player player){
-        File playersForlder = new File(dataFolder + File.separator + "players" + File.separator);
-        return new File(playersForlder,player.getUniqueId().toString() + ".yml");
+        File playersFolder = new File(dataFolder + File.separator + "players" + File.separator);
+        return new File(playersFolder,player.getUniqueId().toString() + ".yml");
     }
 
     public FileConfiguration getPlayerConfig(Player player){

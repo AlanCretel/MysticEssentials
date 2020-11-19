@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,12 +12,12 @@ import org.bukkit.entity.Player;
 public class CommandsWeather implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private langsManager langsManager = plugin.getLangsManager();
-    private playersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
-        String serverLanguage = langsManager.getServerLanguage();
+        String serverLanguage = localesManager.getServerLocale();
         boolean changeAllWorldsWeather = plugin.getConfig().getBoolean("SETTINGS.change_all_worlds_weather", true);
         if(sender instanceof Player){
             Player player = (Player)sender;
@@ -36,7 +36,7 @@ public class CommandsWeather implements CommandExecutor{
                     player.getWorld().setThundering(false);
                     player.getWorld().setWeatherDuration(newWeatherDuration);
                 }
-                player.sendMessage(langsManager.getMessage(playerLanguage, "SET_WEATHER_SUN"));
+                player.sendMessage(localesManager.getMessage(playerLanguage, "SET_WEATHER_SUN"));
             }
             else if(command.getName().equalsIgnoreCase("rain")){
                 if(changeAllWorldsWeather){
@@ -51,7 +51,7 @@ public class CommandsWeather implements CommandExecutor{
                     player.getWorld().setStorm(true);
                     player.getWorld().setWeatherDuration(newWeatherDuration);
                 }
-                player.sendMessage(langsManager.getMessage(playerLanguage, "SET_WEATHER_RAIN"));
+                player.sendMessage(localesManager.getMessage(playerLanguage, "SET_WEATHER_RAIN"));
             }
             else if(command.getName().equalsIgnoreCase("storm")){
                 if(changeAllWorldsWeather){
@@ -66,11 +66,11 @@ public class CommandsWeather implements CommandExecutor{
                     player.getWorld().setThundering(true);
                     player.getWorld().setWeatherDuration(newWeatherDuration);
                 }
-                player.sendMessage(langsManager.getMessage(playerLanguage, "SET_WEATHER_STORM"));
+                player.sendMessage(localesManager.getMessage(playerLanguage, "SET_WEATHER_STORM"));
             }
         }
         else{
-            sender.sendMessage(langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND"));
+            sender.sendMessage(localesManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND"));
         }
         return true;
     }

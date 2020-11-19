@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,12 +11,12 @@ import org.bukkit.entity.Player;
 public class CommandTpaHere implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private langsManager langsManager = plugin.getLangsManager();
-    private playersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
-        String serverLanguage = langsManager.getServerLanguage();
+        String serverLanguage = localesManager.getServerLocale();
         if(sender instanceof Player){
             Player player = (Player)sender;
             String playerLanguage = playersManager.getPlayerLanguage(player);
@@ -29,34 +29,34 @@ public class CommandTpaHere implements CommandExecutor{
                     String targetLanguage = playersManager.getPlayerLanguage(target);
                     String targetName = target.getName();
                     if(!plugin.getTpahere().containsKey(player)){
-                        String tpaRequestTarget = langsManager.getMessage(targetLanguage, "TPAHERE_REQUEST_TARGET");
+                        String tpaRequestTarget = localesManager.getMessage(targetLanguage, "TPAHERE_REQUEST_TARGET");
                         target.sendMessage(formatString(tpaRequestTarget, player, targetName));
 
-                        String tpaRequestSender = langsManager.getMessage(playerLanguage, "TPAHERE_REQUEST_SENDER");
+                        String tpaRequestSender = localesManager.getMessage(playerLanguage, "TPAHERE_REQUEST_SENDER");
                         player.sendMessage(formatString(tpaRequestSender, player, targetName));
                         plugin.getTpahere().put(target, player);
                     }
                     else{
-                        String requestAlreadySent = langsManager.getMessage(playerLanguage, "REQUEST_ALREADY_SENT");
+                        String requestAlreadySent = localesManager.getMessage(playerLanguage, "REQUEST_ALREADY_SENT");
                         player.sendMessage(formatString(requestAlreadySent, player, targetName));
                     }
                 }
                 else if(player == target){
-                    String selfRequested = langsManager.getMessage(playerLanguage, "SELF_REQUESTED");
+                    String selfRequested = localesManager.getMessage(playerLanguage, "SELF_REQUESTED");
                     player.sendMessage(formatString(selfRequested, player, player.getName()));
                 }
                 else if(target == null){
-                    String playerNotFound = langsManager.getMessage(playerLanguage, "PLAYER_NOT_FOUND");
+                    String playerNotFound = localesManager.getMessage(playerLanguage, "PLAYER_NOT_FOUND");
                     player.sendMessage(formatString(playerNotFound, player, arguments[0]));
                 }
                 else{
-                    String playerOffline = langsManager.getMessage(playerLanguage, "PLAYER_OFFLINE");
+                    String playerOffline = localesManager.getMessage(playerLanguage, "PLAYER_OFFLINE");
                     player.sendMessage(formatString(playerOffline, player, arguments[0]));
                 }
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
+            String onlyPlayersWarn = localesManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

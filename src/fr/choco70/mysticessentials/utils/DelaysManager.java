@@ -8,9 +8,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 
-public class delaysManager{
+public class DelaysManager {
 
-    private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
+    public final MysticEssentials plugin;
+
+    public DelaysManager(MysticEssentials plugin){
+        this.plugin = plugin;
+    }
 
     public int getTpaDelay(Player player){
         Set<PermissionAttachmentInfo> permissions = player.getEffectivePermissions();

@@ -1,8 +1,8 @@
 package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
-import fr.choco70.mysticessentials.utils.langsManager;
-import fr.choco70.mysticessentials.utils.playersManager;
+import fr.choco70.mysticessentials.utils.LocalesManager;
+import fr.choco70.mysticessentials.utils.PlayersManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,8 +15,8 @@ public class CommandSetSpawn implements CommandExecutor {
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private langsManager langsManager = plugin.getLangsManager();
-    private playersManager playersManager = plugin.getPlayersManager();
+    private LocalesManager localesManager = plugin.getLocalesManager();
+    private PlayersManager playersManager = plugin.getPlayersManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] arguments){
@@ -32,7 +32,7 @@ public class CommandSetSpawn implements CommandExecutor {
             config.set("SPAWN.yaw", player.getLocation().getYaw());
             try {
                 config.save(plugin.getDataFolder().toString() + "/config.yml");
-                String spawnSet = langsManager.getMessage(playerLanguage, "SPAWN_SET");
+                String spawnSet = localesManager.getMessage(playerLanguage, "SPAWN_SET");
                 player.sendMessage(spawnSet);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -40,7 +40,7 @@ public class CommandSetSpawn implements CommandExecutor {
             }
         }
         else{
-            String onlyPlayersWarn = langsManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
+            String onlyPlayersWarn = localesManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;
