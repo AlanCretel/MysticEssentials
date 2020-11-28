@@ -200,7 +200,7 @@ public class PlayersManager {
     public List<UUID> getPlayersIgnored(Player player){
         List<?> ignoredList = getPlayerConfig(player).getList("ignored_players");
         if(ignoredList == null){
-            return null;
+            return new ArrayList<>();
         }
         else{
             List<UUID> playersUUID = new ArrayList<>();
