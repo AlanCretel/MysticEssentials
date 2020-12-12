@@ -3,6 +3,7 @@ package fr.choco70.mysticessentials.commands;
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.LocalesManager;
 import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,18 +18,20 @@ public class CommandIgnoreList implements CommandExecutor{
     private FileConfiguration config = plugin.getConfig();
     private LocalesManager localesManager = plugin.getLocalesManager();
     private PlayersManager playersManager = plugin.getPlayersManager();
+    private SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
-        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+        String serverLanguage = localesManager.getServerLocale();
         if(sender instanceof Player){
             Player player = (Player)sender;
-            if(playersManager.getIgnoredPlayers(player) != null){
-                String ignoredList = localesManager.getMessage(playersManager.getPlayerLanguage(player), "IGNORED_LIST");
-                player.sendMessage(formatString(ignoredList, playersManager.toUserNames(playersManager.getPlayersIgnored(player))));
+            String playerLocale = sqLiteManager.getPlayerLocale(player.getUniqueId());
+            if(sqLiteManager.getIgnoredPlayers(player.getUniqueId()) != null){
+                String ignoredList = localesManager.getMessage(playerLocale, "IGNORED_LIST");
+                player.sendMessage(formatString(ignoredList, playersManager.toUserNames(sqLiteManager.getIgnoredPlayers(player.getUniqueId()))));
             }
             else{
-                String noIgnoredPlayers = localesManager.getMessage(playersManager.getPlayerLanguage(player), "NO_IGNORED_PLAYERS");
+                String noIgnoredPlayers = localesManager.getMessage(playerLocale, "NO_IGNORED_PLAYERS");
                 player.sendMessage(noIgnoredPlayers);
             }
         }

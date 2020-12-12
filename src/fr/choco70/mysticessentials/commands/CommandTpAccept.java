@@ -2,33 +2,36 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class CommandTpAccept implements CommandExecutor{
 
-    private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private FileConfiguration config = plugin.getConfig();
-    private LocalesManager localesManager = plugin.getLocalesManager();
-    private PlayersManager playersManager = plugin.getPlayersManager();
+    private final MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
+    private final LocalesManager localesManager = plugin.getLocalesManager();
+    private final SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
-        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+        String serverLanguage = localesManager.getServerLocale();
         if(sender instanceof Player){
             Player player = (Player)sender;
-            String playerLanguage = playersManager.getPlayerLanguage(player);
+            String playerLanguage = sqLiteManager.getPlayerLocale(player.getUniqueId());
             if(plugin.getTpa().containsKey(player)){
                 Player requester = plugin.getTpa().get(player);
                 if(requester != null && requester.isOnline()){
                     requester.teleport(player.getLocation());
-                    playersManager.setLastLocation(requester);
+                    if(sqLiteManager.haveLastLocation(requester.getUniqueId())){
+                        sqLiteManager.updateLastLocation(requester.getUniqueId(), requester.getLocation());
+                    }
+                    else{
+                        sqLiteManager.setLastLocation(requester.getUniqueId(), requester.getLocation());
+                    }
                     plugin.getTpa().remove(player);
-                    String requesterLanguage = playersManager.getPlayerLanguage(requester);
+                    String requesterLanguage = sqLiteManager.getPlayerLocale(requester.getUniqueId());
                     String teleportedTo = localesManager.getMessage(requesterLanguage, "TPA_TELEPORTED");
                     requester.sendMessage(formatString(teleportedTo, player.getName(), requester));
                 }
@@ -42,10 +45,15 @@ public class CommandTpAccept implements CommandExecutor{
                 Player requester = plugin.getTpahere().get(player);
                 if(requester != null && requester.isOnline()){
                     player.teleport(requester.getLocation());
-                    playersManager.setLastLocation(player);
+                    if(sqLiteManager.haveLastLocation(player.getUniqueId())){
+                        sqLiteManager.updateLastLocation(player.getUniqueId(), player.getLocation());
+                    }
+                    else{
+                        sqLiteManager.setLastLocation(player.getUniqueId(), player.getLocation());
+                    }
                     plugin.getTpahere().remove(player);
 
-                    String requesterLanguage = playersManager.getPlayerLanguage(requester);
+                    String requesterLanguage = sqLiteManager.getPlayerLocale(requester.getUniqueId());
                     String teleportedPlayer = localesManager.getMessage(requesterLanguage, "TPAHERE_TELEPORTED");
                     requester.sendMessage(formatString(teleportedPlayer, player.getName(), requester));
                 }

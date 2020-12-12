@@ -2,46 +2,36 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
-import java.io.File;
-import java.io.IOException;
 
 public class CommandSetWarp implements CommandExecutor{
 
-    private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private LocalesManager localesManager = plugin.getLocalesManager();
-    private PlayersManager playersManager = plugin.getPlayersManager();
+    private final MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
+    private final LocalesManager localesManager = plugin.getLocalesManager();
+    private final SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
-        FileConfiguration config = plugin.getConfig();
         String serverLanguage = localesManager.getServerLocale();
         if(sender instanceof Player){
             Player player = (Player)sender;
-            String playerLanguage = playersManager.getPlayerLanguage(player);
+            String playerLanguage = sqLiteManager.getPlayerLocale(player.getUniqueId());
             if(arguments.length == 1){
                 String warpName = arguments[0].toLowerCase();
                 Location playerLocation = player.getLocation();
-                config.set("WARPS." + warpName + ".world", playerLocation.getWorld().getName());
-                config.set("WARPS." + warpName + ".x", playerLocation.getX());
-                config.set("WARPS." + warpName + ".y", playerLocation.getY());
-                config.set("WARPS." + warpName + ".z", playerLocation.getZ());
-                config.set("WARPS." + warpName + ".pitch", playerLocation.getPitch());
-                config.set("WARPS." + warpName + ".yaw", playerLocation.getYaw());
-                try {
-                    config.save(plugin.getDataFolder() + File.separator + "config.yml");
-                    String warpSet = localesManager.getMessage(playerLanguage, "WARP_SET");
-                    player.sendMessage(formatString(warpSet, warpName));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if(sqLiteManager.warpExist(warpName)){
+                    sqLiteManager.updateWarp(warpName, playerLocation);
                 }
+                else{
+                    sqLiteManager.insertWarp(warpName, playerLocation);
+                }
+                String warpSet = localesManager.getMessage(playerLanguage, "WARP_SET");
+                player.sendMessage(formatString(warpSet, warpName));
             }
             else{
                 player.sendMessage(command.getUsage());

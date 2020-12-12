@@ -2,24 +2,22 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
 import fr.choco70.mysticessentials.utils.RulesManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class CommandSetRule implements CommandExecutor{
 
-    private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private RulesManager rulesManager = plugin.getRulesManager();
-    private PlayersManager playersManager = plugin.getPlayersManager();
-    private LocalesManager localesManager = plugin.getLocalesManager();
+    private final MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
+    private final RulesManager rulesManager = plugin.getRulesManager();
+    private final LocalesManager localesManager = plugin.getLocalesManager();
+    private final SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
-        FileConfiguration config = plugin.getConfig();
         if(sender instanceof Player){
             if(arguments.length == 0){
                 sender.sendMessage(command.getUsage());
@@ -29,7 +27,7 @@ public class CommandSetRule implements CommandExecutor{
             }
             else{
                 Player player = (Player)sender;
-                String playerLanguage = playersManager.getPlayerLanguage(player);
+                String playerLanguage = sqLiteManager.getPlayerLocale(player.getUniqueId());
                 Integer rule = Integer.parseInt(arguments[0]) - 1;
                 Integer ruleNumber = rule + 1;
                 if(rulesManager.getRulesList().size() == 0 || (rulesManager.getRulesList().size() == 1 && rulesManager.getRule(0).equals(""))){
@@ -53,7 +51,7 @@ public class CommandSetRule implements CommandExecutor{
             }
         }
         else{
-            String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+            String serverLanguage = localesManager.getServerLocale();
             if(arguments.length == 0){
                 sender.sendMessage(command.getUsage());
             }

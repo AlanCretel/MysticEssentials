@@ -2,7 +2,7 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,9 +13,9 @@ import java.util.ArrayList;
 
 public class CommandTpAll implements CommandExecutor{
 
-    private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private PlayersManager playersManager = plugin.getPlayersManager();
-    private LocalesManager localesManager = plugin.getLocalesManager();
+    private final MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
+    private final LocalesManager localesManager = plugin.getLocalesManager();
+    private final SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args){
@@ -25,7 +25,7 @@ public class CommandTpAll implements CommandExecutor{
 
         if(sender instanceof Player){
             Player player = (Player)sender;
-            senderLanguage = playersManager.getPlayerLanguage(player);
+            senderLanguage = sqLiteManager.getPlayerLocale(player.getUniqueId());
             onlinePlayers.remove(player);
         }
         else{
@@ -50,19 +50,19 @@ public class CommandTpAll implements CommandExecutor{
                         }
                         else{
                             sender.sendMessage(formatMessage(localesManager.getMessage(senderLanguage, "TPALL_SENDER"), target));
-                            target.sendMessage(formatMessage(localesManager.getMessage(playersManager.getPlayerLanguage(target), "TPALL_TARGET"), target));
+                            target.sendMessage(formatMessage(localesManager.getMessage(sqLiteManager.getPlayerLocale(target.getUniqueId()), "TPALL_TARGET"), target));
                         }
                         for(Player onlinePlayer : onlinePlayers){
                             onlinePlayer.teleport(teleportLocation);
-                            onlinePlayer.sendMessage(formatMessage(localesManager.getMessage(playersManager.getPlayerLanguage(onlinePlayer), "TPALL_TELEPORTED"), target));
+                            onlinePlayer.sendMessage(formatMessage(localesManager.getMessage(sqLiteManager.getPlayerLocale(onlinePlayer.getUniqueId()), "TPALL_TELEPORTED"), target));
                         }
                     }
                     else{
                         sender.sendMessage(formatMessage(localesManager.getMessage(senderLanguage, "TPALL_SENDER"), target));
-                        target.sendMessage(formatMessage(localesManager.getMessage(playersManager.getPlayerLanguage(target), "TPALL_TARGET"), target));
+                        target.sendMessage(formatMessage(localesManager.getMessage(sqLiteManager.getPlayerLocale(target.getUniqueId()), "TPALL_TARGET"), target));
                         for(Player onlinePlayer : onlinePlayers){
                             onlinePlayer.teleport(teleportLocation);
-                            onlinePlayer.sendMessage(formatMessage(localesManager.getMessage(playersManager.getPlayerLanguage(onlinePlayer), "TPALL_TELEPORTED"), target));
+                            onlinePlayer.sendMessage(formatMessage(localesManager.getMessage(sqLiteManager.getPlayerLocale(onlinePlayer.getUniqueId()), "TPALL_TELEPORTED"), target));
                         }
                     }
                 }

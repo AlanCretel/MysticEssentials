@@ -2,29 +2,27 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.Set;
+import java.util.ArrayList;
 
 public class CommandWarpList implements CommandExecutor{
 
-    private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private FileConfiguration config = plugin.getConfig();
-    private LocalesManager localesManager = plugin.getLocalesManager();
-    private PlayersManager playersManager = plugin.getPlayersManager();
+    private final MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
+    private final LocalesManager localesManager = plugin.getLocalesManager();
+    private final SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
         String serverLanguage = localesManager.getServerLocale();
-        Set<String> warps = config.getConfigurationSection("WARPS.").getKeys(false);
+        ArrayList<String> warps = sqLiteManager.getWarps();
         if(sender instanceof Player){
             Player player = (Player)sender;
-            String playerLanguage = playersManager.getPlayerLanguage(player);
+            String playerLanguage = sqLiteManager.getPlayerLocale(player.getUniqueId());
             if(warps.size() == 0){
                 String noWarps = localesManager.getMessage(playerLanguage, "NO_WARPS");
                 player.sendMessage(noWarps);

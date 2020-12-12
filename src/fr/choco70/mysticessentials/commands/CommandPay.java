@@ -3,7 +3,7 @@ package fr.choco70.mysticessentials.commands;
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.EconomyLink;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,7 +15,7 @@ public class CommandPay implements CommandExecutor {
     private final MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private final EconomyLink economyLink = plugin.getEconomyLink();
     private final LocalesManager localesManager = plugin.getLocalesManager();
-    private final PlayersManager playersManager = plugin.getPlayersManager();
+    private final SQLiteManager sqLiteManager = plugin.getSqLiteManager();
     private final FileConfiguration config = plugin.getConfig();
 
     @Override
@@ -30,7 +30,7 @@ public class CommandPay implements CommandExecutor {
             else{
                 Player player = (Player) sender;
                 Player target = plugin.getServer().getPlayer(args[0]);
-                String playerLocale = playersManager.getPlayerLanguage(player);
+                String playerLocale = sqLiteManager.getPlayerLocale(player.getUniqueId());
                 if(target == null){
                     String playerNotFound = localesManager.getMessage(playerLocale, "PLAYER_NOT_FOUND");
                     player.sendMessage(formatString(playerNotFound, args[0], 0.0));
@@ -50,7 +50,7 @@ public class CommandPay implements CommandExecutor {
                             else{
                                 economyLink.transferMoney(player, target, amount);
                                 String playerMessage = localesManager.getMessage(playerLocale, "PAYED_SENDER");
-                                String targetMessage = localesManager.getMessage(playersManager.getPlayerLanguage(target), "PAYED_TARGET");
+                                String targetMessage = localesManager.getMessage(sqLiteManager.getPlayerLocale(target.getUniqueId()), "PAYED_TARGET");
                                 player.sendMessage(formatString(playerMessage, target.getName(), amount));
                                 target.sendMessage(formatString(targetMessage, player.getName(), amount));
                             }
@@ -61,7 +61,7 @@ public class CommandPay implements CommandExecutor {
                         }
                     }
                     catch (NumberFormatException e){
-                        player.sendMessage(formatString(localesManager.getMessage(playersManager.getPlayerLanguage(player), "NOT_VALID_NUMBER"), null, args[1]));
+                        player.sendMessage(formatString(localesManager.getMessage(sqLiteManager.getPlayerLocale(player.getUniqueId()), "NOT_VALID_NUMBER"), null, args[1]));
                     }
                 }
             }

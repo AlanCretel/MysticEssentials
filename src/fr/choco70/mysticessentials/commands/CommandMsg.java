@@ -2,7 +2,7 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,21 +14,21 @@ public class CommandMsg implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private PlayersManager playersManager = plugin.getPlayersManager();
     private LocalesManager localesManager = plugin.getLocalesManager();
+    private SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
-        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+        String serverLanguage = localesManager.getServerLocale();
         if(sender instanceof Player){
             Player player = (Player)sender;
             if(arguments.length >= 2){
                 Player receiver = plugin.getServer().getPlayer(arguments[0]);
                 if(receiver != null){
-                    if(receiver != player && (playersManager.getPlayersIgnored(receiver) == null || !playersManager.getPlayersIgnored(receiver).contains(player.getUniqueId()))){
+                    if(receiver != player && (!sqLiteManager.doesIgnorePlayer(player.getUniqueId(), receiver.getUniqueId()))){
                         plugin.getConversations().put(receiver, player);
-                        String senderMessagePrefix = localesManager.getMessage(playersManager.getPlayerLanguage(player), "MSG_PREFIX_SENDER");
-                        String receiverMessagePrefix = localesManager.getMessage(playersManager.getPlayerLanguage(receiver), "MSG_PREFIX_RECEIVER");
+                        String senderMessagePrefix = localesManager.getMessage(sqLiteManager.getPlayerLocale(player.getUniqueId()), "MSG_PREFIX_SENDER");
+                        String receiverMessagePrefix = localesManager.getMessage(sqLiteManager.getPlayerLocale(receiver.getUniqueId()), "MSG_PREFIX_RECEIVER");
                         String finalMessage = "";
                         for (int i = 1; i < arguments.length; i++) {
                             finalMessage = finalMessage + arguments[i] + " ";
@@ -37,16 +37,16 @@ public class CommandMsg implements CommandExecutor{
                         receiver.sendMessage(formatString(receiverMessagePrefix, player) + finalMessage);
                         receiver.playSound(receiver.getLocation(), Sound.BLOCK_BELL_USE, 1, 1);
                     }
-                    else if(playersManager.getPlayersIgnored(receiver).contains(player.getUniqueId())){
-                        String ignored = localesManager.getMessage(playersManager.getPlayerLanguage(player), "IGNORED");
+                    else if(sqLiteManager.doesIgnorePlayer(player.getUniqueId(), receiver.getUniqueId())){
+                        String ignored = localesManager.getMessage(sqLiteManager.getPlayerLocale(player.getUniqueId()), "IGNORED");
                         player.sendMessage(formatString(ignored, receiver.getName()));
                     }
                     else{
-                        player.sendMessage(localesManager.getMessage(playersManager.getPlayerLanguage(player), "SELF_MESSAGE"));
+                        player.sendMessage(localesManager.getMessage(sqLiteManager.getPlayerLocale(player.getUniqueId()), "SELF_MESSAGE"));
                     }
                 }
                 else{
-                    String playerNotFound = localesManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
+                    String playerNotFound = localesManager.getMessage(sqLiteManager.getPlayerLocale(player.getUniqueId()), "PLAYER_NOT_FOUND");
                     player.sendMessage(formatString(playerNotFound, arguments[0]));
                 }
             }

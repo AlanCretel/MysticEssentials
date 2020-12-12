@@ -3,26 +3,26 @@ package fr.choco70.mysticessentials.commands;
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.LocalesManager;
 import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class CommandSetHome implements CommandExecutor {
 
-    private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private FileConfiguration config = plugin.getConfig();
-    private LocalesManager localesManager = plugin.getLocalesManager();
-    private PlayersManager playersManager = plugin.getPlayersManager();
+    private final MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
+    private final LocalesManager localesManager = plugin.getLocalesManager();
+    private final PlayersManager playersManager = plugin.getPlayersManager();
+    private final SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] arguments){
-        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+        String serverLanguage = localesManager.getServerLocale();
         if(sender instanceof Player){
             Player player = (Player)sender;
             Integer homesLimit = playersManager.getHomesLimit(player);
-            if((homesLimit > playersManager.getHomesNumber(player)) || player.hasPermission("mysticessentials.homeslimit.nolimit")){
+            if((homesLimit > sqLiteManager.getHomes(player.getUniqueId()).size()) || player.hasPermission("mysticessentials.homeslimit.nolimit")){
                 if(arguments.length != 1 && arguments.length != 0){
                     player.sendMessage(command.getUsage());
                 }
@@ -35,7 +35,7 @@ public class CommandSetHome implements CommandExecutor {
                 }
             }
             else{
-                String homesLimitReached = localesManager.getMessage(playersManager.getPlayerLanguage(player), "HOMES_LIMIT_REACHED");
+                String homesLimitReached = localesManager.getMessage(sqLiteManager.getPlayerLocale(player.getUniqueId()), "HOMES_LIMIT_REACHED");
                 player.sendMessage(homesLimitReached.replaceAll("#homes_limit#", homesLimit.toString()));
             }
         }
@@ -47,8 +47,13 @@ public class CommandSetHome implements CommandExecutor {
     }
 
     public void addHome(Player player, String homeName){
-        playersManager.addHome(player, homeName);
-        String homeSet = localesManager.getMessage(playersManager.getPlayerLanguage(player), "HOME_SET");
+        if(!sqLiteManager.homeExist(player.getUniqueId(), homeName)){
+            sqLiteManager.insertHome(player.getUniqueId(), homeName, false, player.getLocation());
+        }
+        else{
+            sqLiteManager.updateHome(player.getUniqueId(), homeName, false, player.getLocation());
+        }
+        String homeSet = localesManager.getMessage(sqLiteManager.getPlayerLocale(player.getUniqueId()), "HOME_SET");
         player.sendMessage(formatString(homeSet, homeName));
     }
 

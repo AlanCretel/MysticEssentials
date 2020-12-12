@@ -2,7 +2,7 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,28 +14,20 @@ import java.io.IOException;
 
 public class CommandDelWarp implements CommandExecutor{
 
-    private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private FileConfiguration config = plugin.getConfig();
-    private LocalesManager localesManager = plugin.getLocalesManager();
-    private PlayersManager playersManager = plugin.getPlayersManager();
+    private final MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
+    private final FileConfiguration config = plugin.getConfig();
+    private final LocalesManager localesManager = plugin.getLocalesManager();
+    private final SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
-        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+        String serverLanguage = localesManager.getServerLocale();
         if(sender instanceof Player){
             Player player = (Player)sender;
-            String playerLanguage = playersManager.getPlayerLanguage(player);
+            String playerLanguage = sqLiteManager.getPlayerLocale(player.getUniqueId());
             if(arguments.length == 1){
                 String warpName = arguments[0];
-                if(config.isConfigurationSection("WARPS." + warpName)){
-                    config.set("WARPS." + warpName, null);
-                    String warpRemoved = localesManager.getMessage(playerLanguage, "WARP_REMOVED");
-                    player.sendMessage(formatString(warpRemoved, warpName));
-                }
-                else{
-                    String noWarpFound = localesManager.getMessage(playerLanguage, "WARP_NOT_EXIST");
-                    player.sendMessage(formatString(noWarpFound, warpName));
-                }
+                removeWarp(warpName, playerLanguage, sender);
             }
             else{
                 player.sendMessage(command.getUsage());
@@ -44,26 +36,30 @@ public class CommandDelWarp implements CommandExecutor{
         else{
             if(arguments.length == 1){
                 String warpName = arguments[0];
-                if(config.isConfigurationSection("WARPS." + warpName)){
-                    config.set("WARPS." + warpName, null);
-                    String warpRemoved = localesManager.getMessage(serverLanguage, "WARP_REMOVED");
-                    sender.sendMessage(formatString(warpRemoved, warpName));
-                }
-                else{
-                    String noWarpFound = localesManager.getMessage(serverLanguage, "WARP_NOT_EXIST");
-                    sender.sendMessage(formatString(noWarpFound, warpName));
-                }
+                removeWarp(warpName, serverLanguage, sender);
             }
             else{
                 sender.sendMessage(command.getUsage());
             }
+        }
+        return true;
+    }
+
+    public void removeWarp(String warpName, String senderLocale, CommandSender sender){
+        if(sqLiteManager.warpExist(warpName)){
+            sqLiteManager.removeWarp(warpName);
+            String warpRemoved = localesManager.getMessage(senderLocale, "WARP_REMOVED");
+            sender.sendMessage(formatString(warpRemoved, warpName));
+        }
+        else{
+            String noWarpFound = localesManager.getMessage(senderLocale, "WARP_NOT_EXIST");
+            sender.sendMessage(formatString(noWarpFound, warpName));
         }
         try {
             config.save(plugin.getDataFolder() + File.separator + "config.yml");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return true;
     }
 
     public String formatString(String string, String warp){

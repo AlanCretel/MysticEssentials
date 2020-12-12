@@ -2,41 +2,39 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.Set;
+import java.util.ArrayList;
 
 public class CommandSetDefaultHome implements CommandExecutor{
 
-    private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private FileConfiguration config = plugin.getConfig();
-    private LocalesManager localesManager = plugin.getLocalesManager();
-    private PlayersManager playersManager = plugin.getPlayersManager();
+    private final MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
+    private final LocalesManager localesManager = plugin.getLocalesManager();
+    private final SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
-        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+        String serverLanguage = localesManager.getServerLocale();
         if(sender instanceof Player){
             Player player = (Player)sender;
-            String playerLanguage = playersManager.getPlayerLanguage(player);
+            String playerLanguage = sqLiteManager.getPlayerLocale(player.getUniqueId());
             if(arguments.length == 0){
                 player.sendMessage(command.getUsage());
             }
             else{
                 String homeName = arguments[0];
-                Set<String> homes = playersManager.getHomeList(player);
-                if(playersManager.getHomeList(player) == null){
+                ArrayList<String> homes = sqLiteManager.getHomes(player.getUniqueId());
+                if(homes == null){
                     String noHomesMessage = localesManager.getMessage(playerLanguage, "NO_HOMES");
                     player.sendMessage(noHomesMessage);
                 }
                 else{
                     if(homes.contains(homeName)){
-                        playersManager.setDefaultHome(player, homeName);
+                        sqLiteManager.setDefaultHome(player.getUniqueId(), homeName);
                         String defaultHomeSet = localesManager.getMessage(playerLanguage, "DEFAULT_HOME_SET");
                         player.sendMessage(formatString(defaultHomeSet, homeName));
                     }

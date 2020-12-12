@@ -2,7 +2,7 @@ package fr.choco70.mysticessentials.listeners;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,26 +14,19 @@ public class PlayerJoin implements Listener {
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
     private LocalesManager localesManager = plugin.getLocalesManager();
-    private PlayersManager playersManager = plugin.getPlayersManager();
+    private SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e){
         Player player = e.getPlayer();
         String playerDisplayName = player.getDisplayName();
 
-        playersManager.createPlayerFile(player);
-        FileConfiguration playerConfig = playersManager.getPlayerConfig(player);
-
         String serverLanguage = localesManager.getServerLocale();
-        String playerLocale = playersManager.getPlayerLanguage(player);
-        playerConfig.set("language", playerLocale);
+        String playerLocale = sqLiteManager.getPlayerLocale(player.getUniqueId());
 
         String welcome_back_message = localesManager.getMessage(playerLocale, "WELCOME_BACK_MESSAGE");
 
-        if(!playerConfig.isSet("name")){
-            playerConfig.set("name", player.getName());
-            playerConfig.set("display_name", playerDisplayName);
-
+        if(!sqLiteManager.playerExist(player.getUniqueId())){
             String welcome_message = localesManager.getMessage(playerLocale, "WELCOME_MESSAGE");
 
             if(config.isSet("SPAWN.x") && config.isSet("SPAWN.y") && config.isSet("SPAWN.z") && config.isSet("SPAWN.pitch") && config.isSet("SPAWN.yaw") && config.isSet("SPAWN.world")){
@@ -45,11 +38,10 @@ public class PlayerJoin implements Listener {
 
             String welcome_broadcast = localesManager.getMessage(serverLanguage, "WELCOME_BROADCAST");
             plugin.getServer().broadcastMessage(formatString(welcome_broadcast, player));
+            sqLiteManager.insertPlayer(player.getUniqueId(), player.getName(), playerDisplayName, playerLocale);
         }
-        else if(playerConfig.get("name").toString() == player.getName()){
-            playerConfig.set("name", player.getName());
-        }
-        else if(config.getBoolean("SETTINGS.spawnOnJoin", false)){
+
+        if(config.getBoolean("SETTINGS.spawnOnJoin", false)){
             if(config.isSet("SPAWN.x") && config.isSet("SPAWN.y") && config.isSet("SPAWN.z") && config.isSet("SPAWN.pitch") && config.isSet("SPAWN.yaw") && config.isSet("SPAWN.world")){
                 plugin.toSpawn(player, formatString(welcome_back_message, player));
             }
@@ -57,8 +49,6 @@ public class PlayerJoin implements Listener {
         else{
             player.sendMessage(formatString(welcome_back_message, player));
         }
-
-        playersManager.savePlayerConfig(player, playerConfig);
     }
 
     public String formatString(String string, Player player){

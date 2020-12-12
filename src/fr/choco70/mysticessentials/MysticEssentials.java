@@ -27,12 +27,13 @@ public class MysticEssentials extends JavaPlugin {
     private RulesManager rulesManager;
     private DelaysManager delaysManager;
     private EconomyLink economyLink;
+    private SQLiteManager sqLiteManager;
+    private ConfigsManager configsManager;
 
     private Metrics metrics;
 
     @Override
     public void onEnable(){
-        System.out.println(Thread.currentThread().getName());
         FileConfiguration config = this.getConfig();
         config.options().copyDefaults(true);
         try {
@@ -45,12 +46,14 @@ public class MysticEssentials extends JavaPlugin {
 
         setupManagers();
 
+        configsManager.transferConfig();
+
         rulesManager.createRulesFile();
 
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "MysticEssentials: Rules file loaded");
 
         localesManager.setupDefaultLocales();
-        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+        String serverLanguage = localesManager.getServerLocale();
         localesManager.createLanguageFile(serverLanguage);
         localesManager.updateLocalesConfigs();
 
@@ -67,14 +70,17 @@ public class MysticEssentials extends JavaPlugin {
 
     @Override
     public void onDisable(){
+        sqLiteManager.closeConnection();
         this.getServer().getConsoleSender().sendMessage(ChatColor.RED + "MysticEssentials: Disabled");
     }
 
     private void setupManagers(){
+        sqLiteManager = new SQLiteManager();
         localesManager = new LocalesManager(this);
         playersManager = new PlayersManager();
         rulesManager = new RulesManager();
         delaysManager = new DelaysManager(this);
+        configsManager = new ConfigsManager();
     }
 
     private void setupCommands(){
@@ -197,5 +203,9 @@ public class MysticEssentials extends JavaPlugin {
 
     public EconomyLink getEconomyLink(){
         return this.economyLink;
+    }
+
+    public SQLiteManager getSqLiteManager() {
+        return sqLiteManager;
     }
 }

@@ -2,7 +2,7 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,22 +15,26 @@ public class CommandBack implements CommandExecutor{
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
     private LocalesManager localesManager = plugin.getLocalesManager();
-    private PlayersManager playersManager = plugin.getPlayersManager();
+    private SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
         if(sender instanceof Player){
             Player player = (Player)sender;
-            FileConfiguration playerConfig = playersManager.getPlayerConfig(player);
-            String playerLanguage = playersManager.getPlayerLanguage(player);
+            String playerLanguage = sqLiteManager.getPlayerLocale(player.getUniqueId());
 
-            if(playerConfig.isSet("last_location.world")){
+            if(sqLiteManager.haveLastLocation(player.getUniqueId())){
                 String teleportToLastLocationMessage = localesManager.getMessage(playerLanguage, "TELEPORT_LAST_LOCATION");
 
                 player.sendMessage(teleportToLastLocationMessage);
-                Location lastLocation = new Location(plugin.getServer().getWorld(playerConfig.get("last_location.world").toString()), playerConfig.getDouble("last_location.x"), playerConfig.getDouble("last_location.y"), playerConfig.getDouble("last_location.z"), Float.valueOf(playerConfig.getString("last_location.yaw","0")), Float.valueOf(playerConfig.getString("last_location.pitch","0")));
+                Location lastLocation = sqLiteManager.getLastLocation(player.getUniqueId());
                 player.teleport(lastLocation);
-                playersManager.setLastLocation(player);
+                if(sqLiteManager.haveLastLocation(player.getUniqueId())){
+                    sqLiteManager.updateLastLocation(player.getUniqueId(), player.getLocation());
+                }
+                else{
+                    sqLiteManager.setLastLocation(player.getUniqueId(), player.getLocation());
+                }
             }
             else{
                 String noLastLocationMessage = localesManager.getMessage(playerLanguage, "NO_LAST_LOCATION");
@@ -38,8 +42,7 @@ public class CommandBack implements CommandExecutor{
             }
         }
         else{
-            String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
-            String onlyPlayersWarn = localesManager.getMessage(serverLanguage, "ONLY_PLAYERS_COMMAND");
+            String onlyPlayersWarn = localesManager.getMessage(localesManager.getServerLocale(), "ONLY_PLAYERS_COMMAND");
             sender.sendMessage(onlyPlayersWarn);
         }
         return true;

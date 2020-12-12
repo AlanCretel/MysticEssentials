@@ -71,25 +71,19 @@ public class LocalesManager {
         if(isDefaultLocale(languageName)){
             InputStream languageClassStream = plugin.getClass().getResourceAsStream("/langs/" + languageName + ".yml");
             InputStreamReader streamReader = new InputStreamReader(languageClassStream);
-            FileConfiguration defaultLanguageConfig = YamlConfiguration.loadConfiguration(streamReader);
             try {
+                FileConfiguration defaultLanguageConfig = YamlConfiguration.loadConfiguration(streamReader);
                 streamReader.close();
                 languageClassStream.close();
+                return defaultLanguageConfig.getString(message);
             } catch (IOException e) {
                 e.printStackTrace();
+                FileConfiguration defaultLanguageConfig = getLocaleConfig(languageName);
+                return defaultLanguageConfig.getString(message);
             }
-            return defaultLanguageConfig.getString(message);
         }
         else{
-            InputStream languageClassStream = plugin.getClass().getResourceAsStream("/langs/en_us.yml");
-            InputStreamReader streamReader = new InputStreamReader(languageClassStream);
-            FileConfiguration defaultLanguageConfig = YamlConfiguration.loadConfiguration(streamReader);
-            try {
-                streamReader.close();
-                languageClassStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            FileConfiguration defaultLanguageConfig = getLocaleConfig(languageName);
             return defaultLanguageConfig.getString(message);
         }
     }

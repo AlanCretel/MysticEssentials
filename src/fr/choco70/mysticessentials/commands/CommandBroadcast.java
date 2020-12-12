@@ -12,8 +12,8 @@ import java.util.Collection;
 
 public class CommandBroadcast implements CommandExecutor{
 
-    private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private FileConfiguration config = plugin.getConfig();
+    private final MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
+    private final FileConfiguration config = plugin.getConfig();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){

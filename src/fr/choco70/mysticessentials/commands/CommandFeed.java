@@ -2,7 +2,7 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,14 +11,14 @@ import org.bukkit.entity.Player;
 
 public class CommandFeed implements CommandExecutor{
 
-    private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private FileConfiguration config = plugin.getConfig();
-    private PlayersManager playersManager = plugin.getPlayersManager();
-    private LocalesManager localesManager = plugin.getLocalesManager();
+    private final MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
+    private final FileConfiguration config = plugin.getConfig();
+    private final LocalesManager localesManager = plugin.getLocalesManager();
+    private final SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
-        String serverLanguage = config.getString("SETTINGS.serverLanguage", "en_us");
+        String serverLanguage = localesManager.getServerLocale();
         if(arguments.length == 1){
             String targetName = arguments[0];
             Player target = sender.getServer().getPlayer(targetName);
@@ -27,22 +27,22 @@ public class CommandFeed implements CommandExecutor{
                 target.setSaturation(20);
                 if(sender instanceof Player && ((Player)sender).hasPermission("mysticessentials.feed.others")){
                     Player player = (Player)sender;
-                    String playerFed = localesManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_FED");
+                    String playerFed = localesManager.getMessage(sqLiteManager.getPlayerLocale(player.getUniqueId()), "PLAYER_FED");
                     player.sendMessage(formatString(playerFed, null, target.getName()));
-                    String targetFed = localesManager.getMessage(playersManager.getPlayerLanguage(target), "TARGET_FED");
+                    String targetFed = localesManager.getMessage(sqLiteManager.getPlayerLocale(target.getUniqueId()), "TARGET_FED");
                     target.sendMessage(formatString(targetFed, player, null));
                 }
                 else{
                     String playerFed = localesManager.getMessage(serverLanguage, "PLAYER_FED");
                     sender.sendMessage(formatString(playerFed, null, target.getName()));
-                    String targetFed = localesManager.getMessage(playersManager.getPlayerLanguage(target), "TARGET_FED");
+                    String targetFed = localesManager.getMessage(sqLiteManager.getPlayerLocale(target.getUniqueId()), "TARGET_FED");
                     target.sendMessage(formatString(targetFed, null, null));
                 }
             }
             else{
                 if(sender instanceof Player){
                     Player player = (Player)sender;
-                    String playerNotFound = localesManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
+                    String playerNotFound = localesManager.getMessage(sqLiteManager.getPlayerLocale(player.getUniqueId()), "PLAYER_NOT_FOUND");
                     player.sendMessage(formatString(playerNotFound, player, targetName));
                 }
                 else{

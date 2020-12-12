@@ -2,7 +2,7 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,23 +10,23 @@ import org.bukkit.entity.Player;
 
 public class CommandTpaHere implements CommandExecutor{
 
-    private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
-    private LocalesManager localesManager = plugin.getLocalesManager();
-    private PlayersManager playersManager = plugin.getPlayersManager();
+    private final MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
+    private final LocalesManager localesManager = plugin.getLocalesManager();
+    private final SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
         String serverLanguage = localesManager.getServerLocale();
         if(sender instanceof Player){
             Player player = (Player)sender;
-            String playerLanguage = playersManager.getPlayerLanguage(player);
+            String playerLanguage = sqLiteManager.getPlayerLocale(player.getUniqueId());
             if(arguments.length == 0){
                 player.sendMessage(command.getUsage());
             }
             else{
                 Player target = sender.getServer().getPlayer(arguments[0]);
                 if(target != null && target.isOnline() && target != player){
-                    String targetLanguage = playersManager.getPlayerLanguage(target);
+                    String targetLanguage = sqLiteManager.getPlayerLocale(target.getUniqueId());
                     String targetName = target.getName();
                     if(!plugin.getTpahere().containsKey(player)){
                         String tpaRequestTarget = localesManager.getMessage(targetLanguage, "TPAHERE_REQUEST_TARGET");

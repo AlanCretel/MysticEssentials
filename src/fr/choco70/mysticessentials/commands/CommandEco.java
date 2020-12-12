@@ -3,7 +3,7 @@ package fr.choco70.mysticessentials.commands;
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.EconomyLink;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,9 +14,9 @@ public class CommandEco implements CommandExecutor {
 
     private final MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private final EconomyLink economyLink = plugin.getEconomyLink();
-    private final PlayersManager playersManager = plugin.getPlayersManager();
     private final LocalesManager localesManager = plugin.getLocalesManager();
     private final FileConfiguration config = plugin.getConfig();
+    private final SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
@@ -24,7 +24,7 @@ public class CommandEco implements CommandExecutor {
         double defaultBalance = config.getDouble("SETTINGS.default_money_balance", 0.0);
         if(sender instanceof Player){
             Player player = (Player) sender;
-            senderLocal = playersManager.getPlayerLanguage(player);
+            senderLocal = sqLiteManager.getPlayerLocale(player.getUniqueId());
         }
         else{
             senderLocal = localesManager.getServerLocale();
@@ -58,7 +58,7 @@ public class CommandEco implements CommandExecutor {
             Player target = plugin.getServer().getPlayer(args[1]);
             if(target != null){
                 try{
-                    String targetLocale = playersManager.getPlayerLanguage(target);
+                    String targetLocale = sqLiteManager.getPlayerLocale(target.getUniqueId());
                     double amount = Double.parseDouble(args[2]);
                     if(args[0].equalsIgnoreCase("add")){
                         economyLink.addMoney(target, amount);

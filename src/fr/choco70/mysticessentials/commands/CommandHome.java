@@ -2,39 +2,40 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
-import java.util.Set;
+import java.util.ArrayList;
 
 public class CommandHome implements CommandExecutor {
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
-    private PlayersManager playersManager = plugin.getPlayersManager();
     private LocalesManager localesManager = plugin.getLocalesManager();
+    private SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
         String serverLanguage = config.getString("SETTINGS.serverLanguage");
         if(sender instanceof Player){
             Player player = (Player)sender;
-            FileConfiguration playerConfig = playersManager.getPlayerConfig(player);
-            String playerLanguage = playersManager.getPlayerLanguage(player);
+            String playerLanguage = sqLiteManager.getPlayerLocale(player.getUniqueId());
             if(arguments.length == 0){
-                if(playersManager.getHomeList(player) != null && playersManager.getHomeList(player).size() != 0){
-                    Set<String> homes = playersManager.getHomeList(player);
-                    if(homes.contains("home") || playersManager.getDefaultHome(player) != null){
-                        if(playersManager.getDefaultHome(player) != null){
-                            toHome(player, playersManager.getDefaultHome(player), playerConfig, playerLanguage);
+                if(sqLiteManager.getHomes(player.getUniqueId()) != null && sqLiteManager.getHomes(player.getUniqueId()).size() != 0){
+                    ArrayList<String> homes = sqLiteManager.getHomes(player.getUniqueId());
+                    if(homes.contains("home") || sqLiteManager.getDefaultHomeName(player.getUniqueId()) != null){
+                        if(sqLiteManager.getDefaultHomeName(player.getUniqueId()) != null){
+                            toHome(player, sqLiteManager.getDefaultHomeName(player.getUniqueId()), playerLanguage);
                         }
                         else{
-                            toHome(player, "home", playerConfig, playerLanguage);
+                            toHome(player, "home", playerLanguage);
                         }
                     }
                     else{
@@ -48,17 +49,17 @@ public class CommandHome implements CommandExecutor {
                 }
             }
             else{
-                if(arguments.length == 1 && playersManager.getHomeList(player) != null){
+                if(arguments.length == 1 && sqLiteManager.getHomes(player.getUniqueId()) != null){
                     String homeName = arguments[0];
-                    if(playerConfig.isConfigurationSection("homes." + homeName)){
-                        toHome(player, homeName, playerConfig, playerLanguage);
+                    if(sqLiteManager.haveHome(player.getUniqueId(), homeName)){
+                        toHome(player, homeName, playerLanguage);
                     }
                     else{
                         String homeNotFoundMessage = localesManager.getMessage(playerLanguage, "HOME_NOT_EXIST");
-                        player.sendMessage(formatString(homeNotFoundMessage, homeName, playersManager.getHomeList(player).toString()));
+                        player.sendMessage(formatString(homeNotFoundMessage, homeName, sqLiteManager.getHomes(player.getUniqueId()).toString()));
                     }
                 }
-                else if(playersManager.getHomeList(player) == null){
+                else if(sqLiteManager.getHomes(player.getUniqueId()) == null){
                     String homeNotFoundMessage = localesManager.getMessage(playerLanguage, "HOME_NOT_EXIST");
                     player.sendMessage(formatString(homeNotFoundMessage, arguments[0], null));
                 }
@@ -74,18 +75,29 @@ public class CommandHome implements CommandExecutor {
         return true;
     }
 
-    private void toHome(Player player, String homeName, FileConfiguration playerConfig, String playerLanguage){
+    private void toHome(Player player, String homeName, String playerLanguage){
         String teleportToHome = localesManager.getMessage(playerLanguage, "TELEPORT_TO_HOME");
         player.sendMessage(formatString(teleportToHome, homeName, null));
-        Location homeLocation = player.getLocation().clone();
-        homeLocation.setWorld(player.getServer().getWorld(playerConfig.get("homes." + homeName + ".world").toString()));
-        homeLocation.setX(Double.valueOf(playerConfig.get("homes." + homeName + ".x").toString()));
-        homeLocation.setY(Double.valueOf(playerConfig.get("homes." + homeName + ".y").toString()));
-        homeLocation.setZ(Double.valueOf(playerConfig.get("homes." + homeName + ".z").toString()));
-        homeLocation.setPitch(Float.valueOf(playerConfig.get("homes." + homeName + ".pitch").toString()));
-        homeLocation.setYaw(Float.valueOf(playerConfig.get("homes." + homeName + ".yaw").toString()));
-        playersManager.setLastLocation(player);
-        player.teleport(homeLocation);
+        Location homeLocation = sqLiteManager.getHomeLocation(player.getUniqueId(), homeName);
+        if(sqLiteManager.haveLastLocation(player.getUniqueId())){
+            sqLiteManager.updateLastLocation(player.getUniqueId(), player.getLocation());
+        }
+        else{
+            sqLiteManager.setLastLocation(player.getUniqueId(), player.getLocation());
+        }
+        if(player.isInsideVehicle()){
+            if(player.getVehicle() instanceof Horse){
+                Horse horse = (Horse) player.getVehicle();
+                horse.teleport(homeLocation);
+                player.teleport(horse, PlayerTeleportEvent.TeleportCause.UNKNOWN);
+            }
+            else{
+                player.teleport(homeLocation);
+            }
+        }
+        else{
+            player.teleport(homeLocation);
+        }
     }
 
     public String formatString(String string, String homeName, String homeList){

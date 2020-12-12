@@ -2,8 +2,8 @@ package fr.choco70.mysticessentials.commands;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
 import fr.choco70.mysticessentials.utils.RulesManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,8 +14,8 @@ public class CommandAddRule implements CommandExecutor{
 
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private RulesManager rulesManager = plugin.getRulesManager();
-    private PlayersManager playersManager = plugin.getPlayersManager();
     private LocalesManager localesManager = plugin.getLocalesManager();
+    private SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
@@ -36,7 +36,7 @@ public class CommandAddRule implements CommandExecutor{
                 else{
                     rulesManager.addRule(newRule);
                 }
-                player.sendMessage(localesManager.getMessage(playersManager.getPlayerLanguage(player), "RULE_ADDED"));
+                player.sendMessage(localesManager.getMessage(sqLiteManager.getPlayerLocale(player.getUniqueId()), "RULE_ADDED"));
             }
         }
         else{
@@ -54,7 +54,7 @@ public class CommandAddRule implements CommandExecutor{
                 else{
                     rulesManager.addRule(newRule);
                 }
-                sender.sendMessage(localesManager.getMessage(config.getString("SETTINGS.serverLanguage", "en_us"), "RULE_ADDED"));
+                sender.sendMessage(localesManager.getMessage(localesManager.getServerLocale(), "RULE_ADDED"));
             }
         }
         return true;

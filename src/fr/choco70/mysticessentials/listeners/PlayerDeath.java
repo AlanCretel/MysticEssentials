@@ -2,7 +2,7 @@ package fr.choco70.mysticessentials.listeners;
 
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -15,33 +15,30 @@ public class PlayerDeath implements Listener{
     private MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private FileConfiguration config = plugin.getConfig();
     private LocalesManager localesManager = plugin.getLocalesManager();
-    private PlayersManager playersManager = plugin.getPlayersManager();
+    private SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e){
         Player player = e.getEntity();
         Location deathLocation = player.getLocation().clone();
-        FileConfiguration playerConfig = playersManager.getPlayerConfig(player);
 
         if(config.getBoolean("SETTINGS.showDeathCoordinates", true)){
-            String playerLanguage = playersManager.getPlayerLanguage(player);
+            String playerLanguage = sqLiteManager.getPlayerLocale(player.getUniqueId());
             String deathLocationMessage = localesManager.getMessage(playerLanguage, "DEATH_LOCATION_MESSAGE");
             player.sendMessage(formatString(deathLocationMessage, player));
         }
-        playerConfig.set("last_death.world", deathLocation.getWorld().getName());
-        playerConfig.set("last_death.x", deathLocation.getX());
-        playerConfig.set("last_death.y", deathLocation.getY());
-        playerConfig.set("last_death.z", deathLocation.getZ());
-        playerConfig.set("last_death.pitch", deathLocation.getPitch());
-        playerConfig.set("last_death.yaw", deathLocation.getYaw());
-        playerConfig.set("last_location.world", deathLocation.getWorld().getName());
-        playerConfig.set("last_location.x", deathLocation.getX());
-        playerConfig.set("last_location.y", deathLocation.getY());
-        playerConfig.set("last_location.z", deathLocation.getZ());
-        playerConfig.set("last_location.pitch", deathLocation.getPitch());
-        playerConfig.set("last_location.yaw", deathLocation.getYaw());
-
-        playersManager.savePlayerConfig(player, playerConfig);
+        if(sqLiteManager.haveLastLocation(player.getUniqueId())){
+            sqLiteManager.updateLastLocation(player.getUniqueId(), player.getLocation());
+        }
+        else{
+            sqLiteManager.setLastLocation(player.getUniqueId(), player.getLocation());
+        }
+        if(sqLiteManager.getLastDeath(player.getUniqueId()) == null){
+            sqLiteManager.setLastDeath(player.getUniqueId(), deathLocation);
+        }
+        else{
+            sqLiteManager.updateLastDeath(player.getUniqueId(), deathLocation);
+        }
     }
 
     public String formatString(String string, Player player){

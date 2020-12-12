@@ -3,7 +3,7 @@ package fr.choco70.mysticessentials.commands;
 import fr.choco70.mysticessentials.MysticEssentials;
 import fr.choco70.mysticessentials.utils.EconomyLink;
 import fr.choco70.mysticessentials.utils.LocalesManager;
-import fr.choco70.mysticessentials.utils.PlayersManager;
+import fr.choco70.mysticessentials.utils.SQLiteManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,30 +14,31 @@ public class CommandBalance implements CommandExecutor{
 
     private final MysticEssentials plugin = MysticEssentials.getPlugin(MysticEssentials.class);
     private final FileConfiguration config = plugin.getConfig();
-    private final PlayersManager playersManager = plugin.getPlayersManager();
     private final LocalesManager localesManager = plugin.getLocalesManager();
     private final EconomyLink economyLink = plugin.getEconomyLink();
+    private final SQLiteManager sqLiteManager = plugin.getSqLiteManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] arguments){
         String serverLanguage = localesManager.getServerLocale();
         if(sender instanceof Player){
             Player player = (Player)sender;
+            String playerLocale = sqLiteManager.getPlayerLocale(player.getUniqueId());
             if(arguments.length == 1){
                 Player target = sender.getServer().getPlayer(arguments[0]);
                 if(target != null){
-                    String targetBalanceMessage = localesManager.getMessage(playersManager.getPlayerLanguage(player), "BALANCE_OTHER");
+                    String targetBalanceMessage = localesManager.getMessage(playerLocale, "BALANCE_OTHER");
                     Double targetBalance = economyLink.getPlayerBalance(target);
                     player.sendMessage(formatString(targetBalanceMessage, target.getName(), targetBalance));
                 }
                 else{
-                    String playerNotFound = localesManager.getMessage(playersManager.getPlayerLanguage(player), "PLAYER_NOT_FOUND");
-                    player.sendMessage(playerNotFound);
+                    String playerNotFound = localesManager.getMessage(playerLocale, "PLAYER_NOT_FOUND");
+                    player.sendMessage(formatString(playerNotFound, arguments[0], 0.0));
                 }
             }
             else{
                 Double playerBalance = economyLink.getPlayerBalance(player);
-                String balanceMessage = localesManager.getMessage(playersManager.getPlayerLanguage(player), "BALANCE_SELF");
+                String balanceMessage = localesManager.getMessage(playerLocale, "BALANCE_SELF");
                 player.sendMessage(formatString(balanceMessage, null, playerBalance));
             }
         }
