@@ -1,7 +1,7 @@
 name: MysticEssentials
 author: Choco70
 main: fr.choco70.mysticessentials.MysticEssentials
-version: 1.6.0
+version: 1.7.0
 api-version: "1.14"
 softdepend: [Vault]
 commands:
